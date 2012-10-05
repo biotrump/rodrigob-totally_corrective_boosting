@@ -1,0 +1,27 @@
+These scripts are all you need to process data and run experiments
+To run the scripts, you need numpy and pylab
+
+List of scripts:
+1. process_data.py 
+   - checks to see if all of the required data is present
+   - if some data is missing, it is downloaded
+   - some data sets are split into training and test
+   - if so, concatenate them into a single file
+   - split data sets into train, test, and validation
+
+2. run_experiments.py
+   - takes as input the name of the experiment: eta, nu, lp
+   - also takes an optional prefix, e.g. astro*200*
+   - assumes appropriate config files are generated
+   - check to see if the result exists. If not, the experiment is run
+   - to rerun an experiment, you have to remove the result from the 
+   - appropriate result directory
+
+3. make_eta_plots.py
+   - generates plots for eta experiment
+
+4. make_nu_plots.py
+   - generates plots for nu experiment
+
+5. print_config.py
+   - prints all config files used for all experiments
