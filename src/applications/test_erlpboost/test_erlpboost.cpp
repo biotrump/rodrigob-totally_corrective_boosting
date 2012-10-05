@@ -44,7 +44,6 @@
 #include "ConfigFile.hpp"
 
 
-
 #ifdef USE_TAO
 #include "optimizer_tao.hpp"
 #endif
