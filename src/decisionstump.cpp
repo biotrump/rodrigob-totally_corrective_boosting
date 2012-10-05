@@ -21,10 +21,10 @@
 #include <algorithm>
 #include "decisionstump.hpp"
 
-CDecisionStump::CDecisionStump(std::vector<svec>& data, 
+DecisionStump::DecisionStump(std::vector<svec>& data, 
                                std::vector<int>& labels, 
                                bool less_than):
-  COracle(data, labels), less_than(less_than){
+  AbstractOracle(data, labels), less_than(less_than){
   
   // sorted_data is a matrix where each column is the 
   // argsort value of the corresponding hypothesis
@@ -43,13 +43,13 @@ CDecisionStump::CDecisionStump(std::vector<svec>& data,
   return;
 }
 
-CDecisionStump::~CDecisionStump(){ 
+DecisionStump::~CDecisionStump(){ 
   std::cout << "Total time spent in weak learner: " 
             << timer.total_cpu << std::endl;
   return;
 }
 
-CWeakLearnerDstump* CDecisionStump::max_edge_wl(const dvec& dist){
+CWeakLearnerDstump* DecisionStump::max_edge_wl(const dvec& dist){
 
   double best_threshold = 1.0;
   double best_edge = -1.0;
@@ -127,7 +127,7 @@ CWeakLearnerDstump* CDecisionStump::max_edge_wl(const dvec& dist){
   return wl;
 }
 
-void CDecisionStump::fbthresh_ge(const size_t& idx, 
+void DecisionStump::fbthresh_ge(const size_t& idx, 
                                  const double& dist_diff, 
                                  const dvec& dist, 
                                  const double& init_edge,
@@ -185,7 +185,7 @@ void CDecisionStump::fbthresh_ge(const size_t& idx,
 }
 
 
-void CDecisionStump::fbthresh_le(const size_t& idx, 
+void DecisionStump::fbthresh_le(const size_t& idx, 
                                  const double& dist_diff, 
                                  const dvec& dist, 
                                  const double& init_edge,
@@ -243,7 +243,7 @@ void CDecisionStump::fbthresh_le(const size_t& idx,
 }
 
 
-void CDecisionStump::fbthresh(const size_t& idx, 
+void DecisionStump::fbthresh(const size_t& idx, 
                               const dvec& dist, 
                               const double& init_edge, 
                               double& best_threshold, 
@@ -286,7 +286,7 @@ void CDecisionStump::fbthresh(const size_t& idx,
 }
 
 
-ivec CDecisionStump::argsort(svec unsorted){
+ivec DecisionStump::argsort(svec unsorted){
   
   size_t dim = unsorted.nnz;
   

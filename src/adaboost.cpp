@@ -23,17 +23,22 @@
 #include "adaboost.hpp"
 
 
-CAdaBoost::CAdaBoost(COracle* &oracle, 
+AdaBoost::AdaBoost(AbstractOracle* &oracle,
                      const int& num_pt, 
                      const int& max_iter,
 		     const int& disp_freq):
-  CBooster(oracle, num_pt, max_iter,disp_freq){
+  AbstractBooster(oracle, num_pt, max_iter,disp_freq){
   alpha = 0.0;
   return;
 }
 
+AdaBoost::~CAdaBoost()
+{
+    // nothing to do here
+    return;
+}
 
-void CAdaBoost::update_weights(const CWeakLearner& wl){
+void AdaBoost::update_weights(const WeakLearner& wl){
   
   svec pred = wl.get_prediction();
   
@@ -51,20 +56,20 @@ void CAdaBoost::update_weights(const CWeakLearner& wl){
 }
 
 
-void CAdaBoost::update_linear_ensemble(const CWeakLearner& wl){
+void AdaBoost::update_linear_ensemble(const WeakLearner& wl){
   
   double gamma = wl.get_edge();
   double eps = 0.5*(1.0 - gamma);
   alpha = 0.5*log((1-eps-1e-4)/(eps+1e-4));
-  weighted_wl wwl(&wl, alpha);
+  WeightedWeakLearner wwl(&wl, alpha);
   model.add(wwl);
   
   return;
 }
 
-bool CAdaBoost::stopping_criterion(std::ostream& os){
+bool AdaBoost::stopping_criterion(std::ostream& os){
   return false;
 }
 
 
-void CAdaBoost::update_stopping_criterion(const CWeakLearner& wl){}
+void AdaBoost::update_stopping_criterion(const WeakLearner& wl){}

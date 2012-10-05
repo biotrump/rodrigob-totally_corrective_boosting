@@ -35,8 +35,8 @@
 // using namespace std; 
 
 
-// Decision stump oracle
-class CDecisionStump: public COracle {
+/// Decision stump oracle
+class DecisionStump: public AbstractOracle {
 
 private:
 
@@ -51,11 +51,11 @@ private:
   CTimer timer;
   
 public:
-  CDecisionStump(std::vector<svec>& data, 
+  DecisionStump(std::vector<svec>& data,
                  std::vector<int>& labels, 
                  bool less_than);
 
-  ~CDecisionStump();
+  ~DecisionStump();
 
   // given distribution return weak learner with maximum edge
   CWeakLearnerDstump* max_edge_wl(const dvec& dist); 

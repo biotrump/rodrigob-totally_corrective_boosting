@@ -27,28 +27,28 @@
 /** Derived class. Implements AdaBoost 
  */
 
-class CAdaBoost: public CBooster{
+class AdaBoost: public AbstractBooster{
 
 private:
   double alpha;
   
 protected:
   
-  void update_weights(const CWeakLearner& wl);
+  void update_weights(const WeakLearner& wl);
   
-  void update_linear_ensemble(const CWeakLearner& wl);
+  void update_linear_ensemble(const WeakLearner& wl);
 
   bool stopping_criterion(std::ostream& os);
 
-  void update_stopping_criterion(const CWeakLearner& wl);
+  void update_stopping_criterion(const WeakLearner& wl);
   
 public:
 
-  CAdaBoost(COracle* &oracle, 
+  AdaBoost(AbstractOracle* &oracle,
             const int& num_pt, 
             const int& max_iter,
 	    const int& disp_freq);
-  ~CAdaBoost(){};
+  ~AdaBoost();
   
 };
 

@@ -23,26 +23,26 @@
 #include "weak_learner.hpp"
 #include "parse.hpp"
 
-CWeakLearner::CWeakLearner():
+WeakLearner::WeakLearner():
   wt(), edge(0), prediction(){}
 
-CWeakLearner::CWeakLearner(const svec& wt, 
+WeakLearner::WeakLearner(const svec& wt,
                            const double& edge, 
                            const svec& prediction):
   wt(wt), edge(edge), prediction(prediction){}
 
-CWeakLearner::CWeakLearner(const CWeakLearner& wl): 
+WeakLearner::WeakLearner(const WeakLearner& wl):
   wt(wl.wt), edge(wl.edge), prediction(wl.prediction){ }
 
-double CWeakLearner::predict(const dvec& x) const{
+double WeakLearner::predict(const dvec& x) const{
   return dot(wt, x);
 }
 
-double CWeakLearner::predict(const svec& x) const{
+double WeakLearner::predict(const svec& x) const{
   return dot(wt, x);
 }
 
-dvec CWeakLearner::predict(const std::vector<svec>& Data) const{
+dvec WeakLearner::predict(const std::vector<svec>& Data) const{
   
 
   dvec result(Data[0].dim);
@@ -65,18 +65,18 @@ dvec CWeakLearner::predict(const std::vector<svec>& Data) const{
   return result;
 }
 
-std::string CWeakLearner::get_type() const {
+std::string WeakLearner::get_type() const {
   return "RAWDATA";
 }
 
-void CWeakLearner::dump(std::ostream& os) const{
+void WeakLearner::dump(std::ostream& os) const{
 
   os << wt;
   os << "Edge: " << edge << std::endl;
   return;
 }
 
-void CWeakLearner::load(std::istream& in){
+void WeakLearner::load(std::istream& in){
   try {
     in >> wt;
     expect_keyword(in,"Edge:");
@@ -90,23 +90,23 @@ void CWeakLearner::load(std::istream& in){
 }
 
 
-bool CWeakLearner::equal(const CWeakLearner *wl) const{
+bool WeakLearner::equal(const WeakLearner *wl) const{
   return ( this->wt == wl->get_wt());
 }
 
 
-std::ostream& operator << (std::ostream& os, const CWeakLearner& wl){
+std::ostream& operator << (std::ostream& os, const WeakLearner& wl){
   wl.dump(os);
   return os;
 }
 
-std::istream& operator >> (std::istream& in, CWeakLearner& wl){
+std::istream& operator >> (std::istream& in, WeakLearner& wl){
   wl.load(in);
   return in;
 }
 
 
-bool operator == (const CWeakLearner& wl1, const CWeakLearner& wl2){
+bool operator == (const WeakLearner& wl1, const WeakLearner& wl2){
 
   return wl1.equal(&wl2);
 }

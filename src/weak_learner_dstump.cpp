@@ -24,7 +24,7 @@
 #include "parse.hpp"
 
 CWeakLearnerDstump::CWeakLearnerDstump():
-  CWeakLearner(),
+  WeakLearner(),
   thresh(0), direction(true), idx(0){}
 
 //BUG: wt is completely unnecessary. 
@@ -34,13 +34,13 @@ CWeakLearnerDstump::CWeakLearnerDstump(const svec& wt,
 				       const double& thresh,
 				       const bool& direction,
 				       const int& idx):
-  CWeakLearner(wt,edge,prediction), 
+  WeakLearner(wt,edge,prediction), 
   thresh(thresh), direction(direction), idx(idx){}
 
 
 
 CWeakLearnerDstump::CWeakLearnerDstump(const CWeakLearnerDstump& wl): 
-CWeakLearner(wt,edge,prediction), thresh(thresh), direction(direction){}
+WeakLearner(wt,edge,prediction), thresh(thresh), direction(direction){}
 
 std::string CWeakLearnerDstump::get_type() const {
   return "DSTUMP";
@@ -135,7 +135,7 @@ void CWeakLearnerDstump::load(std::istream& in){
   return;
 }
 
-bool CWeakLearnerDstump::equal(const CWeakLearner *wl) const{
+bool CWeakLearnerDstump::equal(const WeakLearner *wl) const{
   return ( this->thresh == wl->get_thresh() 
 	   && this->direction == wl->get_direction()
 	   && this->idx == wl->get_idx()

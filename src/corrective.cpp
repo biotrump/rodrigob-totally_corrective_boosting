@@ -24,14 +24,14 @@
 #include "corrective.hpp"
 
 
-CCorrective::CCorrective(COracle* &oracle, 
+CCorrective::CCorrective(AbstractOracle* &oracle, 
 			 const int& num_pt, 
 			 const int& max_iter,
 			 const double& eps, 
 			 const double& nu,
 			 const bool& linesearch,
 			 const int& disp_freq):
-  CBooster(oracle, num_pt, max_iter,disp_freq), 
+  AbstractBooster(oracle, num_pt, max_iter,disp_freq), 
   linesearch(linesearch), 
   minPt1dt1(-1.0), 
   minPqdq1(1.0), 
@@ -41,7 +41,7 @@ CCorrective::CCorrective(COracle* &oracle,
   return;
 }
 
-CCorrective::CCorrective(COracle* &oracle, 
+CCorrective::CCorrective(AbstractOracle* &oracle, 
                          const int& num_pt, 
                          const int& max_iter,
                          const double& eps, 
@@ -49,7 +49,7 @@ CCorrective::CCorrective(COracle* &oracle,
                          const double& nu,
                          const bool& linesearch,
 			 const int& disp_freq):
-  CBooster(oracle, num_pt, max_iter,disp_freq), 
+  AbstractBooster(oracle, num_pt, max_iter,disp_freq), 
   linesearch(linesearch), 
   minPt1dt1(-1.0), 
   minPqdq1(1.0), 
@@ -59,7 +59,7 @@ CCorrective::CCorrective(COracle* &oracle,
   return;
   }
 
-void CCorrective::update_weights(const CWeakLearner& wl){
+void CCorrective::update_weights(const WeakLearner& wl){
   
   double exp_max = 0.0;
   
@@ -80,7 +80,7 @@ void CCorrective::update_weights(const CWeakLearner& wl){
 }
 
 
-void CCorrective::update_linear_ensemble(const CWeakLearner& wl){
+void CCorrective::update_linear_ensemble(const WeakLearner& wl){
 
   std::cout << "Num of wl: " << model.size() << std::endl;
   
@@ -122,7 +122,7 @@ void CCorrective::update_linear_ensemble(const CWeakLearner& wl){
   // update the other weights
   model.scale_wts(1.0-alpha);
 
-  weighted_wl wwl(&wl, alpha);
+  WeightedWeakLearner wwl(&wl, alpha);
   model.add(wwl);
 
   if(UW.dim ==0){
@@ -148,7 +148,7 @@ bool CCorrective::stopping_criterion(std::ostream& os){
   return(minPqdq1 <=  minPt1dt1 + eps/2.0);
 }
 
-void CCorrective::update_stopping_criterion(const CWeakLearner& wl){
+void CCorrective::update_stopping_criterion(const WeakLearner& wl){
   
   minPqdq1 = std::min(wl.get_edge()+(relent(dist)/eta), minPqdq1);
   return;

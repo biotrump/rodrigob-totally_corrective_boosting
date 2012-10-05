@@ -23,15 +23,15 @@
 
 #include "svm.hpp"
 
-CSVM::CSVM(std::vector<svec>& data, 
+Svm::Svm(std::vector<svec>& data, 
            std::vector<int>& labels, 
            const bool& transposed,
            const bool& reflexive):
-  COracle(data, labels, transposed), reflexive(reflexive){}
+  AbstractOracle(data, labels, transposed), reflexive(reflexive){}
 
-CSVM::~CSVM(){}
+Svm::~CSVM(){}
 
-CWeakLearner* CSVM::max_edge_wl(const dvec& dist){
+WeakLearner* Svm::max_edge_wl(const dvec& dist){
 
   dvec edges;
   
@@ -96,7 +96,7 @@ CWeakLearner* CSVM::max_edge_wl(const dvec& dist){
     double edge = -min_edge;
     // std::cout << "reflexive : " << min_idx << "  " << edge << std::endl; 
     
-    CWeakLearner* wl = new CWeakLearner(wt, edge, prediction);
+    WeakLearner* wl = new WeakLearner(wt, edge, prediction);
     return wl;
   }
   
@@ -123,6 +123,6 @@ CWeakLearner* CSVM::max_edge_wl(const dvec& dist){
   double edge = max_edge;
   // std::cout << "non reflexive : " << max_idx << "  " << edge << std::endl; 
 
-  CWeakLearner* wl = new CWeakLearner(wt, edge, prediction);
+  WeakLearner* wl = new WeakLearner(wt, edge, prediction);
   return wl; 
 }

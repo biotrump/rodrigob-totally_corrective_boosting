@@ -32,7 +32,7 @@ COptimizer_LBFGSB::COptimizer_LBFGSB(const size_t& dim,
                                      const double& nu,
                                      const double& epsilon, 
                                      const bool& binary):
-  COptimizer(dim, transposed, eta, nu, epsilon, binary), 
+  AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary), 
   lambda(0.0), mu(1.0){ 
   return;
 }

@@ -27,7 +27,7 @@
 /** Derived class. Implements Corrective 
  */
 
-class CCorrective: public CBooster{
+class CCorrective: public AbstractBooster{
 
 private:
 
@@ -55,13 +55,13 @@ private:
 
   protected:
 
-  void update_weights(const CWeakLearner& wl);
+  void update_weights(const WeakLearner& wl);
   
-  void update_linear_ensemble(const CWeakLearner& wl);
+  void update_linear_ensemble(const WeakLearner& wl);
 
   bool stopping_criterion(std::ostream& os);
 
-  void update_stopping_criterion(const CWeakLearner& wl);
+  void update_stopping_criterion(const WeakLearner& wl);
 
   double proj_simplex(dvec& dist, const double& exp_max);
 
@@ -71,7 +71,7 @@ private:
   
   public:
 
-  CCorrective(COracle* &oracle, 
+  CCorrective(AbstractOracle* &oracle, 
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
@@ -79,7 +79,7 @@ private:
 	      const bool& linesearch,
 	      const int& disp_freq);
 
-  CCorrective(COracle* &oracle, 
+  CCorrective(AbstractOracle* &oracle, 
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 

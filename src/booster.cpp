@@ -22,7 +22,7 @@
 #include <cassert>
 #include "booster.hpp"
 
-CBooster::CBooster(COracle* &oracle, 
+AbstractBooster::AbstractBooster(AbstractOracle* &oracle, 
                    const int& num_pt, 
                    const int& max_iter):
   oracle(oracle), num_pt(num_pt), max_iter(max_iter), disp_freq(1){
@@ -37,7 +37,7 @@ CBooster::CBooster(COracle* &oracle,
   return;
 }
 
-CBooster::CBooster(COracle* &oracle, 
+AbstractBooster::AbstractBooster(AbstractOracle* &oracle, 
                    const int& num_pt, 
                    const int& max_iter,
 		   const int& disp_freq):
@@ -54,16 +54,16 @@ CBooster::CBooster(COracle* &oracle,
 
 
 
-CBooster::~CBooster(){ 
+AbstractBooster::~CBooster(){ 
   return;
 }
 
-size_t CBooster::boost(std::ostream& os){
+size_t AbstractBooster::boost(std::ostream& os){
   int i = 0;
   size_t num_models = 0;
   for(i = 0; i < max_iter; i++){
     timer.start();
-    CWeakLearner* wl = oracle->max_edge_wl(dist);
+    WeakLearner* wl = oracle->max_edge_wl(dist);
     update_stopping_criterion(*wl);
     if(stopping_criterion(os)){
       break;

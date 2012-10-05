@@ -24,12 +24,12 @@
 #include "lpboost.hpp"
 #include "vec.hpp"
 
-CLPBoost::CLPBoost(COracle* &oracle, 
+LPBoost::LPBoost(AbstractOracle* &oracle, 
                    const int& num_pt, 
                    const int& max_iter,
                    const double& eps,
                    const double& nu):
-  CBooster(oracle, num_pt, max_iter), minPt1dt1(-1.0), minPqdq1(1.0), eps(eps), nu(nu){
+  AbstractBooster(oracle, num_pt, max_iter), minPt1dt1(-1.0), minPqdq1(1.0), eps(eps), nu(nu){
   
   solver.setLogLevel(0);
   solver.resize(0, 1+num_pt);
@@ -63,30 +63,30 @@ CLPBoost::CLPBoost(COracle* &oracle,
   return;
 }
 
-CLPBoost::~CLPBoost(void){
+LPBoost::~CLPBoost(void){
   
 }
 
-void CLPBoost::update_linear_ensemble(const CWeakLearner& wl){
-  weighted_wl wwl(&wl, 1.0);
+void LPBoost::update_linear_ensemble(const WeakLearner& wl){
+  WeightedWeakLearner wwl(&wl, 1.0);
   model.add(wwl);
   return;
 }
 
-bool CLPBoost::stopping_criterion(std::ostream& os){
+bool LPBoost::stopping_criterion(std::ostream& os){
   os << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
   return(minPqdq1 <=  minPt1dt1 + eps/2.0);
 }
 
 
-void CLPBoost::update_stopping_criterion(const CWeakLearner& wl){
+void LPBoost::update_stopping_criterion(const WeakLearner& wl){
 
   double gamma = wl.get_edge(); 
   if(gamma < minPqdq1) minPqdq1 = gamma;
   return;
 }
 
-void CLPBoost::update_weights(const CWeakLearner& wl){
+void LPBoost::update_weights(const WeakLearner& wl){
   
   // The predictions are already pre-multiplied with the labels already
   // in the weak learner

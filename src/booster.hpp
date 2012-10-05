@@ -20,72 +20,69 @@
 #ifndef _BOOSTER_HPP_
 #define _BOOSTER_HPP_
 
-#include <vector>
-#include <iostream>
-
 #include "ensemble.hpp"
 #include "oracle.hpp"
 #include "timer.hpp"
 
+#include <vector>
+#include <iostream>
 
 
-/** Base Class to encapsulate a boosting algorithm. Different
-    implementations have to implement the virtual methods in this class
-    to specify a full fledged boosting algorithm.
-*/ 
-
-
-class CBooster{
+/// Base Class to encapsulate a boosting algorithm. Different
+/// implementations have to implement the virtual methods in this class
+/// to specify a full fledged boosting algorithm.
+class AbstractBooster {
 
 protected:
     
-  // Oracle to supply hypothesis with max edge
-  COracle* oracle;
+  /// Oracle to supply hypothesis with max edge
+  AbstractOracle* oracle;
 
-  // Number of data points 
+  /// Number of data points
   int num_pt;
   
-  // Maximum number of iterations
+  /// Maximum number of iterations
   int max_iter;
 
-  // Affects how often we dump the model to file
+  /// Affects how often we dump the model to file
   int disp_freq;
   
-  // The model is just an ensemble of weak hypothesis seen so far
-  CEnsemble model;
+  /// The model is just an ensemble of weak hypothesis seen so far
+  Ensemble model;
   
-  // Distribution on the examples
+  /// Distribution on the examples
   dvec dist;
 
-  // Keep track of time per iteration 
+  /// Keep track of time per iteration
   CTimer timer;
 
     
-  virtual void update_weights(const CWeakLearner& wl)=0;
+  virtual void update_weights(const WeakLearner& wl)=0;
   
-  virtual void update_linear_ensemble(const CWeakLearner& wl)=0;
+  virtual void update_linear_ensemble(const WeakLearner& wl)=0;
   
   virtual bool stopping_criterion(std::ostream& os)=0;
   
-  virtual void update_stopping_criterion(const CWeakLearner& wl)=0;
+  virtual void update_stopping_criterion(const WeakLearner& wl)=0;
   
 public:
     
-  CBooster(COracle* &oracle, 
+  AbstractBooster(AbstractOracle* &oracle,
            const int& num_pt, 
            const int& max_iter);
 
 
-  CBooster(COracle* &oracle, 
+  AbstractBooster(AbstractOracle* &oracle,
            const int& num_pt, 
            const int& max_iter,
 	   const int& disp_freq);
 
-  virtual ~CBooster();
-  // Boost and save intermediate results
+  virtual ~AbstractBooster();
+
+  /// Boost and save intermediate results
   size_t boost(std::ostream& os = std::cout);
   
-  CEnsemble get_ensemble(void){ return model; }
+  Ensemble get_ensemble(void){ return model; }
 
 };
 

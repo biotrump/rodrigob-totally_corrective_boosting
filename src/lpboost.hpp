@@ -20,15 +20,18 @@
 #ifndef _LPBOOST_HPP_
 #define _LPBOOST_HPP_
 
+#if not defined(USE_CLP)
+#error This file should not be included if the COIN Linear Programming library is not included.
+#endif
+
 #include <coin/ClpSimplex.hpp>
 
 #include "booster.hpp"
 #include "weak_learner.hpp"
 
 
-// Derived class. Implements LPBoost 
-
-class CLPBoost: public CBooster{
+/// Derived class. Implements LPBoost
+class LPBoost: public AbstractBooster{
   
 private:
   
@@ -51,22 +54,22 @@ private:
   
 protected:
   
-  void update_weights(const CWeakLearner& wl);
+  void update_weights(const WeakLearner& wl);
   
-  void update_linear_ensemble(const CWeakLearner& wl);
+  void update_linear_ensemble(const WeakLearner& wl);
 
   bool stopping_criterion(std::ostream& os);
 
-  void update_stopping_criterion(const CWeakLearner& wl);
+  void update_stopping_criterion(const WeakLearner& wl);
   
 public:
 
-  CLPBoost(COracle* &oracle, 
+  LPBoost(AbstractOracle* &oracle,
            const int& num_pt, 
            const int& max_iter,
            const double& eps,
            const double& nu);
-  ~CLPBoost(void);
+  ~LPBoost(void);
   
 };
 

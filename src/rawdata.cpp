@@ -27,11 +27,11 @@ CRawData::CRawData(std::vector<svec>& data,
                    std::vector<int>& labels, 
                    const bool& transposed,
                    const bool& reflexive):
-  COracle(data, labels, transposed), reflexive(reflexive){}
+  AbstractOracle(data, labels, transposed), reflexive(reflexive){}
 
 CRawData::~CRawData(){ }
 
-CWeakLearner* CRawData::max_edge_wl(const dvec& dist){
+WeakLearner* CRawData::max_edge_wl(const dvec& dist){
   
   dvec edges;
   
@@ -91,7 +91,7 @@ CWeakLearner* CRawData::max_edge_wl(const dvec& dist){
     // wt and prediction vectors are deleted and the memory is freed
     
     //return CWeakLearner(wt, edge, prediction);
-    CWeakLearner* wl = new CWeakLearner(wt, edge, prediction);
+    WeakLearner* wl = new WeakLearner(wt, edge, prediction);
     //std::cout << "hyp: " << min_idx << std::endl;
     return wl;
   }
@@ -115,7 +115,7 @@ CWeakLearner* CRawData::max_edge_wl(const dvec& dist){
   
   double edge = max_edge;
   
-  CWeakLearner* wl = new CWeakLearner(wt, edge, prediction);
+  WeakLearner* wl = new WeakLearner(wt, edge, prediction);
   //std::cout << "hyp: " << min_idx << std::endl;
   return wl;
 }

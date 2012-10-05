@@ -34,7 +34,7 @@ COptimizer_TAO::COptimizer_TAO(const size_t& dim,
                                const bool& binary, 
                                int& argc, 
                                char** argv):
-  COptimizer(dim, transposed, eta, nu, epsilon, binary), 
+  AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary), 
   lambda(0.0), mu(1.0) { 
   
   static  char help[] = "Augmented Lagrangian solver using TAO";

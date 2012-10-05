@@ -28,7 +28,7 @@
 #include "weak_learner.hpp"
 #include "weak_learner_dstump.hpp"
 
-class CWeakLearnerDstump: public CWeakLearner{
+class CWeakLearnerDstump: public WeakLearner{
   //class CWeakLearnerDstump{
 private:
 
@@ -68,7 +68,7 @@ public:
   // methods to dump and load data
   void dump(std::ostream& os) const;
   void load(std::istream& in);
-  bool equal(const CWeakLearner *wl) const;
+  bool equal(const WeakLearner *wl) const;
 
   // accessor methods
   bool get_direction(void) const {return direction; }

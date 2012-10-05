@@ -32,7 +32,7 @@ namespace LBFGSB{
   const size_t lbfgsb_m = 5; // Past gradients stored in lbfgsb
 }
 
-class COptimizer_LBFGSB : public COptimizer {
+class COptimizer_LBFGSB : public AbstractOptimizer {
   
 private:
   // Dual variable value we are adjusting

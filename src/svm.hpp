@@ -28,20 +28,20 @@
 #include "vec.hpp"
 #include "oracle.hpp"
 
-class CSVM: public COracle {
+class Svm: public AbstractOracle {
   
 private:
   bool reflexive; // if true then training set is [data, -data]
   
 public:
-  CSVM(std::vector<svec>& data, 
+  Svm(std::vector<svec>& data,
        std::vector<int>& labels,
        const bool& transposed, 
        const bool& reflexive);
-  ~CSVM();
+  ~Svm();
   
   // given distribution return weak learner with maximum edge
-  CWeakLearner* max_edge_wl(const dvec& dist); 
+  WeakLearner* max_edge_wl(const dvec& dist); 
   
 };
 

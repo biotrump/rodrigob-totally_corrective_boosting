@@ -26,7 +26,7 @@
 
 // Derived class. Implements ERLPBoost 
 
-class CERLPBoost: public CBooster{
+class CERLPBoost: public AbstractBooster{
 
 private:
   
@@ -53,36 +53,36 @@ private:
   double eta;
     
   // solver
-  COptimizer* solver;
+  AbstractOptimizer* solver;
   
 protected:
   
-  void update_weights(const CWeakLearner& wl);
+  void update_weights(const WeakLearner& wl);
   
-  void update_linear_ensemble(const CWeakLearner& wl);
+  void update_linear_ensemble(const WeakLearner& wl);
 
   bool stopping_criterion(std::ostream& os);
 
-  void update_stopping_criterion(const CWeakLearner& wl);
+  void update_stopping_criterion(const WeakLearner& wl);
   
 public:
 
-  CERLPBoost(COracle* &oracle, 
+  CERLPBoost(AbstractOracle* &oracle,
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
              const double& nu,
              const bool& binary,
-             COptimizer* &solver);
+             AbstractOptimizer* &solver);
 
-  CERLPBoost(COracle* &oracle, 
+  CERLPBoost(AbstractOracle* &oracle,
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
 	     const double& eta,
              const double& nu,
              const bool& binary,
-             COptimizer* &solver);
+             AbstractOptimizer* &solver);
 
   ~CERLPBoost(void);
   

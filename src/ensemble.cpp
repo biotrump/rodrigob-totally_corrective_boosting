@@ -35,7 +35,7 @@
 #include "parse.hpp"
 
 // predict on a single example
-double CEnsemble::predict(const dvec& x) const{
+double Ensemble::predict(const dvec& x) const{
 
   double result = 0.0;
   for(wwl_citr it = ensemble.begin(); it != ensemble.end(); it++)
@@ -51,7 +51,7 @@ double CEnsemble::predict(const dvec& x) const{
 }
 
 // predict on a single example
-double CEnsemble::predict(const svec& x) const{
+double Ensemble::predict(const svec& x) const{
 
 
   double result = 0.0;
@@ -69,7 +69,7 @@ double CEnsemble::predict(const svec& x) const{
 }
 
 
-dvec CEnsemble::predict(const std::vector<svec>& data) const{
+dvec Ensemble::predict(const std::vector<svec>& data) const{
 
   dvec result(data[0].dim);
 
@@ -106,7 +106,7 @@ dvec CEnsemble::predict(const std::vector<svec>& data) const{
 //   return false;
 // }
 
-dvec CEnsemble::get_wts() const{
+dvec Ensemble::get_wts() const{
   int size = (int)ensemble.size();
   dvec result(size);
 
@@ -116,7 +116,7 @@ dvec CEnsemble::get_wts() const{
   return result;
 }
 
-void CEnsemble::set_wts(const dvec& wts){
+void Ensemble::set_wts(const dvec& wts){
   assert(wts.dim >= ensemble.size());
   wwl_itr it = ensemble.begin();
   double* val = wts.val;
@@ -125,20 +125,20 @@ void CEnsemble::set_wts(const dvec& wts){
   return;
 }
 
-void CEnsemble::scale_wts(const double& scale){
+void Ensemble::scale_wts(const double& scale){
   for(wwl_itr it = ensemble.begin(); it != ensemble.end(); it++)
     (*it).scale_wt(scale);
   return;
   
 }
 
-void CEnsemble::set_wt(const double& wt, const size_t& idx){
+void Ensemble::set_wt(const double& wt, const size_t& idx){
   assert(idx < ensemble.size());
   ensemble[idx].set_wt(wt);
   return;
 }
 
-void CEnsemble::add_wt(const double& wt, const size_t& idx){
+void Ensemble::add_wt(const double& wt, const size_t& idx){
   assert(idx < ensemble.size());
   ensemble[idx].add_wt(wt);
   return;
@@ -148,9 +148,9 @@ void CEnsemble::add_wt(const double& wt, const size_t& idx){
 // true if weak learner already exists 
 // in that case simply add the wt to the 
 // found weak learner
-bool CEnsemble::add(const weighted_wl& wwl){ 
+bool Ensemble::add(const WeightedWeakLearner& wwl){ 
   
-  std::vector<weighted_wl>::iterator it = 
+  std::vector<WeightedWeakLearner>::iterator it = 
     std::find(ensemble.begin(), ensemble.end(), wwl);
   
   if(it == ensemble.end()){
@@ -164,7 +164,7 @@ bool CEnsemble::add(const weighted_wl& wwl){
   
 }  
 
-std::ostream& operator << (std::ostream& os, const weighted_wl& wwl){
+std::ostream& operator << (std::ostream& os, const WeightedWeakLearner& wwl){
   
   os << *wwl.wl;
   os << "weight: " << wwl.wt << std::endl; 
@@ -172,10 +172,10 @@ std::ostream& operator << (std::ostream& os, const weighted_wl& wwl){
   
 }
 
-std::istream& operator >> (std::istream& in, weighted_wl& wwl){
+std::istream& operator >> (std::istream& in, WeightedWeakLearner& wwl){
 
    try{
-     in >> *(const_cast<CWeakLearner *> (wwl.wl));
+     in >> *(const_cast<WeakLearner *> (wwl.wl));
      expect_keyword(in,"weight:");
      in >> wwl.wt;
    }
@@ -186,7 +186,7 @@ std::istream& operator >> (std::istream& in, weighted_wl& wwl){
   return in;
 }
 
-std::ostream& operator << (std::ostream& os, const CEnsemble& e){
+std::ostream& operator << (std::ostream& os, const Ensemble& e){
   std::string typ;
 
   os << "MODEL BEGIN" << std::endl;
@@ -206,7 +206,7 @@ std::ostream& operator << (std::ostream& os, const CEnsemble& e){
 }
 
 
-std::istream& operator >> (std::istream& in, CEnsemble& e){
+std::istream& operator >> (std::istream& in, Ensemble& e){
   int num_wls;
   std::string wl_type;
   try {
@@ -220,13 +220,13 @@ std::istream& operator >> (std::istream& in, CEnsemble& e){
     for (int i = 0; i < num_wls; i++) {
       if (wl_type == "DSTUMP") {
 	CWeakLearnerDstump *wl = new CWeakLearnerDstump;
-	weighted_wl wwl(wl,0.0);
+	WeightedWeakLearner wwl(wl,0.0);
 	in >> wwl;
 	e.ensemble.push_back(wwl);
       }
       else if (wl_type == "RAWDATA") {
-	CWeakLearner *wl = new CWeakLearner;
-	weighted_wl wwl(wl,0.0);
+	WeakLearner *wl = new WeakLearner;
+	WeightedWeakLearner wwl(wl,0.0);
 	in >> wwl;
 	e.ensemble.push_back(wwl);
       }

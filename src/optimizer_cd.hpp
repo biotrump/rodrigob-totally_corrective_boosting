@@ -32,7 +32,7 @@ namespace CD{
 }
 
 
-class COptimizer_CD : public COptimizer {
+class COptimizer_CD : public AbstractOptimizer {
   
 private:
   double proj_simplex(dvec& dist, const double& exp_max);

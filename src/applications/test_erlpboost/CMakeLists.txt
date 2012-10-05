@@ -23,7 +23,7 @@ project (TotallyCorrectiveEntropyRegularizedBoosting)
 
 file(GLOB SrcCpp 
   "./*.cpp"
-  "${src_folrder}/*.cpp"
+  "${src_folder}/*.cpp"
 )
 
 

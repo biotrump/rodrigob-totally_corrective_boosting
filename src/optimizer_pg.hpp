@@ -74,7 +74,7 @@ namespace ProjGrad{
   const size_t max_iter = 10000;
 }
 
-class COptimizer_PG : public COptimizer {
+class COptimizer_PG : public AbstractOptimizer {
 
 private:
   double phi(dvec& x, 

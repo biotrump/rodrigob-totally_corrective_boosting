@@ -28,7 +28,7 @@
 #include "vec.hpp"
 #include "oracle.hpp"
 
-class CRawData: public COracle {
+class CRawData: public AbstractOracle {
   
 private:
   bool reflexive; // if true then training set is [data, -data]
@@ -41,7 +41,7 @@ public:
   ~CRawData();
   
   // given distribution return weak learner with maximum edge
-  CWeakLearner* max_edge_wl(const dvec& dist); 
+  WeakLearner* max_edge_wl(const dvec& dist); 
   
 };
 

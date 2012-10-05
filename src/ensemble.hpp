@@ -26,20 +26,20 @@
 
 #include "weak_learner.hpp"
 
-class CEnsemble;
+class Ensemble;
 
-class weighted_wl{
+class WeightedWeakLearner{
 private:
   // Weak Learner
-  const CWeakLearner* wl;
+  const WeakLearner* wl;
   
   // Weight associated with the wl
   double wt;
   
 public:
-  weighted_wl(const CWeakLearner* _wl, const double& _wt):wl(_wl), wt(_wt){}
-  weighted_wl(const weighted_wl& wwl):wl(wwl.wl), wt(wwl.wt){}
-  ~weighted_wl(){}
+  WeightedWeakLearner(const WeakLearner* _wl, const double& _wt):wl(_wl), wt(_wt){}
+  WeightedWeakLearner(const WeightedWeakLearner& wwl):wl(wwl.wl), wt(wwl.wt){}
+  ~WeightedWeakLearner(){}
   
   void set_wt(double _wt){ wt = _wt; }
   double get_wt(void) const { return wt; }
@@ -57,8 +57,8 @@ public:
   }
   
   friend 
-  bool operator == (const weighted_wl& w1, 
-                    const weighted_wl& w2){
+  bool operator == (const WeightedWeakLearner& w1,
+                    const WeightedWeakLearner& w2){
     return (*(w1.wl) == *(w2.wl));
   }
   
@@ -66,25 +66,25 @@ public:
   // bool wl_equal(const CWeakLearner* _wl){ return (*wl == *_wl); };
 
   friend 
-  std::ostream& operator << (std::ostream& os, const weighted_wl& wwl);  
+  std::ostream& operator << (std::ostream& os, const WeightedWeakLearner& wwl);
   
   friend
-  std::istream& operator >> (std::istream& in, weighted_wl& wwl);
+  std::istream& operator >> (std::istream& in, WeightedWeakLearner& wwl);
   
 };
 
-typedef std::vector<weighted_wl>::const_iterator wwl_citr;
-typedef std::vector<weighted_wl>::iterator wwl_itr;
+typedef std::vector<WeightedWeakLearner>::const_iterator wwl_citr;
+typedef std::vector<WeightedWeakLearner>::iterator wwl_itr;
 
-class CEnsemble{
+class Ensemble{
 
 private:
 
-  std::vector<weighted_wl> ensemble;
+  std::vector<WeightedWeakLearner> ensemble;
   
 public:
   
-  bool add(const weighted_wl& wwl); 
+  bool add(const WeightedWeakLearner& wwl);
 
   // predict on single examples
   double predict(const svec& x) const;
@@ -110,10 +110,10 @@ public:
   size_t size(void) const { return ensemble.size(); } 
   
   friend
-  std::ostream& operator << (std::ostream& os, const CEnsemble& e);
+  std::ostream& operator << (std::ostream& os, const Ensemble& e);
 
   friend
-  std::istream& operator >> (std::istream& in, CEnsemble& e);
+  std::istream& operator >> (std::istream& in, Ensemble& e);
   
 };
 

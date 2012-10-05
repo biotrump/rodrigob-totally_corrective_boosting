@@ -32,7 +32,7 @@ namespace TAO{
   const size_t max_iter = 10000;
 }
 
-class COptimizer_TAO : public COptimizer {
+class COptimizer_TAO : public AbstractOptimizer {
   
 private:
   // Dual variable value we are adjusting

@@ -32,7 +32,7 @@ COptimizer_PG::COptimizer_PG(const size_t& dim,
                              const double& nu,
                              const double& epsilon,
                              const bool& binary):
-  COptimizer(dim, transposed, eta, nu, epsilon, binary){ }
+  AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary){ }
 
 // Compute solution to the Dai Fletcher projection problem
 //

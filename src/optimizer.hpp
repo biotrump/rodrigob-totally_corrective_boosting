@@ -39,7 +39,7 @@ namespace Optimizer{
   const double wt_sum_tol = 1e-3;  // How much tolerance for the sum of wt - 1 
 }
 
-class COptimizer{  
+class AbstractOptimizer{
 
 private:
 
@@ -114,14 +114,14 @@ public:
   double dual_obj;
   
   
-  COptimizer(const size_t& dim, 
+  AbstractOptimizer(const size_t& dim,
              const bool& transposed, 
              const double& eta, 
              const double& nu,
              const double& epsilon,
              const bool& binary = false); 
   
-  virtual ~COptimizer(void); 
+  virtual ~AbstractOptimizer(void);
   
   void set_dist(const dvec& _dist){
     // dist is just a reference to the true array

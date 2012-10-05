@@ -24,14 +24,14 @@
 #include "erlpboost.hpp"
 #include "vec.hpp"
 
-CERLPBoost::CERLPBoost(COracle* &oracle, 
+CERLPBoost::CERLPBoost(AbstractOracle* &oracle, 
                        const int& num_pt, 
                        const int& max_iter,
                        const double& eps, 
                        const double& nu,
                        const bool& binary,
-                       COptimizer* &solver):
-  CBooster(oracle, num_pt, max_iter), found(false), 
+                       AbstractOptimizer* &solver):
+  AbstractBooster(oracle, num_pt, max_iter), found(false), 
   binary(binary), minPt1dt1(-1.0), minPqdq1(1.0), 
   eps(eps), nu(nu), solver(solver){
   
@@ -46,15 +46,15 @@ CERLPBoost::CERLPBoost(COracle* &oracle,
   return;
 }
 
-CERLPBoost::CERLPBoost(COracle* &oracle, 
+CERLPBoost::CERLPBoost(AbstractOracle* &oracle, 
                        const int& num_pt, 
                        const int& max_iter,
                        const double& eps, 
                        const double& eta,
                        const double& nu,
                        const bool& binary,
-                       COptimizer* &solver):
-  CBooster(oracle, num_pt, max_iter), found(false), 
+                       AbstractOptimizer* &solver):
+  AbstractBooster(oracle, num_pt, max_iter), found(false), 
   binary(binary), minPt1dt1(-1.0), minPqdq1(1.0), eps(eps),  
   nu(nu), eta(eta), solver(solver){
   
@@ -69,9 +69,9 @@ CERLPBoost::~CERLPBoost(void){
   
 }
 
-void CERLPBoost::update_linear_ensemble(const CWeakLearner& wl){
+void CERLPBoost::update_linear_ensemble(const WeakLearner& wl){
   
-  weighted_wl wwl(&wl, 0.0);
+  WeightedWeakLearner wwl(&wl, 0.0);
   found = model.add(wwl);
   
   return;
@@ -86,7 +86,7 @@ bool CERLPBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void CERLPBoost::update_stopping_criterion(const CWeakLearner& wl){
+void CERLPBoost::update_stopping_criterion(const WeakLearner& wl){
 
   double gamma = wl.get_edge();
   if(binary){
@@ -99,7 +99,7 @@ void CERLPBoost::update_stopping_criterion(const CWeakLearner& wl){
   return;
 }
 
-void CERLPBoost::update_weights(const CWeakLearner& wl){
+void CERLPBoost::update_weights(const WeakLearner& wl){
   
   // The predictions are already pre-multiplied with the labels already
   // in the weak learner

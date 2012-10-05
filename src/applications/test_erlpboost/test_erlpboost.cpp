@@ -45,11 +45,11 @@
 
 
 
-#ifdef ERLPBOOST_HAVE_TAO
+#ifdef USE_TAO
 #include "optimizer_tao.hpp"
 #endif
 
-#ifdef ERLPBOOST_HAVE_CLP
+#ifdef USE_CLP
 #include "lpboost.hpp"
 #endif
 
@@ -108,20 +108,20 @@ int main(int argc, char **argv){
   else
     c.readlibSVM(train_file, data, labels);
 
-  COracle* oracle = NULL;
+  AbstractOracle* oracle = NULL;
   
   if(oracle_type == "rawdata")
     oracle = new CRawData(data, labels, xposed, reflexive);
   else if(oracle_type == "svm")
-    oracle = new CSVM(data, labels, xposed, reflexive);
+    oracle = new Svm(data, labels, xposed, reflexive);
   else if(oracle_type == "decisionstump")
-    oracle = new CDecisionStump(data, labels, reflexive);
+    oracle = new DecisionStump(data, labels, reflexive);
   
   std::string booster_type;
   config.readInto(booster_type, "booster_type", std::string("ERLPBoost"));
   
-  CBooster* eb = NULL;
-  COptimizer* solver = NULL;
+  AbstractBooster* eb = NULL;
+  AbstractOptimizer* solver = NULL;
   
   if(booster_type == "ERLPBoost"){
     
@@ -151,12 +151,12 @@ int main(int argc, char **argv){
     of << "eta: " << eta << std::endl << std::endl;
     
     if(optimizer_type == "tao"){
-#ifdef ERLPBOOST_HAVE_TAO
+#ifdef USE_TAO
       solver = new COptimizer_TAO(labels.size(), transposed, eta, nu, eps, binary, argc, argv);
 #else                                           
       std::stringstream os;
       os << "You must compile with TAO support enabled to use TAO" 
-         << std::endl << "See README for details" << std::endl; 
+         << std::endl << "See readme.text for details" << std::endl;
       throw std::invalid_argument(os.str());
 #endif
     } else if(optimizer_type == "pg")
@@ -177,18 +177,18 @@ int main(int argc, char **argv){
     
     double nu = 0;
     config.readInto(nu, "nu", 1.0);
-#ifdef ERLPBOOST_HAVE_CLP
-    eb = new CLPBoost(oracle, labels.size(), max_iter, eps, nu);
+#ifdef USE_CLP
+    eb = new LPBoost(oracle, labels.size(), max_iter, eps, nu);
 #else
     std::stringstream os;
     os << "You must compile with COIN-OR LP solver support enabled to use LPBoost" 
-       << std::endl << "See README for details" << std::endl; 
+       << std::endl << "See readme.text for details" << std::endl;
     throw std::invalid_argument(os.str());
 #endif
   }
   else if(booster_type == "AdaBoost"){
     std::cout << "running adaboost" << std::endl;
-    eb = new CAdaBoost(oracle, labels.size(), max_iter,250);
+    eb = new AdaBoost(oracle, labels.size(), max_iter,250);
   }
   else if(booster_type == "Corrective"){
 
@@ -211,7 +211,7 @@ int main(int argc, char **argv){
   
   size_t num_models = eb->boost(of);
   
-  CEnsemble model = eb->get_ensemble();
+  Ensemble model = eb->get_ensemble();
   // of << "model" << std::endl << model;
 
   CEvaluate score;
@@ -284,7 +284,7 @@ int main(int argc, char **argv){
 
   
   for(size_t i = 0; i <num_models; i++){
-    CEnsemble gen_model;
+    Ensemble gen_model;
     in >> gen_model;
     // get gen error per iteration
     dvec genpred = gen_model.predict(test_data);

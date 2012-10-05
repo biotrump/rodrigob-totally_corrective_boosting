@@ -20,13 +20,12 @@
 #ifndef _WEAKLEARNER_HPP_
 #define _WEAKLEARNER_HPP_
 
-/** Class to encapsulate a weak learner. For now our weak learner is a
-    linear predictor. 
-*/ 
 
 #include "vec.hpp"
 
-class CWeakLearner{
+/// Class to encapsulate a weak learner. For now our weak learner is a linear predictor.
+// FIXME should separate the abstract weak learned from the linear predictor implementation
+class WeakLearner{
 
 protected:
   // svnvish: BUGBUG
@@ -43,13 +42,13 @@ protected:
   
 public:
 
-  CWeakLearner();
+  WeakLearner();
   
-  CWeakLearner(const svec& wt, const double& edge, const svec& prediction);
+  WeakLearner(const svec& wt, const double& edge, const svec& prediction);
   
-  CWeakLearner(const CWeakLearner& wl);
+  WeakLearner(const WeakLearner& wl);
   
-  virtual ~CWeakLearner(){ }
+  virtual ~WeakLearner(){ }
   
   // Predict on single example
   virtual double predict(const dvec& x) const;
@@ -62,7 +61,7 @@ public:
   // functions to get around the fact that friends can't be virtual
   virtual void dump(std::ostream& os) const;
   virtual void load(std::istream& in);
-  virtual bool equal(const CWeakLearner *wl) const;
+  virtual bool equal(const WeakLearner *wl) const;
   virtual std::string get_type() const;
   
   double get_edge(void) const { return edge; }
@@ -75,13 +74,13 @@ public:
   virtual size_t get_idx(void) const {return 0;}
 
   friend 
-  bool operator == (const CWeakLearner& wl1, const CWeakLearner& wl2);
+  bool operator == (const WeakLearner& wl1, const WeakLearner& wl2);
 
   friend 
-  std::ostream& operator << (std::ostream& os, const CWeakLearner& wl);  
+  std::ostream& operator << (std::ostream& os, const WeakLearner& wl);
 
   friend
-  std::istream& operator >> (std::istream& in, CWeakLearner& wl);
+  std::istream& operator >> (std::istream& in, WeakLearner& wl);
   
 };
 

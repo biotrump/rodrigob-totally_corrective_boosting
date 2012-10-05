@@ -60,7 +60,7 @@ double log_one_plus_x(const double& x){
   return 2.0*t*w;
 }
 
-COptimizer::COptimizer(const size_t& dim, 
+AbstractOptimizer::AbstractOptimizer(const size_t& dim, 
                        const bool& transposed, 
                        const double& eta, 
                        const double& nu,
@@ -81,7 +81,7 @@ COptimizer::COptimizer(const size_t& dim,
   return;
 }
 
-COptimizer::~COptimizer(void){
+AbstractOptimizer::~COptimizer(void){
   
   // Give up reference to dist
   dist.val = NULL;
@@ -89,7 +89,7 @@ COptimizer::~COptimizer(void){
   return;
 }
 
-void COptimizer::push_back(const svec& u){
+void AbstractOptimizer::push_back(const svec& u){
   
   double alpha = 0.0;
   
@@ -161,7 +161,7 @@ void COptimizer::push_back(const svec& u){
 }
 
 
-double COptimizer::fun_erlp(void){
+double AbstractOptimizer::fun_erlp(void){
   fun_timer.start();  
   
   dvec W;
@@ -212,14 +212,14 @@ double COptimizer::fun_erlp(void){
 
 // Compute objective function value 
 // Just a dummy forwarding function 
-double COptimizer::fun(void){
+double AbstractOptimizer::fun(void){
   if(binary)
     return fun_binary();
   else 
     return fun_erlp();
 }
 
-dvec COptimizer::grad_erlp(void){
+dvec AbstractOptimizer::grad_erlp(void){
   grad_timer.start();
   dvec grad_w;
   
@@ -259,7 +259,7 @@ dvec COptimizer::grad_erlp(void){
 // Assume that dist has been set by previous call to fun
 // compute duality gap as a side effect 
 // Just a dummy forwarding function 
-dvec COptimizer::grad(void){
+dvec AbstractOptimizer::grad(void){
   if(binary)
     return grad_binary();
   else
@@ -269,7 +269,7 @@ dvec COptimizer::grad(void){
 // Return primal objective function 
 // Assume that x, dist, and edge have already been set by previous calls
 // to grad  
-double COptimizer::primal(void){
+double AbstractOptimizer::primal(void){
   if(binary)
     return edge + (binary_relent(dist, nu)/eta);
   
@@ -277,14 +277,14 @@ double COptimizer::primal(void){
   
 }
 
-bool COptimizer::duality_gap_met(void){
+bool AbstractOptimizer::duality_gap_met(void){
   // return gap < 0.05*epsilon;
   return gap < 0.5*epsilon;
 }
 
 
 // Compute objective function value for binary boost  
-double COptimizer::fun_binary(void){
+double AbstractOptimizer::fun_binary(void){
   
   fun_timer.start();
   dvec W;
@@ -377,7 +377,7 @@ double COptimizer::fun_binary(void){
 }
 
 // Assume that dist has been set by previous call to fun
-dvec COptimizer::grad_binary(void){
+dvec AbstractOptimizer::grad_binary(void){
   
   grad_timer.start();
   dvec grad_w;
@@ -413,7 +413,7 @@ dvec COptimizer::grad_binary(void){
 }
 
 
-void COptimizer::report_stats(void){
+void AbstractOptimizer::report_stats(void){
   // dvec W;
   // W.val = x.val;
   // W.dim = num_wl;

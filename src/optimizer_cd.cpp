@@ -31,7 +31,7 @@ COptimizer_CD::COptimizer_CD(const size_t& dim,
                              const double& nu,
                              const double& epsilon,
                              const bool& binary):
-  COptimizer(dim, transposed, eta, nu, epsilon, binary){ }
+  AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary){ }
 
 int COptimizer_CD::solve(void){
   

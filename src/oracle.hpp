@@ -29,7 +29,7 @@
 #include "vec.hpp"
 #include "weak_learner.hpp"
 
-class COracle{
+class AbstractOracle{
 
 protected:
   std::vector<svec> data;
@@ -38,14 +38,14 @@ protected:
   bool transposed;
   
 public:
-  COracle(std::vector<svec>& data, 
+  AbstractOracle(std::vector<svec>& data,
           std::vector<int>& labels,
           const bool& transposed = false): 
     data(data), labels(labels), transposed(transposed){}
-  virtual ~COracle(){}
+  virtual ~AbstractOracle(){}
   
   // given distribution return weak learner with maximum edge
-  virtual CWeakLearner* max_edge_wl(const dvec& dist) = 0;   
+  virtual WeakLearner* max_edge_wl(const dvec& dist) = 0;
 };
 
 #endif
