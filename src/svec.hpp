@@ -25,6 +25,9 @@
 #include <vector>
 #include <iostream>
 
+namespace totally_corrective_boosting
+{
+
 /// Class to encapsulate a sparse vector
 class SparseVector{
 
@@ -108,11 +111,13 @@ public:
 
   friend 
   std::ostream& operator << (std::ostream& os, const SparseVector& s);
-  friend 
+  friend
   std::istream& operator >> (std::istream& in, SparseVector& s);
   friend 
   bool operator == (const SparseVector& s1, const SparseVector& s2);
 
 };
+
+} // end of namespace totally_corrective_boosting
 
 # endif

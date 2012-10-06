@@ -36,6 +36,9 @@ include_directories(
 file(GLOB SrcCpp 
   "./*.cpp"
   "${src_folder}/*.cpp"
+
+  "${project_root_folder}/libs/lbfgsb/*.cpp"
+  "${project_root_folder}/libs/lbfgsb/ap/*.cpp"
 )
 
 # Files that will not compile on all setups

@@ -25,6 +25,9 @@
 #include <vector>
 #include <iostream>
 
+namespace totally_corrective_boosting
+{
+
 /// Dense vector
 class DenseVector{
 public:
@@ -104,5 +107,7 @@ public:
   bool operator == (const DenseVector& s1, const DenseVector& s2);
   
 };
+
+} // end of namespace totally_corrective_boosting
 
 # endif

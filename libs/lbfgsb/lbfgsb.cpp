@@ -24,243 +24,244 @@ quote at least one of the references given below:
 
 #include "lbfgsb.h"
 
-//#include "../optimizer_lbfgsb.hpp"
+#include "LbfgsbOptimizer.hpp"
 
 void lbfgsbactive(const int& n,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     ap::real_1d_array& x,
-     ap::integer_1d_array& iwhere,
-     bool& prjctd,
-     bool& cnstnd,
-     bool& boxed);
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  ap::real_1d_array& x,
+                  ap::integer_1d_array& iwhere,
+                  bool& prjctd,
+                  bool& cnstnd,
+                  bool& boxed);
 void lbfgsbbmv(const int& m,
-     const ap::real_2d_array& sy,
-     ap::real_2d_array& wt,
-     const int& col,
-     const ap::real_1d_array& v,
-     ap::real_1d_array& p,
-     int& info,
-     ap::real_1d_array& workvec);
+               const ap::real_2d_array& sy,
+               ap::real_2d_array& wt,
+               const int& col,
+               const ap::real_1d_array& v,
+               ap::real_1d_array& p,
+               int& info,
+               ap::real_1d_array& workvec);
 void lbfgsbcauchy(const int& n,
-     const ap::real_1d_array& x,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     const ap::real_1d_array& g,
-     ap::integer_1d_array& iorder,
-     ap::integer_1d_array& iwhere,
-     ap::real_1d_array& t,
-     ap::real_1d_array& d,
-     ap::real_1d_array& xcp,
-     const int& m,
-     const ap::real_2d_array& wy,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& sy,
-     ap::real_2d_array& wt,
-     const double& theta,
-     const int& col,
-     const int& head,
-     ap::real_1d_array& p,
-     ap::real_1d_array& c,
-     ap::real_1d_array& wbp,
-     ap::real_1d_array& v,
-     int& nint,
-     const ap::real_1d_array& sg,
-     const ap::real_1d_array& yg,
-     const double& sbgnrm,
-     int& info,
-     ap::real_1d_array& workvec);
+                  const ap::real_1d_array& x,
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  const ap::real_1d_array& g,
+                  ap::integer_1d_array& iorder,
+                  ap::integer_1d_array& iwhere,
+                  ap::real_1d_array& t,
+                  ap::real_1d_array& d,
+                  ap::real_1d_array& xcp,
+                  const int& m,
+                  const ap::real_2d_array& wy,
+                  const ap::real_2d_array& ws,
+                  const ap::real_2d_array& sy,
+                  ap::real_2d_array& wt,
+                  const double& theta,
+                  const int& col,
+                  const int& head,
+                  ap::real_1d_array& p,
+                  ap::real_1d_array& c,
+                  ap::real_1d_array& wbp,
+                  ap::real_1d_array& v,
+                  int& nint,
+                  const ap::real_1d_array& sg,
+                  const ap::real_1d_array& yg,
+                  const double& sbgnrm,
+                  int& info,
+                  ap::real_1d_array& workvec);
 void lbfgsbcmprlb(const int& n,
-     const int& m,
-     const ap::real_1d_array& x,
-     const ap::real_1d_array& g,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& wy,
-     const ap::real_2d_array& sy,
-     ap::real_2d_array& wt,
-     const ap::real_1d_array& z,
-     ap::real_1d_array& r,
-     ap::real_1d_array& wa,
-     const ap::integer_1d_array& index,
-     const double& theta,
-     const int& col,
-     const int& head,
-     const int& nfree,
-     const bool& cnstnd,
-     int& info,
-     ap::real_1d_array& workvec,
-     ap::real_1d_array& workvec2);
+                  const int& m,
+                  const ap::real_1d_array& x,
+                  const ap::real_1d_array& g,
+                  const ap::real_2d_array& ws,
+                  const ap::real_2d_array& wy,
+                  const ap::real_2d_array& sy,
+                  ap::real_2d_array& wt,
+                  const ap::real_1d_array& z,
+                  ap::real_1d_array& r,
+                  ap::real_1d_array& wa,
+                  const ap::integer_1d_array& index,
+                  const double& theta,
+                  const int& col,
+                  const int& head,
+                  const int& nfree,
+                  const bool& cnstnd,
+                  int& info,
+                  ap::real_1d_array& workvec,
+                  ap::real_1d_array& workvec2);
 void lbfgsberrclb(const int& n,
-     const int& m,
-     const double& factr,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     int& task,
-     int& info,
-     int& k);
+                  const int& m,
+                  const double& factr,
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  int& task,
+                  int& info,
+                  int& k);
 void lbfgsbformk(const int& n,
-     const int& nsub,
-     const ap::integer_1d_array& ind,
-     const int& nenter,
-     const int& ileave,
-     const ap::integer_1d_array& indx2,
-     const int& iupdat,
-     const bool& updatd,
-     ap::real_2d_array& wn,
-     ap::real_2d_array& wn1,
-     const int& m,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& wy,
-     const ap::real_2d_array& sy,
-     const double& theta,
-     const int& col,
-     const int& head,
-     int& info,
-     ap::real_1d_array& workvec,
-     ap::real_2d_array& workmat);
+                 const int& nsub,
+                 const ap::integer_1d_array& ind,
+                 const int& nenter,
+                 const int& ileave,
+                 const ap::integer_1d_array& indx2,
+                 const int& iupdat,
+                 const bool& updatd,
+                 ap::real_2d_array& wn,
+                 ap::real_2d_array& wn1,
+                 const int& m,
+                 const ap::real_2d_array& ws,
+                 const ap::real_2d_array& wy,
+                 const ap::real_2d_array& sy,
+                 const double& theta,
+                 const int& col,
+                 const int& head,
+                 int& info,
+                 ap::real_1d_array& workvec,
+                 ap::real_2d_array& workmat);
 void lbfgsbformt(const int& m,
-     ap::real_2d_array& wt,
-     const ap::real_2d_array& sy,
-     const ap::real_2d_array& ss,
-     const int& col,
-     const double& theta,
-     int& info);
+                 ap::real_2d_array& wt,
+                 const ap::real_2d_array& sy,
+                 const ap::real_2d_array& ss,
+                 const int& col,
+                 const double& theta,
+                 int& info);
 void lbfgsbfreev(const int& n,
-     int& nfree,
-     ap::integer_1d_array& index,
-     int& nenter,
-     int& ileave,
-     ap::integer_1d_array& indx2,
-     const ap::integer_1d_array& iwhere,
-     bool& wrk,
-     const bool& updatd,
-     const bool& cnstnd,
-     const int& iter);
+                 int& nfree,
+                 ap::integer_1d_array& index,
+                 int& nenter,
+                 int& ileave,
+                 ap::integer_1d_array& indx2,
+                 const ap::integer_1d_array& iwhere,
+                 bool& wrk,
+                 const bool& updatd,
+                 const bool& cnstnd,
+                 const int& iter);
 void lbfgsbhpsolb(const int& n,
-     ap::real_1d_array& t,
-     ap::integer_1d_array& iorder,
-     const int& iheap);
+                  ap::real_1d_array& t,
+                  ap::integer_1d_array& iorder,
+                  const int& iheap);
 void lbfgsblnsrlb(const int& n,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     ap::real_1d_array& x,
-     const double& f,
-     double& fold,
-     double& gd,
-     double& gdold,
-     const ap::real_1d_array& g,
-     const ap::real_1d_array& d,
-     ap::real_1d_array& r,
-     ap::real_1d_array& t,
-     const ap::real_1d_array& z,
-     double& stp,
-     double& dnrm,
-     double& dtd,
-     double& xstep,
-     double& stpmx,
-     const int& iter,
-     int& ifun,
-     int& iback,
-     int& nfgv,
-     int& info,
-     int& task,
-     const bool& boxed,
-     const bool& cnstnd,
-     int& csave,
-     ap::integer_1d_array& isave,
-     ap::real_1d_array& dsave);
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  ap::real_1d_array& x,
+                  const double& f,
+                  double& fold,
+                  double& gd,
+                  double& gdold,
+                  const ap::real_1d_array& g,
+                  const ap::real_1d_array& d,
+                  ap::real_1d_array& r,
+                  ap::real_1d_array& t,
+                  const ap::real_1d_array& z,
+                  double& stp,
+                  double& dnrm,
+                  double& dtd,
+                  double& xstep,
+                  double& stpmx,
+                  const int& iter,
+                  int& ifun,
+                  int& iback,
+                  int& nfgv,
+                  int& info,
+                  int& task,
+                  const bool& boxed,
+                  const bool& cnstnd,
+                  int& csave,
+                  ap::integer_1d_array& isave,
+                  ap::real_1d_array& dsave);
 void lbfgsbmatupd(const int& n,
-     const int& m,
-     ap::real_2d_array& ws,
-     ap::real_2d_array& wy,
-     ap::real_2d_array& sy,
-     ap::real_2d_array& ss,
-     const ap::real_1d_array& d,
-     const ap::real_1d_array& r,
-     int& itail,
-     const int& iupdat,
-     int& col,
-     int& head,
-     double& theta,
-     const double& rr,
-     const double& dr,
-     const double& stp,
-     const double& dtd);
+                  const int& m,
+                  ap::real_2d_array& ws,
+                  ap::real_2d_array& wy,
+                  ap::real_2d_array& sy,
+                  ap::real_2d_array& ss,
+                  const ap::real_1d_array& d,
+                  const ap::real_1d_array& r,
+                  int& itail,
+                  const int& iupdat,
+                  int& col,
+                  int& head,
+                  double& theta,
+                  const double& rr,
+                  const double& dr,
+                  const double& stp,
+                  const double& dtd);
 void lbfgsbprojgr(const int& n,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     const ap::real_1d_array& x,
-     const ap::real_1d_array& g,
-     double& sbgnrm);
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  const ap::real_1d_array& x,
+                  const ap::real_1d_array& g,
+                  double& sbgnrm);
 void lbfgsbsubsm(const int& n,
-     const int& m,
-     const int& nsub,
-     const ap::integer_1d_array& ind,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     ap::real_1d_array& x,
-     ap::real_1d_array& d,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& wy,
-     const double& theta,
-     const int& col,
-     const int& head,
-     int& iword,
-     ap::real_1d_array& wv,
-     ap::real_2d_array& wn,
-     int& info);
+                 const int& m,
+                 const int& nsub,
+                 const ap::integer_1d_array& ind,
+                 const ap::real_1d_array& l,
+                 const ap::real_1d_array& u,
+                 const ap::integer_1d_array& nbd,
+                 ap::real_1d_array& x,
+                 ap::real_1d_array& d,
+                 const ap::real_2d_array& ws,
+                 const ap::real_2d_array& wy,
+                 const double& theta,
+                 const int& col,
+                 const int& head,
+                 int& iword,
+                 ap::real_1d_array& wv,
+                 ap::real_2d_array& wn,
+                 int& info);
 void lbfgsbdcsrch(const double& f,
-     const double& g,
-     double& stp,
-     const double& ftol,
-     const double& gtol,
-     const double& xtol,
-     const double& stpmin,
-     const double& stpmax,
-     int& task,
-     ap::integer_1d_array& isave,
-     ap::real_1d_array& dsave,
-     int& addinfo);
+                  const double& g,
+                  double& stp,
+                  const double& ftol,
+                  const double& gtol,
+                  const double& xtol,
+                  const double& stpmin,
+                  const double& stpmax,
+                  int& task,
+                  ap::integer_1d_array& isave,
+                  ap::real_1d_array& dsave,
+                  int& addinfo);
 void lbfgsbdcstep(double& stx,
-     double& fx,
-     double& dx,
-     double& sty,
-     double& fy,
-     double& dy,
-     double& stp,
-     const double& fp,
-     const double& dp,
-     bool& brackt,
-     const double& stpmin,
-     const double& stpmax);
+                  double& fx,
+                  double& dx,
+                  double& sty,
+                  double& fy,
+                  double& dy,
+                  double& stp,
+                  const double& fp,
+                  const double& dp,
+                  bool& brackt,
+                  const double& stpmin,
+                  const double& stpmax);
 bool additionallbfgsbstoppingcriterion(int iter,
-     const ap::real_1d_array& x,
-     double f,
-     const ap::real_1d_array& g);
+                                       const ap::real_1d_array& x,
+                                       double f,
+                                       const ap::real_1d_array& g);
 bool lbfgsbdpofa(ap::real_2d_array& a, const int& n);
 void lbfgsbdtrsl(ap::real_2d_array& t,
-     const int& n,
-     ap::real_1d_array& b,
-     const int& job,
-     int& info);
+                 const int& n,
+                 ap::real_1d_array& b,
+                 const int& job,
+                 int& info);
 void lbfgsbnewiteration(const ap::real_1d_array& x,
-     double f,
-     const ap::real_1d_array& g);
+                        double f,
+                        const ap::real_1d_array& g);
 
 // Dummy forwarding function 
 int funcgrad(const ap::real_1d_array& x0, 
-             double& obj, 
+             double& obj,
              ap::real_1d_array& g,
              void *ctx){
-  COptimizer_LBFGSB * solver = (COptimizer_LBFGSB *)ctx;
-  obj = solver->aug_lag_fg(x0, g);  
-  return 0;
+    using namespace totally_corrective_boosting;
+    LbfgsbOptimizer * solver = reinterpret_cast<LbfgsbOptimizer *>(ctx);
+    obj = solver->aug_lag_fg(x0, g);
+    return 0;
 }
 
 /*************************************************************************
@@ -350,17 +351,17 @@ and it isn't necessary to allocate it in the FuncGrad subroutine.
     R.H. Byrd, P. Lu-Chen and J. Nocedal.
 *************************************************************************/
 void lbfgsbminimize(const int& n,
-     const int& m,
-     ap::real_1d_array& x,
-     const double& epsg,
-     const double& epsf,
-     const double& epsx,
-     const int& maxits,
-     const ap::integer_1d_array& nbd,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-                    void* ctx,                     
-      int& info)
+                    const int& m,
+                    ap::real_1d_array& x,
+                    const double& epsg,
+                    const double& epsf,
+                    const double& epsx,
+                    const int& maxits,
+                    const ap::integer_1d_array& nbd,
+                    const ap::real_1d_array& l,
+                    const ap::real_1d_array& u,
+                    void* ctx,
+                    int& info)
 {
     double f;
     ap::real_1d_array g;
@@ -489,12 +490,12 @@ void lbfgsbminimize(const int& n,
     lbfgsberrclb(n, m, epsf, l, u, nbd, task, internalinfo, k);
     if( task==2||maxits<0||epsg<0||epsx<0 )
     {
-      // std::cout << "Something wrong here" << std::endl;
-      // std::cout << "task: " << task << std::endl;
-      // std::cout << "maxits: " << maxits << std::endl;
-      // std::cout << "epsg: " << epsg << std::endl;
-      // std::cout << "epsx: " << epsx << std::endl;
-      
+        // std::cout << "Something wrong here" << std::endl;
+        // std::cout << "task: " << task << std::endl;
+        // std::cout << "maxits: " << maxits << std::endl;
+        // std::cout << "epsg: " << epsg << std::endl;
+        // std::cout << "epsx: " << epsx << std::endl;
+
         info = -1;
         return;
     }
@@ -699,14 +700,14 @@ void lbfgsbminimize(const int& n,
 
 
 void lbfgsbactive(const int& n,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     ap::real_1d_array& x,
-     ap::integer_1d_array& iwhere,
-     bool& prjctd,
-     bool& cnstnd,
-     bool& boxed)
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  ap::real_1d_array& x,
+                  ap::integer_1d_array& iwhere,
+                  bool& prjctd,
+                  bool& cnstnd,
+                  bool& boxed)
 {
     int nbdd;
     int i;
@@ -769,13 +770,13 @@ void lbfgsbactive(const int& n,
 
 
 void lbfgsbbmv(const int& m,
-     const ap::real_2d_array& sy,
-     ap::real_2d_array& wt,
-     const int& col,
-     const ap::real_1d_array& v,
-     ap::real_1d_array& p,
-     int& info,
-     ap::real_1d_array& workvec)
+               const ap::real_2d_array& sy,
+               ap::real_2d_array& wt,
+               const int& col,
+               const ap::real_1d_array& v,
+               ap::real_1d_array& p,
+               int& info,
+               ap::real_1d_array& workvec)
 {
     int i;
     int k;
@@ -832,34 +833,34 @@ void lbfgsbbmv(const int& m,
 
 
 void lbfgsbcauchy(const int& n,
-     const ap::real_1d_array& x,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     const ap::real_1d_array& g,
-     ap::integer_1d_array& iorder,
-     ap::integer_1d_array& iwhere,
-     ap::real_1d_array& t,
-     ap::real_1d_array& d,
-     ap::real_1d_array& xcp,
-     const int& m,
-     const ap::real_2d_array& wy,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& sy,
-     ap::real_2d_array& wt,
-     const double& theta,
-     const int& col,
-     const int& head,
-     ap::real_1d_array& p,
-     ap::real_1d_array& c,
-     ap::real_1d_array& wbp,
-     ap::real_1d_array& v,
-     int& nint,
-     const ap::real_1d_array& sg,
-     const ap::real_1d_array& yg,
-     const double& sbgnrm,
-     int& info,
-     ap::real_1d_array& workvec)
+                  const ap::real_1d_array& x,
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  const ap::real_1d_array& g,
+                  ap::integer_1d_array& iorder,
+                  ap::integer_1d_array& iwhere,
+                  ap::real_1d_array& t,
+                  ap::real_1d_array& d,
+                  ap::real_1d_array& xcp,
+                  const int& m,
+                  const ap::real_2d_array& wy,
+                  const ap::real_2d_array& ws,
+                  const ap::real_2d_array& sy,
+                  ap::real_2d_array& wt,
+                  const double& theta,
+                  const int& col,
+                  const int& head,
+                  ap::real_1d_array& p,
+                  ap::real_1d_array& c,
+                  ap::real_1d_array& wbp,
+                  ap::real_1d_array& v,
+                  int& nint,
+                  const ap::real_1d_array& sg,
+                  const ap::real_1d_array& yg,
+                  const double& sbgnrm,
+                  int& info,
+                  ap::real_1d_array& workvec)
 {
     bool xlower;
     bool xupper;
@@ -1152,25 +1153,25 @@ void lbfgsbcauchy(const int& n,
 
 
 void lbfgsbcmprlb(const int& n,
-     const int& m,
-     const ap::real_1d_array& x,
-     const ap::real_1d_array& g,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& wy,
-     const ap::real_2d_array& sy,
-     ap::real_2d_array& wt,
-     const ap::real_1d_array& z,
-     ap::real_1d_array& r,
-     ap::real_1d_array& wa,
-     const ap::integer_1d_array& index,
-     const double& theta,
-     const int& col,
-     const int& head,
-     const int& nfree,
-     const bool& cnstnd,
-     int& info,
-     ap::real_1d_array& workvec,
-     ap::real_1d_array& workvec2)
+                  const int& m,
+                  const ap::real_1d_array& x,
+                  const ap::real_1d_array& g,
+                  const ap::real_2d_array& ws,
+                  const ap::real_2d_array& wy,
+                  const ap::real_2d_array& sy,
+                  ap::real_2d_array& wt,
+                  const ap::real_1d_array& z,
+                  ap::real_1d_array& r,
+                  ap::real_1d_array& wa,
+                  const ap::integer_1d_array& index,
+                  const double& theta,
+                  const int& col,
+                  const int& head,
+                  const int& nfree,
+                  const bool& cnstnd,
+                  int& info,
+                  ap::real_1d_array& workvec,
+                  ap::real_1d_array& workvec2)
 {
     int i;
     int j;
@@ -1218,14 +1219,14 @@ void lbfgsbcmprlb(const int& n,
 
 
 void lbfgsberrclb(const int& n,
-     const int& m,
-     const double& factr,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     int& task,
-     int& info,
-     int& k)
+                  const int& m,
+                  const double& factr,
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  int& task,
+                  int& info,
+                  int& k)
 {
     int i;
 
@@ -1233,41 +1234,41 @@ void lbfgsberrclb(const int& n,
 
     if( n<=0 )
     {
-      // std::cout << "n <= 0" << n << std::endl;
+        // std::cout << "n <= 0" << n << std::endl;
         task = 2;
     }
     if( m<=0 )
     {
-      // std::cout << "m <= 0" << m << std::endl;
+        // std::cout << "m <= 0" << m << std::endl;
         task = 2;
     }
     if( m>n )
     {
-      // std::cout << "m > n" << m << " " << n << std::endl;
+        // std::cout << "m > n" << m << " " << n << std::endl;
         task = 2;
     }
     if( factr<0 )
     {
-      // std::cout << "factr < 0" << factr << std::endl;
+        // std::cout << "factr < 0" << factr << std::endl;
         task = 2;
     }
     for(i = 1; i <= n; i++)
     {
         if( nbd(i)<0||nbd(i)>3 )
         {
-          // std::cout << "nbd problem" << nbd(i) << "  " << i << std::endl;
-          
-          task = 2;
-          info = -6;
-          k = i;
+            // std::cout << "nbd problem" << nbd(i) << "  " << i << std::endl;
+
+            task = 2;
+            info = -6;
+            k = i;
         }
         if( nbd(i)==2 )
         {
             if( l(i)>u(i) )
             {
-              // std::cout << "nbd problem1" << nbd(i) << "  " 
-              //           << i << " " << l(i) << "  " << u(i) << std::endl;
-              
+                // std::cout << "nbd problem1" << nbd(i) << "  "
+                //           << i << " " << l(i) << "  " << u(i) << std::endl;
+
                 task = 2;
                 info = -7;
                 k = i;
@@ -1279,25 +1280,25 @@ void lbfgsberrclb(const int& n,
 
 
 void lbfgsbformk(const int& n,
-     const int& nsub,
-     const ap::integer_1d_array& ind,
-     const int& nenter,
-     const int& ileave,
-     const ap::integer_1d_array& indx2,
-     const int& iupdat,
-     const bool& updatd,
-     ap::real_2d_array& wn,
-     ap::real_2d_array& wn1,
-     const int& m,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& wy,
-     const ap::real_2d_array& sy,
-     const double& theta,
-     const int& col,
-     const int& head,
-     int& info,
-     ap::real_1d_array& workvec,
-     ap::real_2d_array& workmat)
+                 const int& nsub,
+                 const ap::integer_1d_array& ind,
+                 const int& nenter,
+                 const int& ileave,
+                 const ap::integer_1d_array& indx2,
+                 const int& iupdat,
+                 const bool& updatd,
+                 ap::real_2d_array& wn,
+                 ap::real_2d_array& wn1,
+                 const int& m,
+                 const ap::real_2d_array& ws,
+                 const ap::real_2d_array& wy,
+                 const ap::real_2d_array& sy,
+                 const double& theta,
+                 const int& col,
+                 const int& head,
+                 int& info,
+                 ap::real_1d_array& workvec,
+                 ap::real_2d_array& workmat)
 {
     int m2;
     int ipntr;
@@ -1516,12 +1517,12 @@ void lbfgsbformk(const int& n,
 
 
 void lbfgsbformt(const int& m,
-     ap::real_2d_array& wt,
-     const ap::real_2d_array& sy,
-     const ap::real_2d_array& ss,
-     const int& col,
-     const double& theta,
-     int& info)
+                 ap::real_2d_array& wt,
+                 const ap::real_2d_array& sy,
+                 const ap::real_2d_array& ss,
+                 const int& col,
+                 const double& theta,
+                 int& info)
 {
     int i;
     int j;
@@ -1555,16 +1556,16 @@ void lbfgsbformt(const int& m,
 
 
 void lbfgsbfreev(const int& n,
-     int& nfree,
-     ap::integer_1d_array& index,
-     int& nenter,
-     int& ileave,
-     ap::integer_1d_array& indx2,
-     const ap::integer_1d_array& iwhere,
-     bool& wrk,
-     const bool& updatd,
-     const bool& cnstnd,
-     const int& iter)
+                 int& nfree,
+                 ap::integer_1d_array& index,
+                 int& nenter,
+                 int& ileave,
+                 ap::integer_1d_array& indx2,
+                 const ap::integer_1d_array& iwhere,
+                 bool& wrk,
+                 const bool& updatd,
+                 const bool& cnstnd,
+                 const int& iter)
 {
     int iact;
     int i;
@@ -1613,9 +1614,9 @@ void lbfgsbfreev(const int& n,
 
 
 void lbfgsbhpsolb(const int& n,
-     ap::real_1d_array& t,
-     ap::integer_1d_array& iorder,
-     const int& iheap)
+                  ap::real_1d_array& t,
+                  ap::integer_1d_array& iorder,
+                  const int& iheap)
 {
     int i;
     int j;
@@ -1686,35 +1687,35 @@ void lbfgsbhpsolb(const int& n,
 
 
 void lbfgsblnsrlb(const int& n,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     ap::real_1d_array& x,
-     const double& f,
-     double& fold,
-     double& gd,
-     double& gdold,
-     const ap::real_1d_array& g,
-     const ap::real_1d_array& d,
-     ap::real_1d_array& r,
-     ap::real_1d_array& t,
-     const ap::real_1d_array& z,
-     double& stp,
-     double& dnrm,
-     double& dtd,
-     double& xstep,
-     double& stpmx,
-     const int& iter,
-     int& ifun,
-     int& iback,
-     int& nfgv,
-     int& info,
-     int& task,
-     const bool& boxed,
-     const bool& cnstnd,
-     int& csave,
-     ap::integer_1d_array& isave,
-     ap::real_1d_array& dsave)
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  ap::real_1d_array& x,
+                  const double& f,
+                  double& fold,
+                  double& gd,
+                  double& gdold,
+                  const ap::real_1d_array& g,
+                  const ap::real_1d_array& d,
+                  ap::real_1d_array& r,
+                  ap::real_1d_array& t,
+                  const ap::real_1d_array& z,
+                  double& stp,
+                  double& dnrm,
+                  double& dtd,
+                  double& xstep,
+                  double& stpmx,
+                  const int& iter,
+                  int& ifun,
+                  int& iback,
+                  int& nfgv,
+                  int& info,
+                  int& task,
+                  const bool& boxed,
+                  const bool& cnstnd,
+                  int& csave,
+                  ap::integer_1d_array& isave,
+                  ap::real_1d_array& dsave)
 {
     int i;
     double a1;
@@ -1841,22 +1842,22 @@ void lbfgsblnsrlb(const int& n,
 
 
 void lbfgsbmatupd(const int& n,
-     const int& m,
-     ap::real_2d_array& ws,
-     ap::real_2d_array& wy,
-     ap::real_2d_array& sy,
-     ap::real_2d_array& ss,
-     const ap::real_1d_array& d,
-     const ap::real_1d_array& r,
-     int& itail,
-     const int& iupdat,
-     int& col,
-     int& head,
-     double& theta,
-     const double& rr,
-     const double& dr,
-     const double& stp,
-     const double& dtd)
+                  const int& m,
+                  ap::real_2d_array& ws,
+                  ap::real_2d_array& wy,
+                  ap::real_2d_array& sy,
+                  ap::real_2d_array& ss,
+                  const ap::real_1d_array& d,
+                  const ap::real_1d_array& r,
+                  int& itail,
+                  const int& iupdat,
+                  int& col,
+                  int& head,
+                  double& theta,
+                  const double& rr,
+                  const double& dr,
+                  const double& stp,
+                  const double& dtd)
 {
     int j;
     int pointr;
@@ -1905,12 +1906,12 @@ void lbfgsbmatupd(const int& n,
 
 
 void lbfgsbprojgr(const int& n,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     const ap::real_1d_array& x,
-     const ap::real_1d_array& g,
-     double& sbgnrm)
+                  const ap::real_1d_array& l,
+                  const ap::real_1d_array& u,
+                  const ap::integer_1d_array& nbd,
+                  const ap::real_1d_array& x,
+                  const ap::real_1d_array& g,
+                  double& sbgnrm)
 {
     int i;
     double gi;
@@ -1942,23 +1943,23 @@ void lbfgsbprojgr(const int& n,
 
 
 void lbfgsbsubsm(const int& n,
-     const int& m,
-     const int& nsub,
-     const ap::integer_1d_array& ind,
-     const ap::real_1d_array& l,
-     const ap::real_1d_array& u,
-     const ap::integer_1d_array& nbd,
-     ap::real_1d_array& x,
-     ap::real_1d_array& d,
-     const ap::real_2d_array& ws,
-     const ap::real_2d_array& wy,
-     const double& theta,
-     const int& col,
-     const int& head,
-     int& iword,
-     ap::real_1d_array& wv,
-     ap::real_2d_array& wn,
-     int& info)
+                 const int& m,
+                 const int& nsub,
+                 const ap::integer_1d_array& ind,
+                 const ap::real_1d_array& l,
+                 const ap::real_1d_array& u,
+                 const ap::integer_1d_array& nbd,
+                 ap::real_1d_array& x,
+                 ap::real_1d_array& d,
+                 const ap::real_2d_array& ws,
+                 const ap::real_2d_array& wy,
+                 const double& theta,
+                 const int& col,
+                 const int& head,
+                 int& iword,
+                 ap::real_1d_array& wv,
+                 ap::real_2d_array& wn,
+                 int& info)
 {
     int pointr;
     int m2;
@@ -2107,17 +2108,17 @@ void lbfgsbsubsm(const int& n,
 
 
 void lbfgsbdcsrch(const double& f,
-     const double& g,
-     double& stp,
-     const double& ftol,
-     const double& gtol,
-     const double& xtol,
-     const double& stpmin,
-     const double& stpmax,
-     int& task,
-     ap::integer_1d_array& isave,
-     ap::real_1d_array& dsave,
-     int& addinfo)
+                  const double& g,
+                  double& stp,
+                  const double& ftol,
+                  const double& gtol,
+                  const double& xtol,
+                  const double& stpmin,
+                  const double& stpmax,
+                  int& task,
+                  ap::integer_1d_array& isave,
+                  ap::real_1d_array& dsave,
+                  int& addinfo)
 {
     bool brackt;
     int stage;
@@ -2343,17 +2344,17 @@ void lbfgsbdcsrch(const double& f,
 
 
 void lbfgsbdcstep(double& stx,
-     double& fx,
-     double& dx,
-     double& sty,
-     double& fy,
-     double& dy,
-     double& stp,
-     const double& fp,
-     const double& dp,
-     bool& brackt,
-     const double& stpmin,
-     const double& stpmax)
+                  double& fx,
+                  double& dx,
+                  double& sty,
+                  double& fy,
+                  double& dy,
+                  double& stp,
+                  const double& fp,
+                  const double& dp,
+                  bool& brackt,
+                  const double& stpmin,
+                  const double& stpmax)
 {
     double gamma;
     double p;
@@ -2534,9 +2535,9 @@ void lbfgsbdcstep(double& stx,
 
 
 bool additionallbfgsbstoppingcriterion(int iter,
-     const ap::real_1d_array& x,
-     double f,
-     const ap::real_1d_array& g)
+                                       const ap::real_1d_array& x,
+                                       double f,
+                                       const ap::real_1d_array& g)
 {
     bool result;
 
@@ -2584,10 +2585,10 @@ bool lbfgsbdpofa(ap::real_2d_array& a, const int& n)
 
 
 void lbfgsbdtrsl(ap::real_2d_array& t,
-     const int& n,
-     ap::real_1d_array& b,
-     const int& job,
-     int& info)
+                 const int& n,
+                 ap::real_1d_array& b,
+                 const int& job,
+                 int& info)
 {
     double temp;
     double v;
@@ -2679,8 +2680,8 @@ void lbfgsbdtrsl(ap::real_2d_array& t,
 
 
 void lbfgsbnewiteration(const ap::real_1d_array& x,
-     double f,
-     const ap::real_1d_array& g)
+                        double f,
+                        const ap::real_1d_array& g)
 {
 
 }

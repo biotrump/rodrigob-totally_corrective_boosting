@@ -21,9 +21,10 @@
 #ifndef _LIBSVMREADER_HPP_
 #define _LIBSVMREADER_HPP_
 
+#include "svec.hpp"
+
 #include <string>
 #include <vector>
-#include "svec.hpp"
 
 namespace totally_corrective_boosting
 {
