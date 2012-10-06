@@ -37,11 +37,11 @@
 #include "ConfigFile.hpp"
 
 #ifdef USE_TAO
-#include "optimizer_tao.hpp"
+#include "TaoOptimizer.hpp"
 #endif
 
 #ifdef USE_CLP
-#include "lpboost.hpp"
+#include "LpBoost.hpp"
 #endif
 
 #include <iostream>
@@ -166,6 +166,8 @@ int main(int argc, char **argv)
         of << "Nu (softening): " << 1.0/nu << std::endl << std::endl;
         of << "eta: " << eta << std::endl << std::endl;
 
+        printf("Using optimizer_type == %s\n", optimizer_type.c_str());
+
         if(optimizer_type == "tao"){
 #ifdef USE_TAO
             solver = new TaoOptimizer(labels.size(), transposed, eta, nu, eps, binary, argc, argv);
@@ -193,7 +195,6 @@ int main(int argc, char **argv)
         }
         else
         {
-            printf("optimizer_type == %s\n", optimizer_type.c_str());
             throw std::runtime_error("Received an unknown value for optimizer_type");
         }
 

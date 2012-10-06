@@ -55,6 +55,7 @@ file(GLOB TaoCpp
 )
 
 list(APPEND SrcCpp ${TaoCpp})
+add_definitions(-DUSE_TAO)
 endif(USE_TAO)
 
 if(USE_CLP)
@@ -64,6 +65,7 @@ file(GLOB ClpCpp
 )
 
 list(APPEND SrcCpp ${ClpCpp})
+add_definitions(-DUSE_CLP)
 endif(USE_CLP)
 
 
@@ -83,4 +85,9 @@ target_link_libraries(test_erlpboost
    #lapack blas atlas
 )   
 
+if(USE_CLP)
+target_link_libraries(test_erlpboost
+  Clp
+)
+endif(USE_CLP)
 
