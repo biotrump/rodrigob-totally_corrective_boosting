@@ -51,6 +51,9 @@
 
 using std::string;
 
+namespace totally_corrective_boosting
+{
+
 class ConfigFile {
 // Data
 protected:
@@ -230,6 +233,8 @@ void ConfigFile::add( string key, const T& value )
 	myContents[key] = v;
 	return;
 }
+
+} // end of namespace totally_corrective_boosting
 
 #endif  // CONFIGFILE_H
 

@@ -19,9 +19,13 @@
  */
 
 #include "vec.hpp"
+
 #include <iostream>
 #include <cmath>
 #include <limits>
+
+namespace totally_corrective_boosting
+{
 
 // dot product of matrix with vector 
 // store result in sparse vector res
@@ -560,3 +564,5 @@ bool operator == (const DenseVector& d1, const DenseVector& d2){
   return (d1.dim == d2.dim) && 
     std::equal(d1.val, d1.val+d1.dim, d2.val);
 }
+
+} // end of namespace totally_corrective_boosting

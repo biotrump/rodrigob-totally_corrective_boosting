@@ -25,6 +25,9 @@
 
 #include "ConfigFile.hpp"
 
+namespace totally_corrective_boosting
+{
+
 using std::string;
 
 ConfigFile::ConfigFile( string filename, string delimiter,
@@ -163,3 +166,5 @@ std::istream& operator>>( std::istream& is, ConfigFile& cf )
 	
 	return is;
 }
+
+} // end of namespace totally_corrective_boosting

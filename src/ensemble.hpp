@@ -26,6 +26,9 @@
 
 #include "weak_learner.hpp"
 
+namespace totally_corrective_boosting
+{
+
 class Ensemble;
 
 class WeightedWeakLearner{
@@ -116,5 +119,7 @@ public:
   std::istream& operator >> (std::istream& in, Ensemble& e);
   
 };
+
+} // end of namespace totally_corrective_boosting
 
 # endif

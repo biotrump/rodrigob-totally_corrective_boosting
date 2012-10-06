@@ -24,7 +24,9 @@
 #include "optimizer.hpp"
 #include "lbfgsb.h"
 
-// Augmented Lagrangian solver in the w domain. 
+namespace totally_corrective_boosting
+{
+
 
 namespace LBFGSB{
   const size_t max_iter = 10000;
@@ -32,6 +34,7 @@ namespace LBFGSB{
   const size_t lbfgsb_m = 5; // Past gradients stored in lbfgsb
 }
 
+/// Augmented Lagrangian solver in the w domain.
 class LbfgsbOptimizer : public AbstractOptimizer {
   
 private:
@@ -68,5 +71,7 @@ public:
                     ap::real_1d_array& g);
   
 }; 
+
+} // end of namespace totally_corrective_boosting
 
 # endif

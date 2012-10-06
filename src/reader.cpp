@@ -18,13 +18,17 @@
  * Last Updated: (23/04/2008)   
  */
 
-#include <iostream>
-#include <fstream>
-
-#include <sstream>
-#include <stdexcept>
 
 #include "reader.hpp"
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include <stdexcept>
+
+namespace totally_corrective_boosting
+{
 
 bool LibSVMReader::is_blank(const std::string& line){
   
@@ -384,3 +388,5 @@ int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
   
   return 0;
 }
+
+} // end of namespace totally_corrective_boosting

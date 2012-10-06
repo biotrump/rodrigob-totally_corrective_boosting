@@ -23,6 +23,9 @@
 #include <algorithm>
 #include "corrective.hpp"
 
+namespace totally_corrective_boosting
+{
+
 
 CorrectiveBoost::CorrectiveBoost(AbstractOracle* &oracle, 
 			 const int& num_pt, 
@@ -202,3 +205,5 @@ double CorrectiveBoost::proj_simplex(DenseVector& dist, const double& exp_max){
   
   return obj; 
 }
+
+} // end of namespace totally_corrective_boosting

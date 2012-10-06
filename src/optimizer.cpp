@@ -30,6 +30,9 @@
 
 #include "optimizer.hpp"
 
+namespace totally_corrective_boosting
+{
+
 double log_one_plus_x(const double& x){
   if (x <= -1.0){
     std::stringstream os;
@@ -478,3 +481,5 @@ void AbstractOptimizer::report_stats(){
 //   }
 //   return false;
 // }
+
+} // end of namespace totally_corrective_boosting

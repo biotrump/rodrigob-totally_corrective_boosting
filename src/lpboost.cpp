@@ -24,6 +24,9 @@
 #include "lpboost.hpp"
 #include "vec.hpp"
 
+namespace totally_corrective_boosting
+{
+
 LPBoost::LPBoost(AbstractOracle* &oracle, 
                    const int& num_pt, 
                    const int& max_iter,
@@ -151,3 +154,5 @@ void LPBoost::update_weights(const WeakLearner& wl){
   //           << "  xi value: " << sol[0] << std::endl;
   return;
 }
+
+} // end of namespace totally_corrective_boosting

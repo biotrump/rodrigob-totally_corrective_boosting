@@ -24,6 +24,9 @@
 #include "erlpboost.hpp"
 #include "vec.hpp"
 
+namespace totally_corrective_boosting
+{
+
 ERLPBoost::ERLPBoost(AbstractOracle* &oracle, 
                        const int& num_pt, 
                        const int& max_iter,
@@ -124,3 +127,5 @@ void ERLPBoost::update_weights(const WeakLearner& wl){
   
   return;
 }
+
+} // end of namespace totally_corrective_boosting

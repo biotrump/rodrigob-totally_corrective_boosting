@@ -25,6 +25,10 @@
 #include <vector>
 #include "svec.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 class LibSVMReader{
   
 private:
@@ -53,5 +57,7 @@ public:
 typedef std::vector<double>::iterator dbl_itr;
 typedef std::vector<size_t>::iterator uint_itr;
 typedef std::vector<SparseVector>::iterator svec_itr;
+
+} // end of namespace totally_corrective_boosting
 
 # endif

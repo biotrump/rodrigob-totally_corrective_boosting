@@ -25,6 +25,10 @@
 #include <iostream>
 #include "vec.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 // evaluates binary loss
 class EvaluateLoss{
   
@@ -57,5 +61,7 @@ public:
 		   int& total_loss, double& percent_err) const;
   
 };
+
+} // end of namespace totally_corrective_boosting
 
 # endif

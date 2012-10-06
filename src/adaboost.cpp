@@ -22,6 +22,8 @@
 #include <cmath>
 #include "adaboost.hpp"
 
+namespace totally_corrective_boosting
+{
 
 AdaBoost::AdaBoost(AbstractOracle* &oracle,
                      const int& num_pt, 
@@ -72,4 +74,10 @@ bool AdaBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void AdaBoost::update_stopping_criterion(const WeakLearner& wl){}
+void AdaBoost::update_stopping_criterion(const WeakLearner& wl)
+{
+    // nothing to update
+    return;
+}
+
+} // end of namespace totally_corrective_boosting

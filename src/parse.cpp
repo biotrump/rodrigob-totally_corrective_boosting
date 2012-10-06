@@ -21,6 +21,10 @@
 
 # include "parse.hpp"
 
+
+namespace totally_corrective_boosting
+{
+
 void throw_if_fail(std::istream &in, std::string expected) throw() {
   if (in.fail()) {
     throw std::string("Error before trying to look for " + expected);
@@ -72,4 +76,5 @@ void chomp_input_until(std::istream& in, const std::string &kw) throw(std::strin
   }
 }
 
+} // end of namespace totally_corrective_boosting
 

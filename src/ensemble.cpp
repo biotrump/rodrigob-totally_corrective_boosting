@@ -34,6 +34,9 @@
 #include "vec.hpp"
 #include "parse.hpp"
 
+namespace totally_corrective_boosting
+{
+
 // predict on a single example
 double Ensemble::predict(const DenseVector& x) const{
 
@@ -249,3 +252,5 @@ std::istream& operator >> (std::istream& in, Ensemble& e){
   }
   return in;
 }
+
+} // end of namespace totally_corrective_boosting

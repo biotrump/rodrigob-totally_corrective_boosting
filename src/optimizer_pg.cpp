@@ -26,6 +26,10 @@
 #include <cmath>
 #include "optimizer_pg.hpp"
 
+
+namespace totally_corrective_boosting
+{
+
 ProjectedGradientOptimizer::ProjectedGradientOptimizer(const size_t& dim, 
                              const bool& transposed, 
                              const double& eta, 
@@ -370,3 +374,4 @@ int ProjectedGradientOptimizer::solve(){
   return 1;
 }
 
+} // end of namespace totally_corrective_boosting

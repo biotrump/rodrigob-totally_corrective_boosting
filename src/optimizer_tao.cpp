@@ -26,6 +26,10 @@
 
 #include "optimizer_tao.hpp"
 
+
+namespace totally_corrective_boosting
+{
+
 TaoOptimizer::TaoOptimizer(const size_t& dim, 
                                const bool& transposed, 
                                const double& eta, 
@@ -293,3 +297,5 @@ int tao_bounds_binary(TAO_APPLICATION taoapp,
   TaoOptimizer * solver = (TaoOptimizer *)ctx;
   return solver->bounds_binary(xl, xu);
 }
+
+} // end of namespace totally_corrective_boosting

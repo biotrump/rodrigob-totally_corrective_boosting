@@ -23,6 +23,9 @@
 
 #include "vec.hpp"
 
+namespace totally_corrective_boosting
+{
+
 /// Class to encapsulate a weak learner. For now our weak learner is a linear predictor.
 // FIXME should separate the abstract weak learned from the linear predictor implementation
 class WeakLearner{
@@ -83,5 +86,8 @@ public:
   std::istream& operator >> (std::istream& in, WeakLearner& wl);
   
 };
+
+} // end of namespace totally_corrective_boosting
+
 
 #endif

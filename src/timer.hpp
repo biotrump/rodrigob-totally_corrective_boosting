@@ -36,8 +36,10 @@
 #define TIMES_TICKS_PER_SEC double(HZ)
 #endif
 
-// Keep track of CPU and wall-clock time (in seconds) of program segments
+namespace totally_corrective_boosting
+{
 
+/// Keep track of CPU and wall-clock time (in seconds) of program segments
 class Timer {
 
 private:
@@ -76,5 +78,7 @@ public:
   double avg_wc() const { return total_wc/num_calls; }         
   // double CurrentWallclockTotal();// return current wallclock_total_time
 };
+
+} // end of namespace totally_corrective_boosting
 
 #endif

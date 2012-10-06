@@ -28,6 +28,9 @@
 #include "vec.hpp"
 #include "timer.hpp"
 
+namespace totally_corrective_boosting
+{
+
 // Class to encapsulate the optimization problem we are solving
 // Different implementations of the optimizer simply overload the
 // solve function 
@@ -152,5 +155,7 @@ public:
 }; 
 
 double log_one_plus_x(const double& x);
+
+} // end of namespace totally_corrective_boosting
 
 # endif

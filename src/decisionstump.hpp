@@ -31,6 +31,8 @@
 #include "weak_learner_dstump.hpp"
 #include "timer.hpp"
 
+namespace totally_corrective_boosting
+{
 
 // using namespace std; 
 
@@ -94,6 +96,7 @@ public:
 };
 
 
+} // end of namespace totally_corrective_boosting
 
 
 

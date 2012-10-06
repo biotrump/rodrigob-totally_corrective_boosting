@@ -29,6 +29,8 @@
 #include "booster.hpp"
 #include "weak_learner.hpp"
 
+namespace totally_corrective_boosting
+{
 
 /// Derived class. Implements LPBoost
 class LPBoost: public AbstractBooster{
@@ -72,5 +74,7 @@ public:
   ~LPBoost(void);
   
 };
+
+} // end of namespace totally_corrective_boosting
 
 #endif

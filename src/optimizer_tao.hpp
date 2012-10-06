@@ -30,12 +30,16 @@
 #include "tao.h"
 #include "petscvec.h" 
 
-// Augmented Lagrangian solver in the w domain. 
+
+namespace totally_corrective_boosting
+{
+
 
 namespace TAO{
   const size_t max_iter = 10000;
 }
 
+/// Augmented Lagrangian solver in the w domain.
 class TaoOptimizer : public AbstractOptimizer {
   
 private:
@@ -86,5 +90,7 @@ int tao_bounds_binary(TAO_APPLICATION taoapp,
                       Vec xl, 
                       Vec xu, 
                       void *ctx);
+
+} // end of namespace totally_corrective_boosting
 
 # endif

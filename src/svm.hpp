@@ -28,6 +28,10 @@
 #include "vec.hpp"
 #include "oracle.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 class Svm: public AbstractOracle {
   
 private:
@@ -44,5 +48,7 @@ public:
   WeakLearner* max_edge_wl(const DenseVector& dist); 
   
 };
+
+} // end of namespace totally_corrective_boosting
 
 #endif

@@ -23,6 +23,8 @@
 #include "booster.hpp"
 #include "weak_learner.hpp"
 
+namespace totally_corrective_boosting
+{
 
 /// Derived class. Implements Corrective
 class CorrectiveBoost: public AbstractBooster{
@@ -90,5 +92,6 @@ private:
   
 };
 
+} // end of namespace totally_corrective_boosting
 
 #endif

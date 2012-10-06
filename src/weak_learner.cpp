@@ -23,6 +23,9 @@
 #include "weak_learner.hpp"
 #include "parse.hpp"
 
+namespace totally_corrective_boosting
+{
+
 WeakLearner::WeakLearner():
   wt(), edge(0), prediction(){}
 
@@ -110,4 +113,6 @@ bool operator == (const WeakLearner& wl1, const WeakLearner& wl2){
 
   return wl1.equal(&wl2);
 }
+
+} // end of namespace totally_corrective_boosting
 

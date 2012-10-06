@@ -23,6 +23,10 @@
 
 #include "rawdata.hpp"
 
+
+namespace totally_corrective_boosting
+{
+
 RawDataOracle::RawDataOracle(std::vector<SparseVector>& data, 
                    std::vector<int>& labels, 
                    const bool& transposed,
@@ -119,3 +123,5 @@ WeakLearner* RawDataOracle::max_edge_wl(const DenseVector& dist){
   //std::cout << "hyp: " << min_idx << std::endl;
   return wl;
 }
+
+} // end of namespace totally_corrective_boosting

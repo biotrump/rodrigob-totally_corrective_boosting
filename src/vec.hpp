@@ -24,6 +24,10 @@
 #include "svec.hpp"
 #include "dvec.hpp"
 #include "ivec.hpp"
+
+namespace totally_corrective_boosting
+{
+
 /** Encapsulate operations on vectors */
 
 template <class T, class X> 
@@ -80,5 +84,8 @@ size_t argmin(const DenseVector& a);
 
 double abs_max(const DenseVector& a);
 size_t abs_argmax(const DenseVector& a);
+
+} // end of namespace totally_corrective_boosting
+
 
 # endif

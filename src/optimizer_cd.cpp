@@ -25,6 +25,10 @@
 
 #include "optimizer_cd.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 CoordinateDescentOptimizer::CoordinateDescentOptimizer(const size_t& dim, 
                              const bool& transposed, 
                              const double& eta, 
@@ -210,3 +214,5 @@ double CoordinateDescentOptimizer::proj_simplex(DenseVector& dist, const double&
   
   return obj; 
 }
+
+} // end of namespace totally_corrective_boosting

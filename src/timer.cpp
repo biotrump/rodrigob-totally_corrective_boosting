@@ -21,13 +21,18 @@
 #ifndef _TIMER_CPP_
 #define _TIMER_CPP_
 
+
+#include "timer.hpp"
+
 #include <limits>
 #include <stdexcept>
 #include <sstream>
 
-#include "timer.hpp"
-
 // #include <cstdio>
+
+namespace totally_corrective_boosting
+{
+
 
 
 Timer::Timer()
@@ -95,5 +100,7 @@ void Timer::reset(){
   min_wc = std::numeric_limits<double>::max();
   return; 
 }
+
+} // end of namespace totally_corrective_boosting
 
 #endif

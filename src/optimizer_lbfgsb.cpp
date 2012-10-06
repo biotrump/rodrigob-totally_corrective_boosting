@@ -26,6 +26,9 @@
 
 #include "optimizer_lbfgsb.hpp"
 
+namespace totally_corrective_boosting
+{
+
 LbfgsbOptimizer::LbfgsbOptimizer(const size_t& dim, 
                                      const bool& transposed, 
                                      const double& eta, 
@@ -248,3 +251,5 @@ void LbfgsbOptimizer::bounds_binary(ap::integer_1d_array& nbd,
   
   return;
 }
+
+} // end of namespace totally_corrective_boosting

@@ -20,6 +20,10 @@
 
 #include "evaluate.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 EvaluateLoss::EvaluateLoss():
   tie_breaking(true){}
 
@@ -72,3 +76,5 @@ void EvaluateLoss::binary_loss(const DenseVector pred,
 
   return;
 }
+
+} // end of namespace totally_corrective_boosting

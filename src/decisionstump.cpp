@@ -21,6 +21,9 @@
 #include <algorithm>
 #include "decisionstump.hpp"
 
+namespace totally_corrective_boosting
+{
+
 DecisionStump::DecisionStump(std::vector<SparseVector>& data, 
                                std::vector<int>& labels, 
                                bool less_than):
@@ -321,3 +324,5 @@ ivec DecisionStump::argsort(SparseVector unsorted){
 
   return result;
 }
+
+} // end of namespace totally_corrective_boosting

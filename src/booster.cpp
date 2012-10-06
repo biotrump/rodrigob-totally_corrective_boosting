@@ -22,6 +22,9 @@
 #include <cassert>
 #include "booster.hpp"
 
+namespace totally_corrective_boosting
+{
+
 AbstractBooster::AbstractBooster(AbstractOracle* &oracle, 
                    const int& num_pt, 
                    const int& max_iter):
@@ -115,3 +118,5 @@ size_t AbstractBooster::boost(std::ostream& os){
   //os << model;
   return num_models;
 }
+
+} // end of namespace totally_corrective_boosting

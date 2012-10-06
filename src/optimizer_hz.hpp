@@ -24,6 +24,10 @@
 #include "optimizer_pg.hpp"
 
 
+namespace totally_corrective_boosting
+{
+
+
 // Magic parameters of the algorithm
 // Do not mess!
 // svnvish: BUGBUG
@@ -67,5 +71,7 @@ public:
   int solve(void);
   
 }; 
+
+} // end of namespace totally_corrective_boosting
 
 # endif

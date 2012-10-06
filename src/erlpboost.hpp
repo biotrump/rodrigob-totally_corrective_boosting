@@ -24,6 +24,10 @@
 #include "weak_learner.hpp"
 #include "optimizer.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 /// Derived class. Implements ERLPBoost
 class ERLPBoost: public AbstractBooster{
 
@@ -86,5 +90,7 @@ public:
   ~ERLPBoost();
   
 };
+
+} // end of namespace totally_corrective_boosting
 
 #endif

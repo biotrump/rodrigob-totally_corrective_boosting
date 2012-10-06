@@ -23,6 +23,10 @@
 
 #include "optimizer.hpp"
 
+
+namespace totally_corrective_boosting
+{
+
 // Implement the projected gradient algorithm in w domain
 
 /* Credits:
@@ -110,5 +114,7 @@ public:
   
   virtual int solve(void);
 }; 
+
+} // end of namespace totally_corrective_boosting
 
 # endif

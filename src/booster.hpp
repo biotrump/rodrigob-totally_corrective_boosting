@@ -27,6 +27,8 @@
 #include <vector>
 #include <iostream>
 
+namespace totally_corrective_boosting
+{
 
 /// Base Class to encapsulate a boosting algorithm. Different
 /// implementations have to implement the virtual methods in this class
@@ -85,6 +87,9 @@ public:
   Ensemble get_ensemble(void){ return model; }
 
 };
+
+} // end of namespace totally_corrective_boosting
+
 
 #endif
 

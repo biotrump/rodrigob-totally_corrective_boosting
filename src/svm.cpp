@@ -23,6 +23,10 @@
 
 #include "svm.hpp"
 
+namespace totally_corrective_boosting
+{
+
+
 Svm::Svm(std::vector<SparseVector>& data, 
            std::vector<int>& labels, 
            const bool& transposed,
@@ -126,3 +130,5 @@ WeakLearner* Svm::max_edge_wl(const DenseVector& dist){
   WeakLearner* wl = new WeakLearner(wt, edge, prediction);
   return wl; 
 }
+
+} // end of namespace totally_corrective_boosting

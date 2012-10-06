@@ -23,6 +23,9 @@
 
 #include "optimizer.hpp"
 
+namespace totally_corrective_boosting
+{
+
 
 namespace CD{
   const size_t max_iter = 50000;
@@ -53,5 +56,7 @@ public:
   int solve(void);
   
 }; 
+
+} // end of namespace totally_corrective_boosting
 
 # endif

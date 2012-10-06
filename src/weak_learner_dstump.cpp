@@ -23,6 +23,9 @@
 #include "weak_learner_dstump.hpp"
 #include "parse.hpp"
 
+namespace totally_corrective_boosting
+{
+
 DecisionStumpWeakLearner::DecisionStumpWeakLearner():
   WeakLearner(),
   thresh(0), direction(true), idx(0){}
@@ -158,3 +161,4 @@ bool operator == (const DecisionStumpWeakLearner& wl1, const DecisionStumpWeakLe
   return wl1.equal(&wl2);
 }
 
+} // end of namespace totally_corrective_boosting

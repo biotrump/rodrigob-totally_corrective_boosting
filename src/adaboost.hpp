@@ -23,10 +23,11 @@
 #include "booster.hpp"
 #include "weak_learner.hpp"
 
+namespace totally_corrective_boosting
+{
 
-/** Derived class. Implements AdaBoost 
- */
 
+/// Derived class. Implements AdaBoost
 class AdaBoost: public AbstractBooster{
 
 private:
@@ -52,5 +53,7 @@ public:
   
 };
 
+
+} // end of namespace totally_corrective_boosting
 
 #endif
