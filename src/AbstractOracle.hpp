@@ -1,22 +1,3 @@
-/* Copyright (c) 2009, S V N Vishwanathan
- * All rights reserved. 
- * 
- * The contents of this file are subject to the Mozilla Public License 
- * Version 1.1 (the "License"); you may not use this file except in 
- * compliance with the License. You may obtain a copy of the License at 
- * http://www.mozilla.org/MPL/ 
- * 
- * Software distributed under the License is distributed on an "AS IS" 
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the 
- * License for the specific language governing rights and limitations 
- * under the License. 
- * 
- * Authors: S V N Vishwanathan 
- *
- * Created: (28/03/2009) 
- *
- * Last Updated: (23/04/2008)   
- */
 #ifndef _ORACLE_HPP_
 #define _ORACLE_HPP_
 
@@ -48,8 +29,8 @@ public:
     data(data), labels(labels), transposed(transposed){}
   virtual ~AbstractOracle(){}
   
-  // given distribution return weak learner with maximum edge
-  virtual WeakLearner* max_edge_wl(const DenseVector& dist) = 0;
+  /// given distribution return weak learner with maximum edge
+  virtual WeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist) = 0;
 };
 
 } // end of namespace totally_corrective_boosting
