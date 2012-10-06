@@ -11,12 +11,24 @@
 # ----------------------------------------------------------------------
 # Base CMake setup
 cmake_minimum_required(VERSION 2.6)
+set(project_root_folder "../../..")
 set(src_folder "../..")
 
 # ----------------------------------------------------------------------
 # Setup the project
 include(FindPkgConfig)
 project (TotallyCorrectiveEntropyRegularizedBoosting)
+
+option(USE_TAO "Should the TAO optimizer be used ?" ON)
+option(USE_CLP "Should the COIN linear programming optimizer be used ?" ON)
+
+# ----------------------------------------------------------------------
+# Setup link and include directories
+
+include_directories(
+  "${project_root_folder}/libs"
+  "${project_root_folder}/src"
+)
 
 # ----------------------------------------------------------------------
 # Collect source files
@@ -25,6 +37,31 @@ file(GLOB SrcCpp
   "./*.cpp"
   "${src_folder}/*.cpp"
 )
+
+# Files that will not compile on all setups
+file(GLOB BlackListCpp
+  "${src_folder}/LpBoost.cpp"
+  "${src_folder}/TaoOptimizer.cpp"
+)
+
+list(REMOVE_ITEM SrcCpp ${BlackListCpp})
+
+if(USE_TAO)
+file(GLOB TaoCpp
+  "${src_folder}/TaoOptimizer.cpp"
+)
+
+list(APPEND SrcCpp ${TaoCpp})
+endif(USE_TAO)
+
+if(USE_CLP)
+
+file(GLOB ClpCpp
+  "${src_folder}/LpBoost.cpp"
+)
+
+list(APPEND SrcCpp ${ClpCpp})
+endif(USE_CLP)
 
 
 # ----------------------------------------------------------------------

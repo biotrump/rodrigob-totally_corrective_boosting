@@ -18,31 +18,23 @@
  * Last Updated: (28/03/2008)   
  */
 
-#include <iostream>
-#include <fstream>
 
-#include <sstream>
-#include <stdexcept>
+#include "LibSvmReader.hpp"
+#include "RawDataOracle.hpp"
+#include "DecisionStump.hpp"
+#include "Svm.hpp"
+#include "ErlpBoost.hpp"
+#include "AdaBoost.hpp"
+#include "CorrectiveBoost.hpp"
 
-#include <erlpboost-config.h>
-#include "reader.hpp"
-#include "rawdata.hpp"
-#include "decisionstump.hpp"
-#include "svm.hpp"
-#include "erlpboost.hpp"
-#include "adaboost.hpp"
-#include "corrective.hpp"
+#include "ProjectedGradientOptimizer.hpp"
+#include "ZhangdAndHagerOptimizer.hpp"
+#include "LbfgsbOptimizer.hpp"
+#include "CoordinateDescentOptimizer.hpp"
 
-
-#include "optimizer_pg.hpp"
-#include "optimizer_hz.hpp"
-#include "optimizer_lbfgsb.hpp"
-#include "optimizer_cd.hpp"
-
-#include "evaluate.hpp"
+#include "EvaluateLoss.hpp"
 #include "parse.hpp"
 #include "ConfigFile.hpp"
-
 
 #ifdef USE_TAO
 #include "optimizer_tao.hpp"
@@ -51,6 +43,15 @@
 #ifdef USE_CLP
 #include "lpboost.hpp"
 #endif
+
+#include <iostream>
+#include <fstream>
+
+#include <sstream>
+#include <stdexcept>
+
+
+using namespace totally_corrective_boosting;
 
 int main(int argc, char **argv){
     
@@ -151,7 +152,7 @@ int main(int argc, char **argv){
     
     if(optimizer_type == "tao"){
 #ifdef USE_TAO
-      solver = new COptimizer_TAO(labels.size(), transposed, eta, nu, eps, binary, argc, argv);
+      solver = new TaoOptimizer(labels.size(), transposed, eta, nu, eps, binary, argc, argv);
 #else                                           
       std::stringstream os;
       os << "You must compile with TAO support enabled to use TAO" 
@@ -167,7 +168,7 @@ int main(int argc, char **argv){
     else if(optimizer_type == "cd")
       solver = new CoordinateDescentOptimizer(labels.size(), transposed, eta, nu, eps, binary);
     
-    eb = new ERLPBoost(oracle, labels.size(), max_iter, eps, eta, nu, binary, solver);
+    eb = new ErlpBoost(oracle, labels.size(), max_iter, eps, eta, nu, binary, solver);
   } 
   else if(booster_type == "LPBoost"){
     std::cout << "running lpboost" << std::endl;

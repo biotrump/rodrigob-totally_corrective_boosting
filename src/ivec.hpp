@@ -25,12 +25,15 @@
 #include <vector>
 #include <iostream>
 
+namespace totally_corrective_boosting
+{
+
 /** Class to encapsulate a dense vector */
 
 // svnvish: BUGBUG
 // Maybe make it a template class?
 
-class ivec{
+class DenseIntegerVector{
 public:
   // List of values
   size_t *val;
@@ -39,23 +42,23 @@ public:
   size_t dim;
   
   // default constructor 
-  ivec(void){ dim = 0; val = NULL; }
+  DenseIntegerVector(void){ dim = 0; val = NULL; }
 
   // Other constructors: Syntactic sugar 
-  ivec (const size_t& dim): dim(dim) { 
+  DenseIntegerVector (const size_t& dim): dim(dim) {
     val = new size_t[dim]; 
     for(size_t i = 0; i < dim; i++)
       val[i] = 0;
   }
 
-  ivec (const size_t& dim, const size_t& _val): dim(dim){
+  DenseIntegerVector (const size_t& dim, const size_t& _val): dim(dim){
     val = new size_t[dim];
     for(size_t i = 0; i < dim; i++)
       val[i] = _val;
     return;
   }
     
-  ivec (const size_t& dim, const size_t* _val): dim(dim){
+  DenseIntegerVector (const size_t& dim, const size_t* _val): dim(dim){
     val = new size_t[dim];
     for(size_t i = 0; i < dim; i++) 
       val[i] = _val[i];
@@ -63,14 +66,14 @@ public:
   }
   
   // Copy constructor 
-  ivec(const ivec& d): dim(d.dim){
+  DenseIntegerVector(const DenseIntegerVector& d): dim(d.dim){
     val = new size_t[dim];
     for(size_t i = 0; i < dim; i++)
       val[i] = d.val[i];
     return;
   }
   
-  ~ivec(void){
+  ~DenseIntegerVector(void){
     if(val != NULL) delete[] val; val = NULL;
     dim = 0; 
     return;
@@ -86,7 +89,7 @@ public:
     return;
   }
 
-  ivec& operator=(const ivec &rhs){
+  DenseIntegerVector& operator=(const DenseIntegerVector &rhs){
     if(val != NULL) delete [] val;
     dim = rhs.dim;
     val = new size_t[dim];
@@ -96,8 +99,10 @@ public:
   }
   
   friend 
-  std::ostream& operator << (std::ostream& os, const ivec& d);
+  std::ostream& operator << (std::ostream& os, const DenseIntegerVector& d);
    
 };
+
+} // end of namespace totally_corrective_boosting
 
 # endif
