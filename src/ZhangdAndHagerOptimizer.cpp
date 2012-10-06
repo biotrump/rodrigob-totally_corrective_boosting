@@ -32,9 +32,9 @@ int ZhangdAndHagerOptimizer::solve(){
     double ck = 0.0;
 
     // Compute f and its gradient at x_{0}
-    double obj = fun();
+    double obj = function();
 
-    DenseVector gradk = grad();
+    DenseVector gradk = gradient();
 
     // double min_primal = primal();
 
@@ -44,10 +44,12 @@ int ZhangdAndHagerOptimizer::solve(){
     double alpha = 1.0;
     double lambda; // proposed stepsize
 
-    for(size_t i = 1; i <= ProjGrad_HZ::max_iter; i++){
+    for(size_t i = 1; i <= ProjGrad_HZ::max_iter; i++)
+    {
 
         // Step 1: Detect if we have already converged
-        if(duality_gap_met()){
+        if(duality_gap_met())
+        {
             report_stats();
             return 0;
         }
@@ -75,7 +77,8 @@ int ZhangdAndHagerOptimizer::solve(){
         ck = (etak*qk*ck + obj)/newqk;
         qk = newqk;
         
-        while(true){
+        while(true)
+        {
 
             // Step 2.2: Set x_{+} = x_{k} + \lambda d_{k}
             axpy(lambda, dk, xk, xplus);
@@ -83,15 +86,16 @@ int ZhangdAndHagerOptimizer::solve(){
 
             // Step 2.3
             // if f(x_{+}) \leq obj_max + \gamma * \inner{d_{k}}{g_{k}}}
-            double objplus = fun();
+            double objplus = function();
 
-            if(objplus <=  (ck + ProjGrad_HZ::gamma*lambda*dtg) ){
+            if(objplus <=  (ck + ProjGrad_HZ::gamma*lambda*dtg) )
+            {
                 // Success in step 2.3
                 // x_{k+1} = x_{+}
                 // s_{k} = x_{k+1} - x_{k}
                 // y_{k} = g_{k+1} - g_{k}
 
-                DenseVector gradplus = grad();
+                DenseVector gradplus = gradient();
 
                 sksk = diffnorm(x, xk);
                 skyk = 0.0;
@@ -108,7 +112,9 @@ int ZhangdAndHagerOptimizer::solve(){
                     alpha = std::min(ProjGrad_HZ::alpha_max,
                                      std::max(ProjGrad_HZ::alpha_min, sksk/skyk));
                 break;
-            }else{
+            }
+            else
+            {
                 // Failure in step 2.3
                 // Compute a safeguarded new trial steplength
                 double lambdanew = - lambda * lambda * dtg / (2*(objplus - obj -lambda*dtg));
@@ -116,8 +122,9 @@ int ZhangdAndHagerOptimizer::solve(){
                                   std::min(ProjGrad_HZ::sigma2*lambda, lambdanew));
                 continue;
             }
-        }
-    }
+
+        } // end of "while true"
+    } // end of "for each iteration"
     std::cout << "Failure in HZ optimizer " << std::endl;
     return 1;
 }

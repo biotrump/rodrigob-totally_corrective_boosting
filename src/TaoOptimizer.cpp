@@ -1,23 +1,3 @@
-/* Copyright (c) 2009, S V N Vishwanathan
- * All rights reserved. 
- * 
- * The contents of this file are subject to the Mozilla Public License 
- * Version 1.1 (the "License"); you may not use this file except in 
- * compliance with the License. You may obtain a copy of the License at 
- * http://www.mozilla.org/MPL/ 
- * 
- * Software distributed under the License is distributed on an "AS IS" 
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the 
- * License for the specific language governing rights and limitations 
- * under the License. 
- * 
- * Authors: S V N Vishwanathan (vishy@stat.purdue.edu)
- * 
- *
- * Created: (28/03/2009) 
- *
- * Last Updated: (15/04/2008)   
- */
 
 #include "TaoOptimizer.hpp"
 
@@ -48,7 +28,8 @@ TaoOptimizer::TaoOptimizer(const size_t& dim,
   return;
 }
 
-TaoOptimizer::~Optimizer_TAO(){
+
+TaoOptimizer::~TaoOptimizer(){
 
   PetscFinalize();
   TaoFinalize();
@@ -128,7 +109,7 @@ int TaoOptimizer::solve(){
   
   DenseVector W;
   W.val = x.val;
-  W.dim = num_wl;
+  W.dim = num_weak_learners;
   info = TaoSetTolerances(tao, 0, 0, 0, 0); CHKERRQ(info);
   
   for(size_t iter = 0; iter < TAO::max_iter; iter++){
@@ -197,7 +178,7 @@ double TaoOptimizer::aug_lag_fg(const Vec& X, Vec& G){
   
   DenseVector W;
   W.val = x.val;
-  W.dim = num_wl;
+  W.dim = num_weak_learners;
   double w_gap = sum(W) - 1.0;
   W.val = NULL;
   W.dim = NULL;
@@ -205,12 +186,12 @@ double TaoOptimizer::aug_lag_fg(const Vec& X, Vec& G){
   obj += ((0.5*w_gap*w_gap)/mu);
   
   // Compute gradient 
-  DenseVector _grad = grad();
+  DenseVector _grad = gradient();
   
   info = VecGetArray(G, &g_array); CHKERRQ(info);
-  for(size_t i = 0; i < num_wl; i++)
+  for(size_t i = 0; i < num_weak_learners; i++)
     g_array[i] = _grad.val[i] + lambda + (w_gap/mu);
-  for(size_t i = num_wl; i < _grad.dim; i++)
+  for(size_t i = num_weak_learners; i < _grad.dim; i++)
     g_array[i] = _grad.val[i];
   
   info = VecRestoreArray(G, &g_array); CHKERRQ(info);
@@ -232,7 +213,7 @@ int TaoOptimizer::bounds(Vec& xl, Vec& xu){
   info = VecGetArray(xu, &xu_array); CHKERRQ(info);
   
   // psi have essentially no upper bound
-  for(size_t i = num_wl; i < num_wl+dim; i++)
+  for(size_t i = num_weak_learners; i < num_weak_learners+dim; i++)
     xu_array[i] = Optimizer::INFTY;
   
   info = VecRestoreArray(xu, &xu_array); CHKERRQ(info);
@@ -250,7 +231,7 @@ int TaoOptimizer::bounds_binary(Vec& xl, Vec& xu){
   info = VecGetArray(xl, &xl_array); CHKERRQ(info);
 
   // beta has no lower bound
-  xl_array[num_wl] = -Optimizer::INFTY;
+  xl_array[num_weak_learners] = -Optimizer::INFTY;
 
   info = VecRestoreArray(xl, &xl_array); CHKERRQ(info);
 
@@ -261,7 +242,7 @@ int TaoOptimizer::bounds_binary(Vec& xl, Vec& xu){
   info = VecGetArray(xu, &xu_array); CHKERRQ(info);
   
   // beta has no upper bound
-  xu_array[num_wl] = Optimizer::INFTY;
+  xu_array[num_weak_learners] = Optimizer::INFTY;
   
   info = VecRestoreArray(xu, &xu_array); CHKERRQ(info);
   

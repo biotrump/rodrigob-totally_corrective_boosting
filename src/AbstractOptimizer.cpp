@@ -48,15 +48,15 @@ AbstractOptimizer::AbstractOptimizer(const size_t& dim,
                        const double& epsilon,
                        const bool& binary):
   gap(std::numeric_limits<double>::max()),
-  num_wl(0), dim(dim), transposed(transposed), 
+  num_weak_learners(0), dim(dim), transposed(transposed),
   eta(eta), nu(nu), epsilon(epsilon), binary(binary), edge(0.0), x(0), 
   min_primal(std::numeric_limits<double>::max()),
   dual_obj(std::numeric_limits<double>::max()){ 
   
   if(binary){
-    x.resize(num_wl + 1);
+    x.resize(num_weak_learners + 1);
   } else {
-    x.resize(num_wl + dim);
+    x.resize(num_weak_learners + dim);
   }  
   // Note: dist is still un-initialized at this point
   return;
@@ -65,40 +65,56 @@ AbstractOptimizer::AbstractOptimizer(const size_t& dim,
 AbstractOptimizer::~AbstractOptimizer()
 {
   // Give up reference to dist
-  dist.val = NULL;
-  dist.dim = 0;
+  distribution.val = NULL;
+  distribution.dim = 0;
   return;
 }
+
+
+void AbstractOptimizer::set_distribution(const DenseVector& _distribution)
+{
+  // dist is just a reference to the true array
+  distribution.val = _distribution.val;
+  distribution.dim = _distribution.dim;
+  return;
+}
+
 
 void AbstractOptimizer::push_back(const SparseVector& u){
   
   double alpha = 0.0;
   
-  if(num_wl != 0){
+  if(num_weak_learners != 0){
     // lets do one corrective step
     DenseVector UW;
     DenseVector W;
     W.val = x.val;
-    W.dim = num_wl;
+    W.dim = num_weak_learners;
     
     if(transposed)
+    {
       transpose_dot(U, W, UW);
+    }
     else
+    {
       dot(U, W, UW);
+    }
     
     W.val = NULL;
     W.dim = 0; 
     
     axpy(-1.0, UW, u, UW);
     
-    double dx = dot(dist, UW);
+    double dx = dot(distribution, UW);
     double maxx = max(UW); 
     alpha = std::max(0.0, std::min(1.0, dx/(eta*maxx*maxx)));
   }
   
   DenseVector u_dense(u.dim);
   for(size_t i = 0; i < u.nnz; i++)
+  {
     u_dense.val[u.idx[i]] = u.val[i];
+  }
   
   U.push_back(u_dense);
   
@@ -116,18 +132,18 @@ void AbstractOptimizer::push_back(const SparseVector& u){
   
   // Copy previous value into x 
   // set 0 wt for new weak learner
-  for(size_t i = 0; i < num_wl; i++)
+  for(size_t i = 0; i < num_weak_learners; i++)
     x.val[i] = (1.0 - alpha)*x_tmp.val[i];
-  if(num_wl == 0)
-    x.val[num_wl] = 1.0;
+  if(num_weak_learners == 0)
+    x.val[num_weak_learners] = 1.0;
   else
-    x.val[num_wl] = alpha;
+    x.val[num_weak_learners] = alpha;
   
   // Now copy the rest of x back
-  for(size_t i = num_wl+1; i < x.dim; i++)
+  for(size_t i = num_weak_learners+1; i < x.dim; i++)
     x.val[i] = x_tmp.val[i-1];
   
-  num_wl++;
+  num_weak_learners++;
   
   // reset the min_primal value seen so far
   min_primal = std::numeric_limits<double>::max();
@@ -142,16 +158,16 @@ void AbstractOptimizer::push_back(const SparseVector& u){
 }
 
 
-double AbstractOptimizer::fun_erlp(){
+double AbstractOptimizer::erlp_function(){
   fun_timer.start();  
   
   DenseVector W;
   W.val = x.val;
-  W.dim = num_wl;
+  W.dim = num_weak_learners;
   
   // psi is obtained by simply offsetting num_wl elements of x 
   // Whatever is left is psi 
-  double* psi = x.val + num_wl;
+  double* psi = x.val + num_weak_learners;
   double psi_sum = 0.0;
   for(size_t i = 0; i < dim; i++) psi_sum += psi[i];
 
@@ -173,11 +189,11 @@ double AbstractOptimizer::fun_erlp(){
   // Safe exponentiation
   dual_obj = 0.0;
   for(size_t i = 0; i < tmp_dist.dim; i++) {
-    dist.val[i] = exp(tmp_dist.val[i] - exp_max)/dim;
-    dual_obj += dist.val[i];
+    distribution.val[i] = exp(tmp_dist.val[i] - exp_max)/dim;
+    dual_obj += distribution.val[i];
   }
 
-  scale(dist, 1.0/dual_obj);
+  scale(distribution, 1.0/dual_obj);
   
   dual_obj += 1e-10;
   dual_obj = (log(dual_obj)+ exp_max)/eta;
@@ -193,38 +209,42 @@ double AbstractOptimizer::fun_erlp(){
 
 // Compute objective function value 
 // Just a dummy forwarding function 
-double AbstractOptimizer::fun(){
+double AbstractOptimizer::function(){
   if(binary)
-    return fun_binary();
+  {
+    return binary_function();
+  }
   else 
-    return fun_erlp();
+  {
+    return erlp_function();
+  }
 }
 
-DenseVector AbstractOptimizer::grad_erlp(){
+DenseVector AbstractOptimizer::erlp_gradient(){
   grad_timer.start();
   DenseVector grad_w;
   
   // since the booster stores U transpose do normal dot and not
   // transpose dot
   if(transposed)
-    dot(U, dist, grad_w);
+    dot(U, distribution, grad_w);
   else
-    transpose_dot(U, dist, grad_w);
+    transpose_dot(U, distribution, grad_w);
   
   edge = max(grad_w);
   // Adjust the gradient 
   scale(grad_w, -1.0);
 
-  DenseVector grad(num_wl + dim);
+  DenseVector grad(num_weak_learners + dim);
   
   // copy grad_w 
-  for(size_t i = 0; i < num_wl; i++)
+  for(size_t i = 0; i < num_weak_learners; i++)
     grad.val[i] = grad_w.val[i];
   
 
   // set grad_psi = -dist + 1.0/nu
   for(size_t i = 0; i < dim; i++)
-    grad.val[i+num_wl] = (1.0/nu) - dist.val[i];
+    grad.val[i+num_weak_learners] = (1.0/nu) - distribution.val[i];
 
   // The lowest primal objective we have seen so far
   min_primal = std::min(min_primal, primal());
@@ -240,11 +260,11 @@ DenseVector AbstractOptimizer::grad_erlp(){
 // Assume that dist has been set by previous call to fun
 // compute duality gap as a side effect 
 // Just a dummy forwarding function 
-DenseVector AbstractOptimizer::grad(){
+DenseVector AbstractOptimizer::gradient(){
   if(binary)
-    return grad_binary();
+    return binary_gradient();
   else
-    return grad_erlp();
+    return erlp_gradient();
 }
 
 // Return primal objective function 
@@ -252,9 +272,9 @@ DenseVector AbstractOptimizer::grad(){
 // to grad  
 double AbstractOptimizer::primal(){
   if(binary)
-    return edge + (binary_relent(dist, nu)/eta);
+    return edge + (binary_relent(distribution, nu)/eta);
   
-  return edge + (relent(dist)/eta);
+  return edge + (relent(distribution)/eta);
   
 }
 
@@ -265,15 +285,15 @@ bool AbstractOptimizer::duality_gap_met(){
 
 
 // Compute objective function value for binary boost  
-double AbstractOptimizer::fun_binary(){
+double AbstractOptimizer::binary_function(){
   
   fun_timer.start();
   DenseVector W;
   W.val = x.val;
-  W.dim = num_wl;
+  W.dim = num_weak_learners;
   
   // beta is last element of x 
-  double beta = x.val[num_wl];
+  double beta = x.val[num_weak_learners];
 
   DenseVector tmp_dist;
   
@@ -337,17 +357,17 @@ double AbstractOptimizer::fun_binary(){
     tmp_dist.val[i] = eta*(tmp_dist.val[i] + beta);
     if(tmp_dist.val[i] < x_min){
       dual_obj += ((1-nu_d)/nu_d)*exp(tmp_dist.val[i]) + log(nu_d) - tmp_dist.val[i];
-      dist.val[i] = 1.0/nu;
+      distribution.val[i] = 1.0/nu;
       continue;
     }
     if(tmp_dist.val[i] > x_max){
       dual_obj += log(1-nu_d);
-      dist.val[i] = 0.0;
+      distribution.val[i] = 0.0;
       continue;
     }
     double tmp = (1.0 - nu_d)*exp(tmp_dist.val[i])/nu_d;
     dual_obj += log_one_plus_x(tmp) + log(nu_d) - tmp_dist.val[i];
-    dist.val[i] = 1.0/(nu*(1.0 + tmp));
+    distribution.val[i] = 1.0/(nu*(1.0 + tmp));
   }
 
   dual_obj /= (nu*eta);
@@ -358,7 +378,7 @@ double AbstractOptimizer::fun_binary(){
 }
 
 // Assume that dist has been set by previous call to fun
-DenseVector AbstractOptimizer::grad_binary(){
+DenseVector AbstractOptimizer::binary_gradient(){
   
   grad_timer.start();
   DenseVector grad_w;
@@ -366,22 +386,22 @@ DenseVector AbstractOptimizer::grad_binary(){
   // since the booster stores U transpose do normal dot and not
   // transpose dot
   if(transposed)
-    dot(U, dist, grad_w);
+    dot(U, distribution, grad_w);
   else
-    transpose_dot(U, dist, grad_w);
+    transpose_dot(U, distribution, grad_w);
   
   edge = max(grad_w);
   // Adjust the gradient 
   scale(grad_w, -1.0);
   
-  DenseVector grad(num_wl + 1);
+  DenseVector grad(num_weak_learners + 1);
   
   // copy grad_w 
-  for(size_t i = 0; i < num_wl; i++)
+  for(size_t i = 0; i < num_weak_learners; i++)
     grad.val[i] = grad_w.val[i];
   
   // grad w.r.t beta
-  grad.val[num_wl] = 1.0 - sum(dist);
+  grad.val[num_weak_learners] = 1.0 - sum(distribution);
   
   // The lowest primal objective we have seen so far
   min_primal = std::min(min_primal, primal());

@@ -18,7 +18,7 @@ namespace CD{
 class CoordinateDescentOptimizer : public AbstractOptimizer {
   
 private:
-  double proj_simplex(DenseVector& dist, const double& exp_max);
+  double proj_simplex(DenseVector& distribution, const double& exp_max);
 
   double line_search(DenseVector& W, 
                      const DenseVector& grad_w, 

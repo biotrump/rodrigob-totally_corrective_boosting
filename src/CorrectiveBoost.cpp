@@ -56,18 +56,18 @@ void CorrectiveBoost::update_weights(const WeakLearner& wl){
   
   double exp_max = 0.0;
   
-  for(size_t i = 0; i < dist.dim; i++){
-    dist.val[i] = -eta * UW.val[i];
-    exp_max = std::max(exp_max,dist.val[i]);
+  for(size_t i = 0; i < examples_distribution.dim; i++){
+    examples_distribution.val[i] = -eta * UW.val[i];
+    exp_max = std::max(exp_max,examples_distribution.val[i]);
   }
   
   double dual_obj = 0.0;
-  for(size_t i = 0; i < dist.dim; i++){
-    dist.val[i] = exp(dist.val[i] - exp_max)/dist.dim;
-    dual_obj += dist.val[i];
+  for(size_t i = 0; i < examples_distribution.dim; i++){
+    examples_distribution.val[i] = exp(examples_distribution.val[i] - exp_max)/examples_distribution.dim;
+    dual_obj += examples_distribution.val[i];
   }
   
-  minPt1dt1 = proj_simplex(dist, exp_max);
+  minPt1dt1 = proj_simplex(examples_distribution, exp_max);
   
   return;
 }
@@ -95,7 +95,7 @@ void CorrectiveBoost::update_linear_ensemble(const WeakLearner& wl){
   }
 
   // set alpha
-  double dx = dot(dist,x);
+  double dx = dot(examples_distribution,x);
 
   // find the maximum value of x
   double max_x = max(x); 
@@ -143,7 +143,7 @@ bool CorrectiveBoost::stopping_criterion(std::ostream& os){
 
 void CorrectiveBoost::update_stopping_criterion(const WeakLearner& wl){
   
-  minPqdq1 = std::min(wl.get_edge()+(relent(dist)/eta), minPqdq1);
+  minPqdq1 = std::min(wl.get_edge()+(relent(examples_distribution)/eta), minPqdq1);
   return;
 }
 

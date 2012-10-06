@@ -48,8 +48,8 @@ protected:
 public:
 
   LpBoost(AbstractOracle* &oracle,
-           const int& num_pt, 
-           const int& max_iter,
+           const int& num_data_points,
+           const int& max_iterations,
            const double& eps,
            const double& nu);
   ~LpBoost(void);

@@ -14,14 +14,14 @@ namespace totally_corrective_boosting
  *
  * Dai-Fletcher Projected Gradient method for SVM [1].
  * Modified from the GPDT software [2] for inequality constraints.
- * Projected gradient method [3] for simplex constraints. 
- * 
- * 
+ * Projected gradient method [3] for simplex constraints.
+ *
+ *
  * References:
  *
  *   [1] Y. H. Dai and R. Fletcher,
  *       New algorithms for singly linearly constrained quadratic programs
- *       subject to lower and upper bounds, 
+ *       subject to lower and upper bounds,
  *       Math. Program., 2006.
  *
  *   [2] L. Zanni, T. Serafini, and G. Zanghirati,
@@ -39,9 +39,9 @@ namespace totally_corrective_boosting
 
 
 namespace DaiFletcher{
-  const double tol_r = 1e-16;
-  const double tol_lam = 1e-15;
-  const size_t max_iter = 10000;
+const double tol_r = 1e-16;
+const double tol_lam = 1e-15;
+const size_t max_iter = 10000;
 }
 
 // Magic parameters of the Projected Gradient algorithm
@@ -50,50 +50,50 @@ namespace DaiFletcher{
 // All constants are arbitrary
 
 namespace ProjGrad{
-  const double alpha_min = 1e-30;
-  const double alpha_max = 10;
-  const double gamma = 1e-4;
-  const double sigma1 = 0.1;
-  const double sigma2 = 0.9;
-  const size_t M = 10; 
-  const size_t max_iter = 10000;
+const double alpha_min = 1e-30;
+const double alpha_max = 10;
+const double gamma = 1e-4;
+const double sigma1 = 0.1;
+const double sigma2 = 0.9;
+const size_t M = 10;
+const size_t max_iter = 10000;
 }
 
 class ProjectedGradientOptimizer : public AbstractOptimizer {
 
 private:
-  double phi(DenseVector& x, 
-             const DenseVector& a, 
-             const double& b, 
-             const DenseVector& z, 
-             const DenseVector& l, 
-             const DenseVector& u,
-             const double& lambda);
-  
-  size_t project(DenseVector& x,
-                 const DenseVector& a, 
-                 const double& b, 
-                 const DenseVector& z, 
-                 const DenseVector& l, 
-                 const DenseVector& u, 
-                 const size_t& max_iter);
-  
+    double phi(DenseVector& x,
+               const DenseVector& a,
+               const double& b,
+               const DenseVector& z,
+               const DenseVector& l,
+               const DenseVector& u,
+               const double& lambda);
+
+    size_t project(DenseVector& x,
+                   const DenseVector& a,
+                   const double& b,
+                   const DenseVector& z,
+                   const DenseVector& l,
+                   const DenseVector& u,
+                   const size_t& max_iter);
+
 protected:
-  void project_erlp(DenseVector& z);
-  
-  void project_binary(DenseVector& z);
-  
+    void project_erlp(DenseVector& z);
+
+    void project_binary(DenseVector& z);
+
 public:
-  
-  ProjectedGradientOptimizer(const size_t& dim,
-                const bool& transposed, 
-                const double& eta, 
-                const double& nu,
-                const double& epsilon,
-                const bool& binary);
-  ~ProjectedGradientOptimizer(void){ }
-  
-  virtual int solve(void);
+
+    ProjectedGradientOptimizer(const size_t& dim,
+                               const bool& transposed,
+                               const double& eta,
+                               const double& nu,
+                               const double& epsilon,
+                               const bool& binary);
+    ~ProjectedGradientOptimizer(void){ }
+
+    int solve(void);
 }; 
 
 } // end of namespace totally_corrective_boosting

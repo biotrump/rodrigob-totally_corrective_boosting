@@ -27,7 +27,7 @@ ErlpBoost::ErlpBoost(AbstractOracle* &oracle,
     }
     assert(solver);
     // Set reference to the dist array in the solver
-    solver->set_dist(dist);
+    solver->set_distribution(examples_distribution);
     return;
 }
 
@@ -45,7 +45,7 @@ ErlpBoost::ErlpBoost(AbstractOracle* &oracle,
 
     assert(solver);
     // Set reference to the dist array in the solver
-    solver->set_dist(dist);
+    solver->set_distribution(examples_distribution);
     return;
 }
 
@@ -77,9 +77,9 @@ void ErlpBoost::update_stopping_criterion(const WeakLearner& wl){
 
     double gamma = wl.get_edge();
     if(binary){
-        gamma += (binary_relent(dist, nu)/eta);
+        gamma += (binary_relent(examples_distribution, nu)/eta);
     }else{
-        gamma += (relent(dist)/eta);
+        gamma += (relent(examples_distribution)/eta);
     }
 
     if(gamma < minPqdq1) minPqdq1 = gamma;

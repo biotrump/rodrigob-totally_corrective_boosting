@@ -27,9 +27,9 @@ protected:
 public:
 
   AdaBoost(AbstractOracle* &oracle,
-            const int& num_pt, 
-            const int& max_iter,
-	    const int& disp_freq);
+            const int& num_data_points,
+            const int& max_iterations,
+            const int& display_frequency);
   ~AdaBoost();
   
 };

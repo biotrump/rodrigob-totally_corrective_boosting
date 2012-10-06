@@ -32,9 +32,9 @@ void AdaBoost::update_weights(const WeakLearner& wl){
     // Predictions are premultiplied with the labels already in the weak
     // learner
     int idx = pred.idx[i]; 
-    dist.val[idx] = dist.val[idx]*exp(-alpha*pred.val[i]);
+    examples_distribution.val[idx] = examples_distribution.val[idx]*exp(-alpha*pred.val[i]);
   }
-  normalize(dist);
+  normalize(examples_distribution);
   return;
 }
 
@@ -51,7 +51,7 @@ void AdaBoost::update_linear_ensemble(const WeakLearner& wl){
 }
 
 bool AdaBoost::stopping_criterion(std::ostream& os){
-  return false;
+  return false; // AdaBoost will progress until max number of iterations is reached
 }
 
 

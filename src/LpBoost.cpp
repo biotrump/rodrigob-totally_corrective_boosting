@@ -99,6 +99,7 @@ void LpBoost::update_weights(const WeakLearner& wl){
     delete newrow;
     delete newrowidx;
 
+    // solve in the primal
     solver.primal();
     // solver.dual();
 
@@ -106,8 +107,8 @@ void LpBoost::update_weights(const WeakLearner& wl){
     double *sol = solver.primalColumnSolution();
     assert(sol);
     // std::cout << sol[0] << std::endl << std::endl;
-    for(int i = 0; i < num_pt; i++){
-        dist.val[i] = sol[i+1];
+    for(int i = 0; i < num_data_points; i++){
+        examples_distribution.val[i] = sol[i+1];
         // std::cout << dist.val[i] << std::endl;
     }
 

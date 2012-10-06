@@ -28,21 +28,21 @@ class AbstractOptimizer{
 private:
 
   // ERLPBoost function value and gradient
-  double fun_erlp(void);
+  double erlp_function(void);
   
-  DenseVector grad_erlp(void);  
+  DenseVector erlp_gradient(void);
 
   // Binary ERLPBoost function value and gradient
-  double fun_binary(void);
+  double binary_function(void);
   
-  DenseVector grad_binary(void);  
+  DenseVector binary_gradient(void);
   
   // duality gap
   double gap;
     
 protected:
   // Columns of U 
-  size_t num_wl; 
+  size_t num_weak_learners;
   
   // Rows of U
   size_t dim;        
@@ -85,11 +85,11 @@ public:
   
   // Below are return values. 
   
-  // Vector with current solution
+  /// Vector with current solution
   DenseVector x;
   
-  // Vector to store the distribution
-  DenseVector dist;          
+  /// Vector to store the distribution
+  DenseVector distribution;
   
   // minimum primal value seen so far
   double min_primal;
@@ -107,20 +107,15 @@ public:
   
   virtual ~AbstractOptimizer(void);
   
-  void set_dist(const DenseVector& _dist){
-    // dist is just a reference to the true array
-    dist.val = _dist.val;
-    dist.dim = _dist.dim;
-    return;
-  }
+  void set_distribution(const DenseVector& _distribution);
   
   void push_back(const SparseVector& u);
   
-  // ERLPBoost function 
-  double fun(void);
+  /// ERLPBoost function
+  double function(void);
   
-  // ERLPBoost gradient 
-  DenseVector grad(void);
+  /// ERLPBoost gradient
+  DenseVector gradient(void);
 
   // ERLPBoost primal function
   double primal(void);
@@ -130,7 +125,7 @@ public:
   bool duality_gap_met(void);
   
   
-  // Derived classes will implement these methods 
+  /// Derived classes will implement this method
   virtual int solve(void) = 0;
   
 }; 

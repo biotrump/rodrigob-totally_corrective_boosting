@@ -52,16 +52,16 @@ protected:
 public:
 
   ErlpBoost(AbstractOracle* &oracle,
-             const int& num_pt, 
-             const int& max_iter,
+             const int& num_data_points,
+             const int& max_iterations,
              const double& eps, 
              const double& nu,
              const bool& binary,
              AbstractOptimizer* &solver);
 
   ErlpBoost(AbstractOracle* &oracle,
-             const int& num_pt, 
-             const int& max_iter,
+             const int& num_data_points,
+             const int& max_iterations,
              const double& eps, 
 	     const double& eta,
              const double& nu,

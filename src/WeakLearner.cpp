@@ -10,15 +10,29 @@ namespace totally_corrective_boosting
 {
 
 WeakLearner::WeakLearner():
-  wt(), edge(0), prediction(){}
+  wt(), edge(0), prediction()
+{
+    // nothing to do here
+    return;
+}
+
 
 WeakLearner::WeakLearner(const SparseVector& wt,
                            const double& edge, 
                            const SparseVector& prediction):
-  wt(wt), edge(edge), prediction(prediction){}
+  wt(wt), edge(edge), prediction(prediction)
+{
+    // nothing to do here
+    return;
+}
+
 
 WeakLearner::WeakLearner(const WeakLearner& wl):
-  wt(wl.wt), edge(wl.edge), prediction(wl.prediction){ }
+  wt(wl.wt), edge(wl.edge), prediction(wl.prediction)
+{
+    // nothing to do here
+    return;
+}
 
 double WeakLearner::predict(const DenseVector& x) const{
   return dot(wt, x);

@@ -22,43 +22,48 @@ protected:
   AbstractOracle* oracle;
 
   /// Number of data points
-  int num_pt;
+  int num_data_points;
   
   /// Maximum number of iterations
-  int max_iter;
+  int max_iterations;
 
   /// Affects how often we dump the model to file
-  int disp_freq;
+  int display_frequency;
   
   /// The model is just an ensemble of weak hypothesis seen so far
   Ensemble model;
   
   /// Distribution on the examples
-  DenseVector dist;
+  DenseVector examples_distribution;
 
   /// Keep track of time per iteration
   Timer timer;
 
     
-  virtual void update_weights(const WeakLearner& wl)=0;
-  
+  /// Update the strong classifier
+  /// (add the new weak learner and update the weights of the weak classifiers)
   virtual void update_linear_ensemble(const WeakLearner& wl)=0;
-  
+
+  /// Update the weights of the examples distribution
+  virtual void update_weights(const WeakLearner& wl)=0;
+
+  virtual void update_stopping_criterion(const WeakLearner& wl)=0;
+
+  /// should we stop now ?
   virtual bool stopping_criterion(std::ostream& os)=0;
   
-  virtual void update_stopping_criterion(const WeakLearner& wl)=0;
   
 public:
     
   AbstractBooster(AbstractOracle* &oracle,
-           const int& num_pt, 
-           const int& max_iter);
+           const int& num_data_points,
+           const int& max_iterations);
 
 
   AbstractBooster(AbstractOracle* &oracle,
-           const int& num_pt, 
-           const int& max_iter,
-	   const int& disp_freq);
+           const int& num_data_points,
+           const int& max_iterations,
+           const int& display_frequency);
 
   virtual ~AbstractBooster();
 

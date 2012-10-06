@@ -43,7 +43,7 @@ private:
 
   void update_stopping_criterion(const WeakLearner& wl);
 
-  double proj_simplex(DenseVector& dist, const double& exp_max);
+  double proj_simplex(DenseVector& examples_distribution, const double& exp_max);
 
   double line_search(DenseVector ut);
 
@@ -52,21 +52,21 @@ private:
   public:
 
   CorrectiveBoost(AbstractOracle* &oracle,
-             const int& num_pt, 
-             const int& max_iter,
+             const int& num_data_points,
+             const int& max_iterations,
              const double& eps, 
 	      const double& nu,
 	      const bool& linesearch,
-	      const int& disp_freq);
+              const int& display_frequency);
 
   CorrectiveBoost(AbstractOracle* &oracle,
-             const int& num_pt, 
-             const int& max_iter,
+             const int& num_data_points,
+             const int& max_iterations,
              const double& eps, 
 	      const double& eta,
 	      const double& nu,
 	      const bool& linesearch,
-	      const int& disp_freq);
+              const int& display_frequency);
 
   ~CorrectiveBoost();
   
