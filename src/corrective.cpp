@@ -24,7 +24,7 @@
 #include "corrective.hpp"
 
 
-CCorrective::CCorrective(AbstractOracle* &oracle, 
+CorrectiveBoost::CorrectiveBoost(AbstractOracle* &oracle, 
 			 const int& num_pt, 
 			 const int& max_iter,
 			 const double& eps, 
@@ -41,7 +41,7 @@ CCorrective::CCorrective(AbstractOracle* &oracle,
   return;
 }
 
-CCorrective::CCorrective(AbstractOracle* &oracle, 
+CorrectiveBoost::CorrectiveBoost(AbstractOracle* &oracle, 
                          const int& num_pt, 
                          const int& max_iter,
                          const double& eps, 
@@ -56,10 +56,16 @@ CCorrective::CCorrective(AbstractOracle* &oracle,
   eps(eps), 
   nu(nu), 
   eta(eta){
-  return;
-  }
+    return;
+}
 
-void CCorrective::update_weights(const WeakLearner& wl){
+CorrectiveBoost::~CorrectiveBoost()
+{
+    // nothing to do here
+    return;
+}
+
+void CorrectiveBoost::update_weights(const WeakLearner& wl){
   
   double exp_max = 0.0;
   
@@ -80,21 +86,21 @@ void CCorrective::update_weights(const WeakLearner& wl){
 }
 
 
-void CCorrective::update_linear_ensemble(const WeakLearner& wl){
+void CorrectiveBoost::update_linear_ensemble(const WeakLearner& wl){
 
   std::cout << "Num of wl: " << model.size() << std::endl;
   
-  svec ut = wl.get_prediction();
+  SparseVector ut = wl.get_prediction();
   
-  dvec x(ut.dim);
+  DenseVector x(ut.dim);
   for(size_t i = 0; i < ut.nnz; i++){
     x.val[ut.idx[i]] = ut.val[i];
   }
   
-  dvec ut_dense(x);
+  DenseVector ut_dense(x);
   
   if(UW.dim>0){
-    dvec w = model.get_wts();
+    DenseVector w = model.get_wts();
     // subtract Uw from x and store in x
     for(size_t i = 0; i < x.dim; i++){
       x.val[i] -=  UW.val[i];
@@ -140,7 +146,7 @@ void CCorrective::update_linear_ensemble(const WeakLearner& wl){
   return;
 }
 
-bool CCorrective::stopping_criterion(std::ostream& os){
+bool CorrectiveBoost::stopping_criterion(std::ostream& os){
   std::cout << "min of Obj Values : " << minPqdq1 << std::endl;
   std::cout << "min Lower Bound : " << minPt1dt1 << std::endl;
   std::cout << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
@@ -148,7 +154,7 @@ bool CCorrective::stopping_criterion(std::ostream& os){
   return(minPqdq1 <=  minPt1dt1 + eps/2.0);
 }
 
-void CCorrective::update_stopping_criterion(const WeakLearner& wl){
+void CorrectiveBoost::update_stopping_criterion(const WeakLearner& wl){
   
   minPqdq1 = std::min(wl.get_edge()+(relent(dist)/eta), minPqdq1);
   return;
@@ -156,13 +162,13 @@ void CCorrective::update_stopping_criterion(const WeakLearner& wl){
 
 
 // Return the dual objective function after projection
-double CCorrective::proj_simplex(dvec& dist, const double& exp_max){
+double CorrectiveBoost::proj_simplex(DenseVector& dist, const double& exp_max){
 
   double cap = 1.0/nu;
   double theta = 0.0;
   size_t dim = dist.dim;
   int N = dist.dim - 1;
-  dvec tmpdist(dist);
+  DenseVector tmpdist(dist);
   // sort dist from smallest to largest
   std::sort(tmpdist.val, tmpdist.val+tmpdist.dim);
   // store the sum of the dist in Z			 

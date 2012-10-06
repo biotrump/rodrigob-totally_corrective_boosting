@@ -20,16 +20,12 @@
 #ifndef _WEAKLEARNERDSTUMP_HPP_
 #define _WEAKLEARNERDSTUMP_HPP_
 
-/** Class to encapsulate a weak learner. For now our weak learner is a
-    linear predictor. 
-*/ 
+#include "weak_learner.hpp"
 
 #include "vec.hpp"
-#include "weak_learner.hpp"
-#include "weak_learner_dstump.hpp"
 
-class CWeakLearnerDstump: public WeakLearner{
-  //class CWeakLearnerDstump{
+class DecisionStumpWeakLearner: public WeakLearner{
+
 private:
 
 
@@ -46,24 +42,24 @@ private:
   
 public:
   
-  CWeakLearnerDstump();
+  DecisionStumpWeakLearner();
 
-  CWeakLearnerDstump(const svec& wt, const double& edge, const svec& prediction, 
+  DecisionStumpWeakLearner(const SparseVector& wt, const double& edge, const SparseVector& prediction,
 		     const double& thresh, const bool& direction, const int& idx);
   
-  CWeakLearnerDstump(const CWeakLearnerDstump& wl);
+  DecisionStumpWeakLearner(const DecisionStumpWeakLearner& wl);
   
-  ~CWeakLearnerDstump(){ }
+  ~DecisionStumpWeakLearner(){ }
 
   std::string get_type() const;
   
   // Predict on examples
-  double predict(const dvec& x) const;
-  double predict(const svec& x) const;
+  double predict(const DenseVector& x) const;
+  double predict(const SparseVector& x) const;
   // predict on a data matrix
   // assumes it's read in using readlibSVM_transpose
   // i.e. Data must be a vector of hypotheses
-  dvec   predict(const std::vector<svec>& Data) const;
+  DenseVector   predict(const std::vector<SparseVector>& Data) const;
 
   // methods to dump and load data
   void dump(std::ostream& os) const;
@@ -76,13 +72,13 @@ public:
   size_t get_idx(void) const {return idx;}
   
   friend 
-  std::ostream& operator << (std::ostream& os, const CWeakLearnerDstump& wl);  
+  std::ostream& operator << (std::ostream& os, const DecisionStumpWeakLearner& wl);
 
   friend
-  std::istream& operator >> (std::istream& in, CWeakLearnerDstump& wl);
+  std::istream& operator >> (std::istream& in, DecisionStumpWeakLearner& wl);
 
   friend 
-  bool operator == (const CWeakLearnerDstump& wl1, const CWeakLearnerDstump& wl2);
+  bool operator == (const DecisionStumpWeakLearner& wl1, const DecisionStumpWeakLearner& wl2);
 
 };
 

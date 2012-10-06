@@ -32,31 +32,31 @@ protected:
   // Perhaps these should be const members?
   
   // The weak learner predicts with <wt, x> 
-  svec wt;
+  SparseVector wt;
   
   // Edge on the training dataset
   double edge;
   
   // Vector of predictions on the training dataset.
-  svec prediction;
+  SparseVector prediction;
   
 public:
 
   WeakLearner();
   
-  WeakLearner(const svec& wt, const double& edge, const svec& prediction);
+  WeakLearner(const SparseVector& wt, const double& edge, const SparseVector& prediction);
   
   WeakLearner(const WeakLearner& wl);
   
   virtual ~WeakLearner(){ }
   
   // Predict on single example
-  virtual double predict(const dvec& x) const;
-  virtual double predict(const svec& x) const;
+  virtual double predict(const DenseVector& x) const;
+  virtual double predict(const SparseVector& x) const;
   // predict on a data matrix
   // assumes it's read in using readlibSVM_transpose
   // i.e. Data must be a vector of hypotheses
-  virtual dvec   predict(const std::vector<svec>& Data) const;
+  virtual DenseVector   predict(const std::vector<SparseVector>& Data) const;
 
   // functions to get around the fact that friends can't be virtual
   virtual void dump(std::ostream& os) const;
@@ -65,8 +65,8 @@ public:
   virtual std::string get_type() const;
   
   double get_edge(void) const { return edge; }
-  svec get_wt(void) const { return wt;}
-  svec get_prediction(void) const { return prediction; }
+  SparseVector get_wt(void) const { return wt;}
+  SparseVector get_prediction(void) const { return prediction; }
 
   // ugly hack. Need to figure out how to avoid.
   virtual bool get_direction(void) const {return false; }

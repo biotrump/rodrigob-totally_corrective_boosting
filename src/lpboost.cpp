@@ -63,7 +63,7 @@ LPBoost::LPBoost(AbstractOracle* &oracle,
   return;
 }
 
-LPBoost::~CLPBoost(void){
+LPBoost::~CLPBoost(){
   
 }
 
@@ -91,7 +91,7 @@ void LPBoost::update_weights(const WeakLearner& wl){
   // The predictions are already pre-multiplied with the labels already
   // in the weak learner
   
-  svec pred = wl.get_prediction();
+  SparseVector pred = wl.get_prediction();
 
   // std::cout << pred
   //           << "Number of rows: " << solver.getNumRows() << std::endl
@@ -130,7 +130,7 @@ void LPBoost::update_weights(const WeakLearner& wl){
   // std::cout << std::endl << wt[0] << std::endl << std::endl;
   // wt[0] is the summation to one constraint 
 
-  dvec wtvec(model.size());
+  DenseVector wtvec(model.size());
   for(size_t i = 0; i < wtvec.dim; i++)
     wtvec.val[i] = -wt[i+1];
   

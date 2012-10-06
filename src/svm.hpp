@@ -34,14 +34,14 @@ private:
   bool reflexive; // if true then training set is [data, -data]
   
 public:
-  Svm(std::vector<svec>& data,
+  Svm(std::vector<SparseVector>& data,
        std::vector<int>& labels,
        const bool& transposed, 
        const bool& reflexive);
   ~Svm();
   
   // given distribution return weak learner with maximum edge
-  WeakLearner* max_edge_wl(const dvec& dist); 
+  WeakLearner* max_edge_wl(const DenseVector& dist); 
   
 };
 

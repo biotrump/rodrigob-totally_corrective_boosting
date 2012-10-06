@@ -21,7 +21,7 @@
 #include <algorithm>
 #include "decisionstump.hpp"
 
-DecisionStump::DecisionStump(std::vector<svec>& data, 
+DecisionStump::DecisionStump(std::vector<SparseVector>& data, 
                                std::vector<int>& labels, 
                                bool less_than):
   AbstractOracle(data, labels), less_than(less_than){
@@ -31,8 +31,8 @@ DecisionStump::DecisionStump(std::vector<svec>& data,
   // we sort the data upon initialization so we only have to 
   // do it once.
   
-  CTimer sort_timer;
-  std::vector<svec>::iterator it;
+  Timer sort_timer;
+  std::vector<SparseVector>::iterator it;
   sort_timer.start();
   for(it = data.begin(); it != data.end(); it++){
     ivec tmp = argsort(*it);
@@ -49,7 +49,7 @@ DecisionStump::~CDecisionStump(){
   return;
 }
 
-CWeakLearnerDstump* DecisionStump::max_edge_wl(const dvec& dist){
+DecisionStumpWeakLearner* DecisionStump::max_edge_wl(const DenseVector& dist){
 
   double best_threshold = 1.0;
   double best_edge = -1.0;
@@ -80,7 +80,7 @@ CWeakLearnerDstump* DecisionStump::max_edge_wl(const dvec& dist){
     }
   }
   
-  svec result(data[max_idx].dim, data[max_idx].dim);
+  SparseVector result(data[max_idx].dim, data[max_idx].dim);
   
   // initially set result to zero
   for(size_t i = 0; i < result.dim; i++){
@@ -108,14 +108,14 @@ CWeakLearnerDstump* DecisionStump::max_edge_wl(const dvec& dist){
     result.val[i] *= labels[i];
     edge += result.val[i]*dist.val[i];
   }
-  svec wt(size, 1);
+  SparseVector wt(size, 1);
   wt.idx[0] = max_idx;
   wt.val[0] = 1.0;
 
   //std::cout << "thresh: " << best_threshold << " dir: " << ge;
   //std::cout << " idx: " << max_idx << " edge: " << edge << std::endl;
   
-  CWeakLearnerDstump* wl = new CWeakLearnerDstump(wt,
+  DecisionStumpWeakLearner* wl = new DecisionStumpWeakLearner(wt,
                                                   edge,
                                                   result,
                                                   best_threshold,
@@ -129,7 +129,7 @@ CWeakLearnerDstump* DecisionStump::max_edge_wl(const dvec& dist){
 
 void DecisionStump::fbthresh_ge(const size_t& idx, 
                                  const double& dist_diff, 
-                                 const dvec& dist, 
+                                 const DenseVector& dist, 
                                  const double& init_edge,
                                  double& best_threshold, 
                                  double& best_edge){
@@ -187,7 +187,7 @@ void DecisionStump::fbthresh_ge(const size_t& idx,
 
 void DecisionStump::fbthresh_le(const size_t& idx, 
                                  const double& dist_diff, 
-                                 const dvec& dist, 
+                                 const DenseVector& dist, 
                                  const double& init_edge,
                                  double& best_threshold, 
                                  double& best_edge){
@@ -244,7 +244,7 @@ void DecisionStump::fbthresh_le(const size_t& idx,
 
 
 void DecisionStump::fbthresh(const size_t& idx, 
-                              const dvec& dist, 
+                              const DenseVector& dist, 
                               const double& init_edge, 
                               double& best_threshold, 
                               double& best_edge, 
@@ -286,7 +286,7 @@ void DecisionStump::fbthresh(const size_t& idx,
 }
 
 
-ivec DecisionStump::argsort(svec unsorted){
+ivec DecisionStump::argsort(SparseVector unsorted){
   
   size_t dim = unsorted.nnz;
   

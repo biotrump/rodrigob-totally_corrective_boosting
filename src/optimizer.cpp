@@ -81,7 +81,7 @@ AbstractOptimizer::AbstractOptimizer(const size_t& dim,
   return;
 }
 
-AbstractOptimizer::~COptimizer(void){
+AbstractOptimizer::~COptimizer(){
   
   // Give up reference to dist
   dist.val = NULL;
@@ -89,14 +89,14 @@ AbstractOptimizer::~COptimizer(void){
   return;
 }
 
-void AbstractOptimizer::push_back(const svec& u){
+void AbstractOptimizer::push_back(const SparseVector& u){
   
   double alpha = 0.0;
   
   if(num_wl != 0){
     // lets do one corrective step
-    dvec UW;
-    dvec W;
+    DenseVector UW;
+    DenseVector W;
     W.val = x.val;
     W.dim = num_wl;
     
@@ -115,7 +115,7 @@ void AbstractOptimizer::push_back(const svec& u){
     alpha = std::max(0.0, std::min(1.0, dx/(eta*maxx*maxx)));
   }
   
-  dvec u_dense(u.dim);
+  DenseVector u_dense(u.dim);
   for(size_t i = 0; i < u.nnz; i++)
     u_dense.val[u.idx[i]] = u.val[i];
   
@@ -123,7 +123,7 @@ void AbstractOptimizer::push_back(const svec& u){
   
   // U.push_back(u);
 
-  dvec x_tmp(x);
+  DenseVector x_tmp(x);
   
   // Increase size of x by one
   x.resize(x.dim + 1);
@@ -161,10 +161,10 @@ void AbstractOptimizer::push_back(const svec& u){
 }
 
 
-double AbstractOptimizer::fun_erlp(void){
+double AbstractOptimizer::fun_erlp(){
   fun_timer.start();  
   
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
   
@@ -174,7 +174,7 @@ double AbstractOptimizer::fun_erlp(void){
   double psi_sum = 0.0;
   for(size_t i = 0; i < dim; i++) psi_sum += psi[i];
 
-  dvec tmp_dist;
+  DenseVector tmp_dist;
   // since the booster stores U transpose do transpose dot
   if(transposed)
     transpose_dot(U, W, tmp_dist);
@@ -212,16 +212,16 @@ double AbstractOptimizer::fun_erlp(void){
 
 // Compute objective function value 
 // Just a dummy forwarding function 
-double AbstractOptimizer::fun(void){
+double AbstractOptimizer::fun(){
   if(binary)
     return fun_binary();
   else 
     return fun_erlp();
 }
 
-dvec AbstractOptimizer::grad_erlp(void){
+DenseVector AbstractOptimizer::grad_erlp(){
   grad_timer.start();
-  dvec grad_w;
+  DenseVector grad_w;
   
   // since the booster stores U transpose do normal dot and not
   // transpose dot
@@ -234,7 +234,7 @@ dvec AbstractOptimizer::grad_erlp(void){
   // Adjust the gradient 
   scale(grad_w, -1.0);
 
-  dvec grad(num_wl + dim);
+  DenseVector grad(num_wl + dim);
   
   // copy grad_w 
   for(size_t i = 0; i < num_wl; i++)
@@ -259,7 +259,7 @@ dvec AbstractOptimizer::grad_erlp(void){
 // Assume that dist has been set by previous call to fun
 // compute duality gap as a side effect 
 // Just a dummy forwarding function 
-dvec AbstractOptimizer::grad(void){
+DenseVector AbstractOptimizer::grad(){
   if(binary)
     return grad_binary();
   else
@@ -269,7 +269,7 @@ dvec AbstractOptimizer::grad(void){
 // Return primal objective function 
 // Assume that x, dist, and edge have already been set by previous calls
 // to grad  
-double AbstractOptimizer::primal(void){
+double AbstractOptimizer::primal(){
   if(binary)
     return edge + (binary_relent(dist, nu)/eta);
   
@@ -277,24 +277,24 @@ double AbstractOptimizer::primal(void){
   
 }
 
-bool AbstractOptimizer::duality_gap_met(void){
+bool AbstractOptimizer::duality_gap_met(){
   // return gap < 0.05*epsilon;
   return gap < 0.5*epsilon;
 }
 
 
 // Compute objective function value for binary boost  
-double AbstractOptimizer::fun_binary(void){
+double AbstractOptimizer::fun_binary(){
   
   fun_timer.start();
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
   
   // beta is last element of x 
   double beta = x.val[num_wl];
 
-  dvec tmp_dist;
+  DenseVector tmp_dist;
   
   // since the booster stores U transpose do transpose dot
   if(transposed)
@@ -377,10 +377,10 @@ double AbstractOptimizer::fun_binary(void){
 }
 
 // Assume that dist has been set by previous call to fun
-dvec AbstractOptimizer::grad_binary(void){
+DenseVector AbstractOptimizer::grad_binary(){
   
   grad_timer.start();
-  dvec grad_w;
+  DenseVector grad_w;
 
   // since the booster stores U transpose do normal dot and not
   // transpose dot
@@ -393,7 +393,7 @@ dvec AbstractOptimizer::grad_binary(void){
   // Adjust the gradient 
   scale(grad_w, -1.0);
   
-  dvec grad(num_wl + 1);
+  DenseVector grad(num_wl + 1);
   
   // copy grad_w 
   for(size_t i = 0; i < num_wl; i++)
@@ -413,7 +413,7 @@ dvec AbstractOptimizer::grad_binary(void){
 }
 
 
-void AbstractOptimizer::report_stats(void){
+void AbstractOptimizer::report_stats(){
   // dvec W;
   // W.val = x.val;
   // W.dim = num_wl;

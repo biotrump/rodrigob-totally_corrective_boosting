@@ -26,7 +26,7 @@
 
 #include "reader.hpp"
 
-bool CLibSVMReader::is_blank(const std::string& line){
+bool LibSVMReader::is_blank(const std::string& line){
   
   for(size_t i = 0; i < line.size(); i++)
     if(!std::isspace(line[i]))
@@ -34,8 +34,8 @@ bool CLibSVMReader::is_blank(const std::string& line){
   return true;
 }
 
-int CLibSVMReader::readlibSVM(const std::string& filename, 
-                              std::vector<svec>& data, 
+int LibSVMReader::readlibSVM(const std::string& filename, 
+                              std::vector<SparseVector>& data, 
                               std::vector<int>& labels){
   
   std::ifstream df;
@@ -86,7 +86,7 @@ int CLibSVMReader::readlibSVM(const std::string& filename,
     }
     
     // Create a new data point and push it back into the data vector
-    svec data_pt;
+    SparseVector data_pt;
     data_pt.nnz = pt_val.size();
     data_pt.val = new double[data_pt.nnz];
     data_pt.idx = new size_t[data_pt.nnz];
@@ -119,8 +119,8 @@ int CLibSVMReader::readlibSVM(const std::string& filename,
 
 
 
-int CLibSVMReader::readlibSVM_transpose(const std::string& filename, 
-                                        std::vector<svec>& data, 
+int LibSVMReader::readlibSVM_transpose(const std::string& filename, 
+                                        std::vector<SparseVector>& data, 
                                         std::vector<int>& labels){
   
   std::ifstream df;
@@ -211,7 +211,7 @@ int CLibSVMReader::readlibSVM_transpose(const std::string& filename,
   data.reserve(max_idx);
   
   for(size_t i = 0; i < max_idx; i++){
-    data.push_back(svec(num_pt, idx_counter[i]));
+    data.push_back(SparseVector(num_pt, idx_counter[i]));
     idx_counter[i] = 0;
   }
   
@@ -273,8 +273,8 @@ int CLibSVMReader::readlibSVM_transpose(const std::string& filename,
 }
 
 
-int CLibSVMReader::readlibSVM_transpose_fast(const std::string& filename, 
-                              std::vector<svec>& data, 
+int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename, 
+                              std::vector<SparseVector>& data, 
                               std::vector<int>& labels){
 
 
@@ -356,7 +356,7 @@ int CLibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
   size_t i = 0;
   for(it = tmpmat.begin(); it != tmpmat.end(); it++,i++){
     // create a hypothesis
-    svec hyp;
+    SparseVector hyp;
     hyp.nnz = it->size();
     hyp.val = new double[hyp.nnz];
     hyp.idx = new size_t[hyp.nnz];

@@ -24,10 +24,8 @@
 #include "weak_learner.hpp"
 
 
-/** Derived class. Implements Corrective 
- */
-
-class CCorrective: public AbstractBooster{
+/// Derived class. Implements Corrective
+class CorrectiveBoost: public AbstractBooster{
 
 private:
 
@@ -50,7 +48,7 @@ private:
   double eta;
 
   // holds current value of U*w
-  dvec UW;
+  DenseVector UW;
  
 
   protected:
@@ -63,15 +61,15 @@ private:
 
   void update_stopping_criterion(const WeakLearner& wl);
 
-  double proj_simplex(dvec& dist, const double& exp_max);
+  double proj_simplex(DenseVector& dist, const double& exp_max);
 
-  double line_search(dvec ut);
+  double line_search(DenseVector ut);
 
-  dvec tmp_update_dist(dvec ut, double alpha);
+  DenseVector tmp_update_dist(DenseVector ut, double alpha);
   
   public:
 
-  CCorrective(AbstractOracle* &oracle, 
+  CorrectiveBoost(AbstractOracle* &oracle,
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
@@ -79,7 +77,7 @@ private:
 	      const bool& linesearch,
 	      const int& disp_freq);
 
-  CCorrective(AbstractOracle* &oracle, 
+  CorrectiveBoost(AbstractOracle* &oracle,
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
@@ -88,7 +86,7 @@ private:
 	      const bool& linesearch,
 	      const int& disp_freq);
 
-  ~CCorrective(){};
+  ~CorrectiveBoost();
   
 };
 

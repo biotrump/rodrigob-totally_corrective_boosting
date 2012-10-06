@@ -26,7 +26,7 @@
 
 #include "optimizer_lbfgsb.hpp"
 
-COptimizer_LBFGSB::COptimizer_LBFGSB(const size_t& dim, 
+LbfgsbOptimizer::LbfgsbOptimizer(const size_t& dim, 
                                      const bool& transposed, 
                                      const double& eta, 
                                      const double& nu,
@@ -37,12 +37,12 @@ COptimizer_LBFGSB::COptimizer_LBFGSB(const size_t& dim,
   return;
 }
 
-COptimizer_LBFGSB::~COptimizer_LBFGSB(void){
+LbfgsbOptimizer::~COptimizer_LBFGSB(){
   
   return;
 }
 
-int COptimizer_LBFGSB::solve(void){
+int LbfgsbOptimizer::solve(){
   
   // Solution vector
   ap::real_1d_array x0;
@@ -106,7 +106,7 @@ int COptimizer_LBFGSB::solve(void){
   // omemin is the tolerance for kkt gap
   double omega = omega_bar*pow(alpha, alpha_omega);
   
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
   
@@ -178,7 +178,7 @@ int COptimizer_LBFGSB::solve(void){
   return 0;
 }
 
-double COptimizer_LBFGSB::aug_lag_fg(const ap::real_1d_array& x0,
+double LbfgsbOptimizer::aug_lag_fg(const ap::real_1d_array& x0,
                                      ap::real_1d_array& g){
   
   // Copy current iterate into solver solution vector 
@@ -188,7 +188,7 @@ double COptimizer_LBFGSB::aug_lag_fg(const ap::real_1d_array& x0,
   // Compute objective function 
   double obj = fun();
   
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
   double w_sum = sum(W);
@@ -198,7 +198,7 @@ double COptimizer_LBFGSB::aug_lag_fg(const ap::real_1d_array& x0,
   obj += (0.5*(w_sum - 1.0)*(w_sum - 1.0)/mu);
   
   // Compute gradient 
-  dvec _grad = grad();
+  DenseVector _grad = grad();
   
   for(size_t i = 0; i < num_wl; i++)
     g(i+1) = _grad.val[i] - lambda + ((w_sum - 1.0)/mu);
@@ -208,7 +208,7 @@ double COptimizer_LBFGSB::aug_lag_fg(const ap::real_1d_array& x0,
   return obj;
 }
 
-void COptimizer_LBFGSB::bounds(ap::integer_1d_array& nbd,
+void LbfgsbOptimizer::bounds(ap::integer_1d_array& nbd,
                                ap::real_1d_array& l,
                                ap::real_1d_array& u){
   
@@ -229,7 +229,7 @@ void COptimizer_LBFGSB::bounds(ap::integer_1d_array& nbd,
   return;
 }
 
-void COptimizer_LBFGSB::bounds_binary(ap::integer_1d_array& nbd,
+void LbfgsbOptimizer::bounds_binary(ap::integer_1d_array& nbd,
                                       ap::real_1d_array& l,
                                       ap::real_1d_array& u){
   

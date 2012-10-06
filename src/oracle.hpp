@@ -20,32 +20,34 @@
 #ifndef _ORACLE_HPP_
 #define _ORACLE_HPP_
 
-// Base class to encapsulate a oracle. It essentially represents a set
-// of weak learners. Given a distribution over data it picks out the
-// weak learner with the maximum edge. Every new oracle has to implement
-// the max_edge_wl function.
 
-#include <vector>
 #include "vec.hpp"
 #include "weak_learner.hpp"
 
+#include <vector>
+
+
+/// Base class to encapsulate a oracle. It essentially represents a set
+/// of weak learners. Given a distribution over data it picks out the
+/// weak learner with the maximum edge.
+/// Every new oracle has to implement the max_edge_wl function.
 class AbstractOracle{
 
 protected:
-  std::vector<svec> data;
+  std::vector<SparseVector> data;
   std::vector<int> labels;
   
   bool transposed;
   
 public:
-  AbstractOracle(std::vector<svec>& data,
+  AbstractOracle(std::vector<SparseVector>& data,
           std::vector<int>& labels,
           const bool& transposed = false): 
     data(data), labels(labels), transposed(transposed){}
   virtual ~AbstractOracle(){}
   
   // given distribution return weak learner with maximum edge
-  virtual WeakLearner* max_edge_wl(const dvec& dist) = 0;
+  virtual WeakLearner* max_edge_wl(const DenseVector& dist) = 0;
 };
 
 #endif

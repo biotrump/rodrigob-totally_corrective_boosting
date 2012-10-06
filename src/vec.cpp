@@ -29,7 +29,7 @@
 // To explicitly encourage the callers to deallocate 
 // we will assert that res.idx and res.val are NULL
 template <class T, class X>
-void dot(const std::vector<T>& mat, const X& vec, svec& res){
+void dot(const std::vector<T>& mat, const X& vec, SparseVector& res){
   
   // paranoia
   assert(res.val == NULL);
@@ -56,10 +56,10 @@ void dot(const std::vector<T>& mat, const X& vec, svec& res){
 }
 
 template 
-void dot(const std::vector<svec>& mat, const svec& vec, svec& res);
+void dot(const std::vector<SparseVector>& mat, const SparseVector& vec, SparseVector& res);
 
 template 
-void dot(const std::vector<dvec>& mat, const svec& vec, svec& res);
+void dot(const std::vector<DenseVector>& mat, const SparseVector& vec, SparseVector& res);
 
 // svnvish: BUGBUG
 // don't need it for now 
@@ -77,7 +77,7 @@ void dot(const std::vector<dvec>& mat, const svec& vec, svec& res);
 // we will assert that res.val is NULL
 
 template <class T, class X>
-void dot(const std::vector<T>& mat, const X& vec, dvec& res){
+void dot(const std::vector<T>& mat, const X& vec, DenseVector& res){
   
   // paranoia
   assert(res.val == NULL);
@@ -99,16 +99,16 @@ void dot(const std::vector<T>& mat, const X& vec, dvec& res){
 }
 
 template 
-void dot(const std::vector<svec>& mat, const svec& vec, dvec& res);
+void dot(const std::vector<SparseVector>& mat, const SparseVector& vec, DenseVector& res);
 
 template 
-void dot(const std::vector<svec>& mat, const dvec& vec, dvec& res);
+void dot(const std::vector<SparseVector>& mat, const DenseVector& vec, DenseVector& res);
 
 template 
-void dot(const std::vector<dvec>& mat, const svec& vec, dvec& res);
+void dot(const std::vector<DenseVector>& mat, const SparseVector& vec, DenseVector& res);
 
 template 
-void dot(const std::vector<dvec>& mat, const dvec& vec, dvec& res);
+void dot(const std::vector<DenseVector>& mat, const DenseVector& vec, DenseVector& res);
 
 // dot product of transpose of matrix with vector 
 // store result in dense vector res
@@ -117,7 +117,7 @@ void dot(const std::vector<dvec>& mat, const dvec& vec, dvec& res);
 // we will assert that res.val is NULL
 
 template <class T>
-void transpose_dot(const std::vector<T>& mat, const dvec& vec, dvec& res){
+void transpose_dot(const std::vector<T>& mat, const DenseVector& vec, DenseVector& res){
   
   // paranoia
   assert(res.val == NULL);
@@ -137,10 +137,10 @@ void transpose_dot(const std::vector<T>& mat, const dvec& vec, dvec& res){
 }
 
 template
-void transpose_dot(const std::vector<svec>& mat, const dvec& vec, dvec& res);
+void transpose_dot(const std::vector<SparseVector>& mat, const DenseVector& vec, DenseVector& res);
 
 template
-void transpose_dot(const std::vector<dvec>& mat, const dvec& vec, dvec& res);
+void transpose_dot(const std::vector<DenseVector>& mat, const DenseVector& vec, DenseVector& res);
 
 // dot product of transpose of matrix with vector 
 // store result in dense vector res
@@ -148,7 +148,7 @@ void transpose_dot(const std::vector<dvec>& mat, const dvec& vec, dvec& res);
 // To explicitly encourage the callers to deallocate 
 // we will assert that res.val is NULL
 
-void transpose_dot(const std::vector<svec>& mat, const svec& vec, svec& res){
+void transpose_dot(const std::vector<SparseVector>& mat, const SparseVector& vec, SparseVector& res){
   
   // paranoia
   assert(res.val == NULL);
@@ -163,7 +163,7 @@ void transpose_dot(const std::vector<svec>& mat, const svec& vec, svec& res){
   for(size_t i = 0; i < vec.nnz; i++){
     size_t idx = vec.idx[i];
     double scale = vec.val[i];
-    svec row = mat[idx];
+    SparseVector row = mat[idx];
     for(size_t i = 0; i < row.nnz; i++)
       res.val[row.idx[i]] += scale*row.val[i];
   }
@@ -171,7 +171,7 @@ void transpose_dot(const std::vector<svec>& mat, const svec& vec, svec& res){
   return;
 }
 
-double dot(const svec& a, const svec& b){
+double dot(const SparseVector& a, const SparseVector& b){
   
   assert(a.dim == b.dim);
   
@@ -190,7 +190,7 @@ double dot(const svec& a, const svec& b){
   return val;
 }
 
-double dot(const svec& a, const dvec& b){
+double dot(const SparseVector& a, const DenseVector& b){
   
   assert(a.dim == b.dim);
   double val = 0;
@@ -201,7 +201,7 @@ double dot(const svec& a, const dvec& b){
   return val;
 }
 
-double dot(const dvec& a, const svec& b){
+double dot(const DenseVector& a, const SparseVector& b){
   return dot(b, a);
 }
 // double dot(const svec& a, const std::vector<double>& b){
@@ -223,7 +223,7 @@ double dot(const dvec& a, const svec& b){
 //   return val;
 // }
 
-double dot(const dvec& a, const dvec& b){
+double dot(const DenseVector& a, const DenseVector& b){
   assert(a.dim == b.dim);
   double val = 0.0;
   for(size_t i = 0; i < a.dim; i++)
@@ -237,7 +237,7 @@ double dot(const dvec& a, const dvec& b){
 // To explicitly encourage the callers to deallocate 
 // we will assert that res.idx and res.val are NULL
 
-void hadamard(const svec& a, const svec& b, svec& res){
+void hadamard(const SparseVector& a, const SparseVector& b, SparseVector& res){
 
   // paranoia
   assert(res.val == NULL);
@@ -278,7 +278,7 @@ void hadamard(const svec& a, const svec& b, svec& res){
 }
 
 // scale a by scalar s
-void scale(svec& a, const double& s){
+void scale(SparseVector& a, const double& s){
 
   for(size_t i = 0; i < a.nnz; i++) 
     a.val[i] *= s;
@@ -287,7 +287,7 @@ void scale(svec& a, const double& s){
 }
 
 // scale a by scalar s
-void scale(dvec& a, const double& s){
+void scale(DenseVector& a, const double& s){
   
   for(size_t i = 0; i < a.dim; i++) 
     a.val[i] *= s;
@@ -296,14 +296,14 @@ void scale(dvec& a, const double& s){
 }
 
 // copy values
-void copy(const dvec& source, dvec& target){
+void copy(const DenseVector& source, DenseVector& target){
   assert(source.dim == target.dim);
   for(size_t i = 0; i < target.dim; i++)
     target.val[i] = source.val[i];
   return;
 }
 
-void axpy(const double& a, const dvec& x, const dvec& y, dvec& res){
+void axpy(const double& a, const DenseVector& x, const DenseVector& y, DenseVector& res){
   assert(x.dim == y.dim);
   assert(y.dim == res.dim);
   for(size_t i = 0; i < res.dim; i++)
@@ -311,7 +311,7 @@ void axpy(const double& a, const dvec& x, const dvec& y, dvec& res){
   return;
 }
 
-void axpy(const double& a, const dvec& x, const svec& y, dvec& res){
+void axpy(const double& a, const DenseVector& x, const SparseVector& y, DenseVector& res){
   assert(x.dim == y.dim);
   assert(y.dim == res.dim);
   for(size_t i = 0; i < res.dim; i++)
@@ -325,7 +325,7 @@ void axpy(const double& a, const dvec& x, const svec& y, dvec& res){
   return;
 }
 
-void axpy(const double& a, const svec& x, const dvec& y, dvec& res){
+void axpy(const double& a, const SparseVector& x, const DenseVector& y, DenseVector& res){
   assert(x.dim == y.dim);
   assert(y.dim == res.dim);
   for(size_t i = 0; i < res.dim; i++)
@@ -341,21 +341,21 @@ void axpy(const double& a, const svec& x, const dvec& y, dvec& res){
 
 
 // sum values
-double sum(const svec& a){
+double sum(const SparseVector& a){
   double sum = 0.0;
   for(size_t i = 0; i < a.nnz; i++) sum += a.val[a.idx[i]];
   return sum;
 }
 
 // sum values
-double sum(const dvec& a){
+double sum(const DenseVector& a){
   double sum = 0.0;
   for(size_t i = 0; i < a.dim; i++) sum += a.val[i];
   return sum;
 }
 
 // normalize so that entries sum to one 
-void normalize(dvec& a){
+void normalize(DenseVector& a){
   
   double sum = 0.0;
   for(size_t i = 0; i < a.dim; i++) sum += a.val[i];
@@ -364,7 +364,7 @@ void normalize(dvec& a){
 }
 
 // normalize so that entries sum to one 
-void normalize(svec& a){
+void normalize(SparseVector& a){
   
   double sum = 0.0;
   for(size_t i = 0; i < a.nnz; i++) sum += a.val[i];
@@ -372,7 +372,7 @@ void normalize(svec& a){
   return;
 }
 
-double diffnorm(const dvec& a, const dvec& b){
+double diffnorm(const DenseVector& a, const DenseVector& b){
   assert(a.dim == b.dim);
   double diff = 0.0;
   for(size_t i = 0; i < a.dim; i++)
@@ -380,7 +380,7 @@ double diffnorm(const dvec& a, const dvec& b){
   return diff;
 }
 
-size_t argmin(const dvec& a){
+size_t argmin(const DenseVector& a){
   double min = std::numeric_limits<double>::max();
   size_t idx = -1;
   for(size_t i = 0; i < a.dim; i++){
@@ -392,7 +392,7 @@ size_t argmin(const dvec& a){
   return idx;
 }
 
-size_t argmax(const dvec& a){
+size_t argmax(const DenseVector& a){
   double max = -std::numeric_limits<double>::max();
   size_t idx = -1;
   for(size_t i = 0; i < a.dim; i++){
@@ -404,7 +404,7 @@ size_t argmax(const dvec& a){
   return idx;
 }
 
-size_t abs_argmax(const dvec& a){
+size_t abs_argmax(const DenseVector& a){
   double max = -std::numeric_limits<double>::max();
   size_t idx = -1;
   for(size_t i = 0; i < a.dim; i++){
@@ -416,7 +416,7 @@ size_t abs_argmax(const dvec& a){
   return idx;
 }
 
-double max(const dvec& a){
+double max(const DenseVector& a){
   double max = -std::numeric_limits<double>::max();
   for(size_t i = 0; i < a.dim; i++){
     if(a.val[i] > max) max = a.val[i];
@@ -424,7 +424,7 @@ double max(const dvec& a){
   return max;
 }
 
-double abs_max(const dvec& a){
+double abs_max(const DenseVector& a){
   double max = 0.0; 
   for(size_t i = 0; i < a.dim; i++){
     if(std::abs(a.val[i]) > max) max = std::abs(a.val[i]);
@@ -432,7 +432,7 @@ double abs_max(const dvec& a){
   return max;
 }
 
-double min(const dvec& a){
+double min(const DenseVector& a){
   double min = std::numeric_limits<double>::max();
   for(size_t i = 0; i < a.dim; i++){
     if(a.val[i] < min) min = a.val[i];
@@ -441,7 +441,7 @@ double min(const dvec& a){
 }
 
 // Relative entropy with respect to the uniform distribution
-double relent(const dvec& d){
+double relent(const DenseVector& d){
   double ent = 0.0;
   for(size_t i = 0; i < d.dim; i ++){
     if(d.val[i] != 0.0)
@@ -452,7 +452,7 @@ double relent(const dvec& d){
 
 // Binary relative entropy with respect to the uniform distribution
 // Elements restricted to 1/nu
-double binary_relent(const dvec& d, const double& nu){
+double binary_relent(const DenseVector& d, const double& nu){
   double ent = 0.0;
   for(size_t i = 0; i < d.dim; i ++){
     if(d.val[i] != 0.0)
@@ -464,7 +464,7 @@ double binary_relent(const dvec& d, const double& nu){
   return ent; 
 }
 
-std::ostream& operator << (std::ostream& os, const dvec& d) {
+std::ostream& operator << (std::ostream& os, const DenseVector& d) {
   for(size_t i = 0; i < d.dim; i++){
     os << "[" << i << "] " << d.val[i];
     if( i != (d.dim -1))
@@ -484,7 +484,7 @@ std::ostream& operator << (std::ostream& os, const ivec& d) {
   return os;
 }
 
-std::ostream& operator << (std::ostream& os, const svec& s) {
+std::ostream& operator << (std::ostream& os, const SparseVector& s) {
   os << "(" << s.dim << ")" << " ";
   for(size_t i = 0; i < s.nnz; i++){
     os << "[" << s.idx[i] << "]  "<< s.val[i];
@@ -495,7 +495,7 @@ std::ostream& operator << (std::ostream& os, const svec& s) {
   return os;
 }
 
-std::istream& operator >> (std::istream& in, svec& s) {
+std::istream& operator >> (std::istream& in, SparseVector& s) {
   try {
 
     std::vector<int> idxs;
@@ -535,7 +535,7 @@ std::istream& operator >> (std::istream& in, svec& s) {
     }
 
     int nnz = (int)idxs.size();
-    svec tmp(dim,nnz);
+    SparseVector tmp(dim,nnz);
     for(int i = 0; i < nnz; i++){
       tmp.val[i] = vals[i];
       tmp.idx[i] = idxs[i];
@@ -549,14 +549,14 @@ std::istream& operator >> (std::istream& in, svec& s) {
 }
 
 
-bool operator == (const svec& s1, const svec& s2){
+bool operator == (const SparseVector& s1, const SparseVector& s2){
   return (s1.dim == s2.dim) && 
     (s1.nnz == s2.nnz) &&
     std::equal(s1.val, s1.val+s1.nnz, s2.val) &&
     std::equal(s1.idx, s1.idx+s1.nnz, s2.idx);
 }
 
-bool operator == (const dvec& d1, const dvec& d2){
+bool operator == (const DenseVector& d1, const DenseVector& d2){
   return (d1.dim == d2.dim) && 
     std::equal(d1.val, d1.val+d1.dim, d2.val);
 }

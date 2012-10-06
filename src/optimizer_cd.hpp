@@ -23,33 +23,32 @@
 
 #include "optimizer.hpp"
 
-// Implement coordinate descent. Basically this is nothing but the
-// corrective algorithm which is run in a loop. 
 
 namespace CD{
   const size_t max_iter = 50000;
   const size_t ls_max_iter = 20;
 }
 
-
-class COptimizer_CD : public AbstractOptimizer {
+/// Implement coordinate descent. Basically this is nothing but the
+/// corrective algorithm which is run in a loop.
+class CoordinateDescentOptimizer : public AbstractOptimizer {
   
 private:
-  double proj_simplex(dvec& dist, const double& exp_max);
+  double proj_simplex(DenseVector& dist, const double& exp_max);
 
-  double line_search(dvec& W, 
-                     const dvec& grad_w, 
+  double line_search(DenseVector& W, 
+                     const DenseVector& grad_w, 
                      const size_t& idx);
     
 public:
   
-  COptimizer_CD(const size_t& dim, 
+  CoordinateDescentOptimizer(const size_t& dim,
                 const bool& transposed, 
                 const double& eta, 
                 const double& nu,
                 const double& epsilon,
                 const bool& binary);
-  ~COptimizer_CD(void){ } 
+  ~CoordinateDescentOptimizer(void){ }
   
   int solve(void);
   

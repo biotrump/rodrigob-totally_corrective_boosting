@@ -48,24 +48,24 @@ private:
   std::vector<ivec> sorted_data;
   
   // Keep track of time spent in max_edge_wl
-  CTimer timer;
+  Timer timer;
   
 public:
-  DecisionStump(std::vector<svec>& data,
+  DecisionStump(std::vector<SparseVector>& data,
                  std::vector<int>& labels, 
                  bool less_than);
 
   ~DecisionStump();
 
   // given distribution return weak learner with maximum edge
-  CWeakLearnerDstump* max_edge_wl(const dvec& dist); 
+  DecisionStumpWeakLearner* max_edge_wl(const DenseVector& dist); 
   //CWeakLearner max_edge_wl(const dvec& dist); 
 
   // given a hypothesis and distribution, return the best threshold
   // the best edge, and the direction of the best threshold
   // if ge==true, then x >= thresh else x <= thresh
   void fbthresh(const size_t& idx, 
-                const dvec& dist, 
+                const DenseVector& dist, 
                 const double& init_edge,
                 double& best_threshold,
                 double& best_edge, 
@@ -75,7 +75,7 @@ public:
   // return the best threshold and edge for hyp <= thresh
   void fbthresh_le(const size_t& idx, 
                    const double& dist_diff, 
-                   const dvec& dist, 
+                   const DenseVector& dist, 
                    const double& init_edge,
                    double& best_threshold, 
                    double& best_edge);
@@ -84,12 +84,12 @@ public:
   // return the best threshold and edge for hyp >= thresh
   void fbthresh_ge(const size_t& idx, 
                    const double& dist_diff, 
-                   const dvec& dist, 
+                   const DenseVector& dist, 
                    const double& init_edge,
                    double& best_threshold, 
                    double& best_edge);
   
-  ivec argsort(svec unsorted);
+  ivec argsort(SparseVector unsorted);
   
 };
 

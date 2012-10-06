@@ -23,21 +23,21 @@
 
 #include "rawdata.hpp"
 
-CRawData::CRawData(std::vector<svec>& data, 
+RawDataOracle::RawDataOracle(std::vector<SparseVector>& data, 
                    std::vector<int>& labels, 
                    const bool& transposed,
                    const bool& reflexive):
   AbstractOracle(data, labels, transposed), reflexive(reflexive){}
 
-CRawData::~CRawData(){ }
+RawDataOracle::~CRawData(){ }
 
-WeakLearner* CRawData::max_edge_wl(const dvec& dist){
+WeakLearner* RawDataOracle::max_edge_wl(const DenseVector& dist){
   
-  dvec edges;
+  DenseVector edges;
   
   assert(labels.size() == (size_t) dist.dim);
   
-  dvec dist_labels(dist.dim);
+  DenseVector dist_labels(dist.dim);
   for(size_t i = 0; i < dist.dim; i++)
     dist_labels.val[i] = dist.val[i]*labels[i];
   
@@ -68,12 +68,12 @@ WeakLearner* CRawData::max_edge_wl(const dvec& dist){
   if(reflexive && (min_edge < 0) && (-min_edge > max_edge)){
     
     // return the negation of the min_edge feature
-    svec wt(edges.dim, 1);
+    SparseVector wt(edges.dim, 1);
 
     wt.idx[0] = min_idx;
     wt.val[0] = -1.0;
     
-    svec prediction;
+    SparseVector prediction;
     if(transposed){
       prediction = data[min_idx];
       scale(prediction, -1.0);
@@ -98,11 +98,11 @@ WeakLearner* CRawData::max_edge_wl(const dvec& dist){
   
   // return the max_edge feature
 
-  svec wt(edges.dim, 1);
+  SparseVector wt(edges.dim, 1);
   wt.idx[0] = max_idx;
   wt.val[0] = 1.0;
   
-  svec prediction;
+  SparseVector prediction;
   if(transposed)
     prediction = data[max_idx];
   else

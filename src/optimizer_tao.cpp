@@ -26,7 +26,7 @@
 
 #include "optimizer_tao.hpp"
 
-COptimizer_TAO::COptimizer_TAO(const size_t& dim, 
+TaoOptimizer::TaoOptimizer(const size_t& dim, 
                                const bool& transposed, 
                                const double& eta, 
                                const double& nu,
@@ -44,14 +44,14 @@ COptimizer_TAO::COptimizer_TAO(const size_t& dim,
   return;
 }
 
-COptimizer_TAO::~COptimizer_TAO(void){
+TaoOptimizer::~COptimizer_TAO(){
 
   PetscFinalize();
   TaoFinalize();
   return;
 }
 
-int COptimizer_TAO::solve(void){
+int TaoOptimizer::solve(){
   int        info;
   
   TAO_SOLVER tao;
@@ -122,7 +122,7 @@ int COptimizer_TAO::solve(void){
   // etamin is the minimum norm of the constraint violation 
   PetscReal eta = eta_0*pow(alpha, alpha_eta);
   
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
   info = TaoSetTolerances(tao, 0, 0, 0, 0); CHKERRQ(info);
@@ -179,7 +179,7 @@ int COptimizer_TAO::solve(void){
   return 0;
 }
 
-double COptimizer_TAO::aug_lag_fg(const Vec& X, Vec& G){
+double TaoOptimizer::aug_lag_fg(const Vec& X, Vec& G){
 
   // Copy TAO iterate into solver solution vector 
   PetscScalar  *x_array, *g_array;
@@ -191,7 +191,7 @@ double COptimizer_TAO::aug_lag_fg(const Vec& X, Vec& G){
   // Compute objective function 
   double obj = fun();
   
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
   double w_gap = sum(W) - 1.0;
@@ -201,7 +201,7 @@ double COptimizer_TAO::aug_lag_fg(const Vec& X, Vec& G){
   obj += ((0.5*w_gap*w_gap)/mu);
   
   // Compute gradient 
-  dvec _grad = grad();
+  DenseVector _grad = grad();
   
   info = VecGetArray(G, &g_array); CHKERRQ(info);
   for(size_t i = 0; i < num_wl; i++)
@@ -214,7 +214,7 @@ double COptimizer_TAO::aug_lag_fg(const Vec& X, Vec& G){
   return obj;
 }
 
-int COptimizer_TAO::bounds(Vec& xl, Vec& xu){
+int TaoOptimizer::bounds(Vec& xl, Vec& xu){
   
   PetscScalar  *xu_array;
   
@@ -236,7 +236,7 @@ int COptimizer_TAO::bounds(Vec& xl, Vec& xu){
   return 0;
 }
 
-int COptimizer_TAO::bounds_binary(Vec& xl, Vec& xu){
+int TaoOptimizer::bounds_binary(Vec& xl, Vec& xu){
   
   PetscScalar  *xl_array, *xu_array;
   
@@ -271,7 +271,7 @@ int tao_fun_grad(TAO_APPLICATION taoapp,
                  double *obj,
                  Vec G,
                  void *ctx){
-  COptimizer_TAO * solver = (COptimizer_TAO *)ctx;
+  TaoOptimizer * solver = (TaoOptimizer *)ctx;
   *obj = solver->aug_lag_fg(X, G);  
   return 0;
 }
@@ -281,7 +281,7 @@ int tao_bounds(TAO_APPLICATION taoapp,
                Vec xl, 
                Vec xu, 
                void *ctx){
-  COptimizer_TAO * solver = (COptimizer_TAO *)ctx;
+  TaoOptimizer * solver = (TaoOptimizer *)ctx;
   return solver->bounds(xl, xu);
 }
 
@@ -290,6 +290,6 @@ int tao_bounds_binary(TAO_APPLICATION taoapp,
                       Vec xl, 
                       Vec xu, 
                       void *ctx){
-  COptimizer_TAO * solver = (COptimizer_TAO *)ctx;
+  TaoOptimizer * solver = (TaoOptimizer *)ctx;
   return solver->bounds_binary(xl, xu);
 }

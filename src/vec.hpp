@@ -27,58 +27,58 @@
 /** Encapsulate operations on vectors */
 
 template <class T, class X> 
-void dot(const std::vector<T>& mat, const X& vec, svec& res);
+void dot(const std::vector<T>& mat, const X& vec, SparseVector& res);
 
 template <class T, class X> 
-void dot(const std::vector<T>& mat, const X& vec, dvec& res);
+void dot(const std::vector<T>& mat, const X& vec, DenseVector& res);
 
 template <class T> 
-void transpose_dot(const std::vector<T>& mat, const dvec& vec, dvec& res);
+void transpose_dot(const std::vector<T>& mat, const DenseVector& vec, DenseVector& res);
 
-void transpose_dot(const std::vector<svec>& mat, const svec& vec, svec& res);
+void transpose_dot(const std::vector<SparseVector>& mat, const SparseVector& vec, SparseVector& res);
 
-void scale(svec& a, const double& s);
-void scale(dvec& a, const double& s);
+void scale(SparseVector& a, const double& s);
+void scale(DenseVector& a, const double& s);
 
-double dot(const svec& a, const svec& b);
-double dot(const svec& a, const dvec& b);
-double dot(const dvec& a, const dvec& b);
-double dot(const dvec& a, const svec& b);
+double dot(const SparseVector& a, const SparseVector& b);
+double dot(const SparseVector& a, const DenseVector& b);
+double dot(const DenseVector& a, const DenseVector& b);
+double dot(const DenseVector& a, const SparseVector& b);
 
 // double dot(const dvec& a, const std::vector<double>& b);
 // double dot(const svec& a, const std::vector<double>& b);
 
-double relent(const dvec& d);
+double relent(const DenseVector& d);
 
-double binary_relent(const dvec& d, const double& nu);
+double binary_relent(const DenseVector& d, const double& nu);
 
-void normalize(svec& a);
-void normalize(dvec& a);
+void normalize(SparseVector& a);
+void normalize(DenseVector& a);
 
-void hadamard(const svec& a, const svec& b, svec& res);
+void hadamard(const SparseVector& a, const SparseVector& b, SparseVector& res);
 
-double sum(const svec& a);
-double sum(const dvec& a);
+double sum(const SparseVector& a);
+double sum(const DenseVector& a);
 
-void copy(const dvec& source, dvec& target);
+void copy(const DenseVector& source, DenseVector& target);
 
-void axpy(const double& a, const dvec& x, const dvec& y, dvec& res);
+void axpy(const double& a, const DenseVector& x, const DenseVector& y, DenseVector& res);
 
-void axpy(const double& a, const dvec& x, const svec& y, dvec& res);
+void axpy(const double& a, const DenseVector& x, const SparseVector& y, DenseVector& res);
 
-void axpy(const double& a, const svec& x, const dvec& y, dvec& res);
+void axpy(const double& a, const SparseVector& x, const DenseVector& y, DenseVector& res);
 
-void axpy(const double& a, const svec& x, const svec& y, svec& res);
+void axpy(const double& a, const SparseVector& x, const SparseVector& y, SparseVector& res);
 
-double diffnorm(const dvec& a, const dvec& b);
+double diffnorm(const DenseVector& a, const DenseVector& b);
 
-double max(const dvec& a);
-size_t argmax(const dvec& a);
+double max(const DenseVector& a);
+size_t argmax(const DenseVector& a);
 
-double min(const dvec& a);
-size_t argmin(const dvec& a);
+double min(const DenseVector& a);
+size_t argmin(const DenseVector& a);
 
-double abs_max(const dvec& a);
-size_t abs_argmax(const dvec& a);
+double abs_max(const DenseVector& a);
+size_t abs_argmax(const DenseVector& a);
 
 # endif

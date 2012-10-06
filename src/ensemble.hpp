@@ -46,12 +46,12 @@ public:
   void scale_wt(double scale){ wt *= scale; }
   void add_wt(double alpha){wt += alpha;}
   std::string get_type() const {return wl->get_type();}
-  double weighted_predict(const dvec& x) const { return wt*(wl->predict(x)); }
+  double weighted_predict(const DenseVector& x) const { return wt*(wl->predict(x)); }
   
-  double weighted_predict(const svec& x) const { return wt*(wl->predict(x)); }
+  double weighted_predict(const SparseVector& x) const { return wt*(wl->predict(x)); }
   
-  dvec weighted_predict(const std::vector<svec>& data) const { 
-    dvec result = wl->predict(data);
+  DenseVector weighted_predict(const std::vector<SparseVector>& data) const { 
+    DenseVector result = wl->predict(data);
     scale(result, wt); 
     return result;
   }
@@ -87,15 +87,15 @@ public:
   bool add(const WeightedWeakLearner& wwl);
 
   // predict on single examples
-  double predict(const svec& x) const;
-  double predict(const dvec& x) const;
+  double predict(const SparseVector& x) const;
+  double predict(const DenseVector& x) const;
 
   // predict on full matrix
   // Assumes matrix is read in using 
   // readlibSVM_transpose
-  dvec   predict(const std::vector<svec>& data) const;
+  DenseVector   predict(const std::vector<SparseVector>& data) const;
 
-  void set_wts(const dvec& wts);
+  void set_wts(const DenseVector& wts);
 
   void scale_wts(const double& scale);
 
@@ -103,7 +103,7 @@ public:
 
   void add_wt(const double& wt, const size_t& idx);
   
-  dvec get_wts(void) const;
+  DenseVector get_wts(void) const;
   
   // bool find_wl(const CWeakLearner* wl, size_t& idx);
   

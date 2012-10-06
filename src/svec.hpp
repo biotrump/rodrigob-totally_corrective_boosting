@@ -25,9 +25,8 @@
 #include <vector>
 #include <iostream>
 
-/** Class to encapsulate a sparse vector */
-
-class svec{
+/// Class to encapsulate a sparse vector
+class SparseVector{
 
 public:
   // List of values
@@ -43,10 +42,10 @@ public:
   size_t dim;
   
   // default constructor 
-  svec(void):val(NULL), idx(NULL), nnz(0), dim(0){ }
+  SparseVector(void):val(NULL), idx(NULL), nnz(0), dim(0){ }
   
   // Copy constructor
-  svec(const svec& s): nnz(s.nnz), dim(s.dim){
+  SparseVector(const SparseVector& s): nnz(s.nnz), dim(s.dim){
     val = new double[nnz];
     idx = new size_t[nnz];
     for(size_t i = 0; i < nnz; i++){
@@ -58,7 +57,7 @@ public:
 
   // Construct a sparse vector with specified dimension
   // and specified number of non zero elements
-  svec(const size_t& dim, const size_t& nnz):nnz(nnz), dim(dim){
+  SparseVector(const size_t& dim, const size_t& nnz):nnz(nnz), dim(dim){
     val = new double[nnz];
     idx = new size_t[nnz];
     for(size_t i = 0; i < nnz; i++){
@@ -81,12 +80,12 @@ public:
     return; 
   }
 
-  ~svec(void){
+  ~SparseVector(void){
     reset();
     return;
   }
 
-  svec& operator=(const svec &rhs){
+  SparseVector& operator=(const SparseVector &rhs){
     if(val != NULL) delete [] val;
     if(idx != NULL) delete [] idx;
     dim = rhs.dim;
@@ -108,11 +107,11 @@ public:
   }
 
   friend 
-  std::ostream& operator << (std::ostream& os, const svec& s);
+  std::ostream& operator << (std::ostream& os, const SparseVector& s);
   friend 
-  std::istream& operator >> (std::istream& in, svec& s);
+  std::istream& operator >> (std::istream& in, SparseVector& s);
   friend 
-  bool operator == (const svec& s1, const svec& s2);
+  bool operator == (const SparseVector& s1, const SparseVector& s2);
 
 };
 

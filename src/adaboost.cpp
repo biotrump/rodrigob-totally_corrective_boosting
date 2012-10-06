@@ -40,7 +40,7 @@ AdaBoost::~CAdaBoost()
 
 void AdaBoost::update_weights(const WeakLearner& wl){
   
-  svec pred = wl.get_prediction();
+  SparseVector pred = wl.get_prediction();
   
   // Since the prediction is a sparse vector
   // We only need to update those components of dist for which hx.val is

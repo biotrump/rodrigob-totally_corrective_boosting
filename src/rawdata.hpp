@@ -20,28 +20,26 @@
 #ifndef _RAWDATA_HPP_
 #define _RAWDATA_HPP_
 
-/** Base class to encapsulate a oracle. It essentially represents a set
-    of weak learners. Given a distribution over data it picks out the
-    weak learner with the maximum edge. */ 
-
-#include <vector>
 #include "vec.hpp"
 #include "oracle.hpp"
 
-class CRawData: public AbstractOracle {
+#include <vector>
+
+
+class RawDataOracle: public AbstractOracle {
   
 private:
-  bool reflexive; // if true then training set is [data, -data]
+  bool reflexive; /// if true then training set is [data, -data]
   
 public:
-  CRawData(std::vector<svec>& data, 
+  RawDataOracle(std::vector<SparseVector>& data,
            std::vector<int>& labels,
            const bool& transposed, 
            const bool& reflexive);
-  ~CRawData();
+  ~RawDataOracle();
   
-  // given distribution return weak learner with maximum edge
-  WeakLearner* max_edge_wl(const dvec& dist); 
+  /// given distribution return weak learner with maximum edge
+  WeakLearner* max_edge_wl(const DenseVector& dist); 
   
 };
 

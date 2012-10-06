@@ -25,9 +25,8 @@
 #include <vector>
 #include <iostream>
 
-// Dense vector
-
-class dvec{
+/// Dense vector
+class DenseVector{
 public:
   // List of values
   double *val;
@@ -36,23 +35,23 @@ public:
   size_t dim;
   
   // default constructor 
-  dvec(void){ dim = 0; val = NULL; }
+  DenseVector(void){ dim = 0; val = NULL; }
 
   // Other constructors: Syntactic sugar 
-  dvec (const size_t& dim): dim(dim) { 
+  DenseVector (const size_t& dim): dim(dim) {
     val = new double[dim]; 
     for(size_t i = 0; i < dim; i++)
       val[i] = 0.0;
   }
 
-  dvec (const size_t& dim, const double& _val): dim(dim){
+  DenseVector (const size_t& dim, const double& _val): dim(dim){
     val = new double[dim];
     for(size_t i = 0; i < dim; i++)
       val[i] = _val;
     return;
   }
     
-  dvec (const size_t& dim, const double* _val): dim(dim){
+  DenseVector (const size_t& dim, const double* _val): dim(dim){
     val = new double[dim];
     for(size_t i = 0; i < dim; i++) 
       val[i] = _val[i];
@@ -60,14 +59,14 @@ public:
   }
   
   // Copy constructor 
-  dvec(const dvec& d): dim(d.dim){
+  DenseVector(const DenseVector& d): dim(d.dim){
     val = new double[dim];
     for(size_t i = 0; i < dim; i++)
       val[i] = d.val[i];
     return;
   }
   
-  ~dvec(void){
+  ~DenseVector(void){
     if(val != NULL) delete[] val; val = NULL;
     dim = 0; 
     return;
@@ -83,7 +82,7 @@ public:
     return;
   }
 
-  dvec& operator=(const dvec &rhs){
+  DenseVector& operator=(const DenseVector &rhs){
     if(val != NULL) delete [] val;
     dim = rhs.dim;
     val = new double[dim];
@@ -99,10 +98,10 @@ public:
     return;
   }
   friend 
-  std::ostream& operator << (std::ostream& os, const dvec& d);
+  std::ostream& operator << (std::ostream& os, const DenseVector& d);
   
   friend 
-  bool operator == (const dvec& s1, const dvec& s2);
+  bool operator == (const DenseVector& s1, const DenseVector& s2);
   
 };
 

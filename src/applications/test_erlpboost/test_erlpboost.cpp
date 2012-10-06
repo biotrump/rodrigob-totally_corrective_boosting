@@ -97,8 +97,8 @@ int main(int argc, char **argv){
 		throw std::invalid_argument(os.str());
   }
 
-  CLibSVMReader c;
-  std::vector<svec> data;
+  LibSVMReader c;
+  std::vector<SparseVector> data;
   std::vector<int> labels;
   bool xposed = true;
   
@@ -110,7 +110,7 @@ int main(int argc, char **argv){
   AbstractOracle* oracle = NULL;
   
   if(oracle_type == "rawdata")
-    oracle = new CRawData(data, labels, xposed, reflexive);
+    oracle = new RawDataOracle(data, labels, xposed, reflexive);
   else if(oracle_type == "svm")
     oracle = new Svm(data, labels, xposed, reflexive);
   else if(oracle_type == "decisionstump")
@@ -159,15 +159,15 @@ int main(int argc, char **argv){
       throw std::invalid_argument(os.str());
 #endif
     } else if(optimizer_type == "pg")
-      solver = new COptimizer_PG(labels.size(), transposed, eta, nu, eps, binary);
+      solver = new ProjectedGradientOptimizer(labels.size(), transposed, eta, nu, eps, binary);
     else if(optimizer_type == "hz")
-      solver = new COptimizer_HZ(labels.size(), transposed, eta, nu, eps, binary);
+      solver = new ZhangdAndHagerOptimizer(labels.size(), transposed, eta, nu, eps, binary);
     else if(optimizer_type == "lbfgsb")
-      solver = new COptimizer_LBFGSB(labels.size(), transposed, eta, nu, eps, binary);
+      solver = new LbfgsbOptimizer(labels.size(), transposed, eta, nu, eps, binary);
     else if(optimizer_type == "cd")
-      solver = new COptimizer_CD(labels.size(), transposed, eta, nu, eps, binary);
+      solver = new CoordinateDescentOptimizer(labels.size(), transposed, eta, nu, eps, binary);
     
-    eb = new CERLPBoost(oracle, labels.size(), max_iter, eps, eta, nu, binary, solver);
+    eb = new ERLPBoost(oracle, labels.size(), max_iter, eps, eta, nu, binary, solver);
   } 
   else if(booster_type == "LPBoost"){
     std::cout << "running lpboost" << std::endl;
@@ -203,7 +203,7 @@ int main(int argc, char **argv){
     double eta = 0.0;
     config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/eps);
 
-    eb = new CCorrective(oracle, labels.size(), max_iter, eps, eta, nu, linesearch,10);
+    eb = new CorrectiveBoost(oracle, labels.size(), max_iter, eps, eta, nu, linesearch,10);
   }
   
   assert(eb);
@@ -213,10 +213,10 @@ int main(int argc, char **argv){
   Ensemble model = eb->get_ensemble();
   // of << "model" << std::endl << model;
 
-  CEvaluate score;
+  EvaluateLoss score;
 
   // get training error
-  dvec trainpred = model.predict(data);
+  DenseVector trainpred = model.predict(data);
   int train_loss;
   double train_err;
   score.binary_loss(trainpred, labels, train_loss, train_err);
@@ -224,16 +224,16 @@ int main(int argc, char **argv){
   of << "training error: " << train_err*100 << "%" << std::endl;
 
   // get test error
-  std::vector<svec> test_data;
+  std::vector<SparseVector> test_data;
   std::vector<int> test_labels;
   c.readlibSVM_transpose(test_file, test_data, test_labels);
   // backfill
   while(test_data.size() < data.size()){
-    svec empty(data[0].dim,1);
+    SparseVector empty(data[0].dim,1);
     test_data.push_back(empty);
   }
 
-  dvec testpred = model.predict(test_data);
+  DenseVector testpred = model.predict(test_data);
   int test_loss;
   double test_err;
   score.binary_loss(testpred, test_labels, test_loss, test_err);
@@ -241,19 +241,19 @@ int main(int argc, char **argv){
   of << "test error: " << test_err*100 << "%" << std::endl;
 
   // get validation error
-  std::vector<svec> valid_data;
+  std::vector<SparseVector> valid_data;
   std::vector<int> valid_labels;
   if(valid_file != "no_valid"){
     c.readlibSVM_transpose(valid_file, valid_data, valid_labels);
 
     // backfill
     while(valid_data.size() < data.size()){
-      svec empty(data[0].dim,1);
+      SparseVector empty(data[0].dim,1);
       valid_data.push_back(empty);
     }
     int valid_loss;
     double valid_err;
-    dvec validpred = model.predict(valid_data);
+    DenseVector validpred = model.predict(valid_data);
     score.binary_loss(validpred,valid_labels, valid_loss, valid_err);
     std::cout << "validation error: " << valid_err*100 << "%" << std::endl;
     of << "validation error: " << valid_err*100 << "%" << std::endl;
@@ -286,11 +286,11 @@ int main(int argc, char **argv){
     Ensemble gen_model;
     in >> gen_model;
     // get gen error per iteration
-    dvec genpred = gen_model.predict(test_data);
+    DenseVector genpred = gen_model.predict(test_data);
     score.binary_loss(genpred, test_labels, gen_loss, gen_err);
     gen_error[i] = gen_err;
     // get valid error per iteration
-    dvec valpred = gen_model.predict(valid_data);
+    DenseVector valpred = gen_model.predict(valid_data);
     score.binary_loss(valpred, valid_labels, val_loss, val_err);
     val_error[i] = val_err;
   }

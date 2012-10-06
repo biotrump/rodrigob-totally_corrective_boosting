@@ -24,9 +24,8 @@
 #include "weak_learner.hpp"
 #include "optimizer.hpp"
 
-// Derived class. Implements ERLPBoost 
-
-class CERLPBoost: public AbstractBooster{
+/// Derived class. Implements ERLPBoost
+class ERLPBoost: public AbstractBooster{
 
 private:
   
@@ -67,7 +66,7 @@ protected:
   
 public:
 
-  CERLPBoost(AbstractOracle* &oracle,
+  ERLPBoost(AbstractOracle* &oracle,
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
@@ -75,7 +74,7 @@ public:
              const bool& binary,
              AbstractOptimizer* &solver);
 
-  CERLPBoost(AbstractOracle* &oracle,
+  ERLPBoost(AbstractOracle* &oracle,
              const int& num_pt, 
              const int& max_iter,
              const double& eps, 
@@ -84,7 +83,7 @@ public:
              const bool& binary,
              AbstractOptimizer* &solver);
 
-  ~CERLPBoost(void);
+  ~ERLPBoost();
   
 };
 

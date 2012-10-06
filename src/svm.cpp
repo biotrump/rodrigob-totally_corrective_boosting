@@ -23,7 +23,7 @@
 
 #include "svm.hpp"
 
-Svm::Svm(std::vector<svec>& data, 
+Svm::Svm(std::vector<SparseVector>& data, 
            std::vector<int>& labels, 
            const bool& transposed,
            const bool& reflexive):
@@ -31,23 +31,23 @@ Svm::Svm(std::vector<svec>& data,
 
 Svm::~CSVM(){}
 
-WeakLearner* Svm::max_edge_wl(const dvec& dist){
+WeakLearner* Svm::max_edge_wl(const DenseVector& dist){
 
-  dvec edges;
+  DenseVector edges;
   
   assert(labels.size() == (size_t) dist.dim);
   
-  dvec dist_labels(dist.dim);
+  DenseVector dist_labels(dist.dim);
   for(size_t i = 0; i < dist.dim; i++)
     dist_labels.val[i] = dist.val[i]*labels[i];
   
   // Compute X^{\top} X dist_labels 
   if(transposed){
-    dvec tmp_edges;
+    DenseVector tmp_edges;
     dot(data, dist_labels, tmp_edges);
     transpose_dot(data, tmp_edges, edges);
   }else{ 
-    dvec tmp_edges; 
+    DenseVector tmp_edges; 
     transpose_dot(data, dist_labels, tmp_edges);
     dot(data, tmp_edges, edges); 
   }
@@ -75,10 +75,10 @@ WeakLearner* Svm::max_edge_wl(const dvec& dist){
   // std::cout << min_edge << "  " << min_idx << "  " << max_edge << " " << max_idx << std::endl; 
   if(reflexive && (min_edge < 0) && (-min_edge > max_edge)){
     // wt = -x of the point with the max edge 
-    svec wt;
-    svec prediction;
+    SparseVector wt;
+    SparseVector prediction;
     if(transposed){
-      svec tmp(edges.dim, 1);
+      SparseVector tmp(edges.dim, 1);
       tmp.idx[0] = min_idx;
       tmp.val[0] = -1.0;
       dot(data, tmp, wt);
@@ -103,10 +103,10 @@ WeakLearner* Svm::max_edge_wl(const dvec& dist){
   // return the max_edge feature
 
   // wt = x of the point with the max edge 
-  svec wt;
-  svec prediction;
+  SparseVector wt;
+  SparseVector prediction;
   if(transposed){
-    svec tmp(edges.dim, 1);
+    SparseVector tmp(edges.dim, 1);
     tmp.idx[0] = max_idx;
     tmp.val[0] = 1.0;
     dot(data, tmp, wt);

@@ -46,12 +46,12 @@ private:
   // ERLPBoost function value and gradient
   double fun_erlp(void);
   
-  dvec grad_erlp(void);  
+  DenseVector grad_erlp(void);  
 
   // Binary ERLPBoost function value and gradient
   double fun_binary(void);
   
-  dvec grad_binary(void);  
+  DenseVector grad_binary(void);  
   
   // duality gap
   double gap;
@@ -64,7 +64,7 @@ protected:
   size_t dim;        
   
   // Weak learners 
-  std::vector<dvec> U; 
+  std::vector<DenseVector> U; 
   
   // Do we store U or U transpose?
   bool transposed; 
@@ -85,15 +85,15 @@ protected:
   double edge; 
   
   // KKT gap for w < kkt_gap_tol?
-  bool kkt_gap_met(const dvec& gradk);
+  bool kkt_gap_met(const DenseVector& gradk);
   
   // projected gradient norm for psi < pgnorm_tol
-  bool pgnorm_met(const dvec& gradk);
+  bool pgnorm_met(const DenseVector& gradk);
 
   // Keep track of time spent in function and gradient evaluation 
-  CTimer fun_timer;
+  Timer fun_timer;
   
-  CTimer grad_timer;
+  Timer grad_timer;
 
   void report_stats(void);
   
@@ -102,10 +102,10 @@ public:
   // Below are return values. 
   
   // Vector with current solution
-  dvec x;
+  DenseVector x;
   
   // Vector to store the distribution
-  dvec dist;          
+  DenseVector dist;          
   
   // minimum primal value seen so far
   double min_primal;
@@ -123,25 +123,25 @@ public:
   
   virtual ~AbstractOptimizer(void);
   
-  void set_dist(const dvec& _dist){
+  void set_dist(const DenseVector& _dist){
     // dist is just a reference to the true array
     dist.val = _dist.val;
     dist.dim = _dist.dim;
     return;
   }
   
-  void push_back(const svec& u);
+  void push_back(const SparseVector& u);
   
   // ERLPBoost function 
   double fun(void);
   
   // ERLPBoost gradient 
-  dvec grad(void);
+  DenseVector grad(void);
 
   // ERLPBoost primal function
   double primal(void);
   
-  bool converged(const dvec& gradk);
+  bool converged(const DenseVector& gradk);
 
   bool duality_gap_met(void);
   

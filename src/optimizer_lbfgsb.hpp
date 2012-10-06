@@ -32,7 +32,7 @@ namespace LBFGSB{
   const size_t lbfgsb_m = 5; // Past gradients stored in lbfgsb
 }
 
-class COptimizer_LBFGSB : public AbstractOptimizer {
+class LbfgsbOptimizer : public AbstractOptimizer {
   
 private:
   // Dual variable value we are adjusting
@@ -43,13 +43,13 @@ private:
   
 public:
 
-  COptimizer_LBFGSB(const size_t& dim, 
+  LbfgsbOptimizer(const size_t& dim,
                     const bool& transposed, 
                     const double& eta, 
                     const double& nu,
                     const double& epsilon, 
                     const bool& binary);
-  ~COptimizer_LBFGSB(void);
+  ~LbfgsbOptimizer(void);
   
   int solve(void);
   

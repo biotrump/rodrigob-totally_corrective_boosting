@@ -26,26 +26,26 @@
 WeakLearner::WeakLearner():
   wt(), edge(0), prediction(){}
 
-WeakLearner::WeakLearner(const svec& wt,
+WeakLearner::WeakLearner(const SparseVector& wt,
                            const double& edge, 
-                           const svec& prediction):
+                           const SparseVector& prediction):
   wt(wt), edge(edge), prediction(prediction){}
 
 WeakLearner::WeakLearner(const WeakLearner& wl):
   wt(wl.wt), edge(wl.edge), prediction(wl.prediction){ }
 
-double WeakLearner::predict(const dvec& x) const{
+double WeakLearner::predict(const DenseVector& x) const{
   return dot(wt, x);
 }
 
-double WeakLearner::predict(const svec& x) const{
+double WeakLearner::predict(const SparseVector& x) const{
   return dot(wt, x);
 }
 
-dvec WeakLearner::predict(const std::vector<svec>& Data) const{
+DenseVector WeakLearner::predict(const std::vector<SparseVector>& Data) const{
   
 
-  dvec result(Data[0].dim);
+  DenseVector result(Data[0].dim);
   
   if(wt.nnz == 1){
     int idx = wt.idx[0];
@@ -55,7 +55,7 @@ dvec WeakLearner::predict(const std::vector<svec>& Data) const{
     }
   }
   else{
-    svec tmp;
+    SparseVector tmp;
     
     transpose_dot(Data,wt,tmp);
     for(size_t i = 0; i < tmp.nnz; i++){

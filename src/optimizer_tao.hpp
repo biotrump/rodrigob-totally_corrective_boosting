@@ -21,6 +21,10 @@
 #ifndef _OPTIMIZER_TAO_HPP_
 #define _OPTIMIZER_TAO_HPP_
 
+#if not defined(USE_TAO)
+#error This file should only be included when the TAO library is used.
+#endif
+
 #include "optimizer.hpp"
 
 #include "tao.h"
@@ -32,7 +36,7 @@ namespace TAO{
   const size_t max_iter = 10000;
 }
 
-class COptimizer_TAO : public AbstractOptimizer {
+class TaoOptimizer : public AbstractOptimizer {
   
 private:
   // Dual variable value we are adjusting
@@ -43,7 +47,7 @@ private:
   
 public:
 
-  COptimizer_TAO(const size_t& dim, 
+  TaoOptimizer(const size_t& dim,
                  const bool& transposed, 
                  const double& eta, 
                  const double& nu,
@@ -52,7 +56,7 @@ public:
                  int& argc, 
                  char** argv);
   
-  ~COptimizer_TAO(void);
+  ~TaoOptimizer(void);
   
   int solve(void);
   

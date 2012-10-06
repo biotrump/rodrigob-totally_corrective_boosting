@@ -23,21 +23,6 @@
 
 #include "optimizer_pg.hpp"
 
-// Implement the  Zhang and Hager projected gradient algorithm
-
-/* Credits:
- *
- * A Nonmonotone line search technique and its application to
- * unconstrained optimization [1] 
- *
- * References:
- *
- *   [1] H. Zhang and W. W. Hager
- *       A Nonmonotone line search technique and its application to
- *       unconstrained optimization 
- *       SIAM J. Optim., Vol. 14, No. 4, pp. 1043-1056
- *
- */
 
 // Magic parameters of the algorithm
 // Do not mess!
@@ -61,17 +46,23 @@ namespace ProjGrad_HZ{
   const size_t max_iter = 100000;
 }
 
-class COptimizer_HZ:public COptimizer_PG{  
+
+/// Implements the  Zhang and Hager projected gradient algorithm
+///
+/// H. Zhang and W. W. Hager
+/// A Nonmonotone line search technique and its application to unconstrained optimization
+/// SIAM J. Optim., Vol. 14, No. 4, pp. 1043-1056
+class ZhangdAndHagerOptimizer:public ProjectedGradientOptimizer {
 
 public:
   
-  COptimizer_HZ(const size_t& dim, 
+  ZhangdAndHagerOptimizer(const size_t& dim,
                 const bool& transposed, 
                 const double& eta, 
                 const double& nu,
                 const double& epsilon, 
                 const bool& binary);
-  ~COptimizer_HZ(void){ } 
+  ~ZhangdAndHagerOptimizer(void){ }
   
   int solve(void);
   

@@ -25,7 +25,7 @@
 
 #include "optimizer_cd.hpp"
 
-COptimizer_CD::COptimizer_CD(const size_t& dim, 
+CoordinateDescentOptimizer::CoordinateDescentOptimizer(const size_t& dim, 
                              const bool& transposed, 
                              const double& eta, 
                              const double& nu,
@@ -33,7 +33,7 @@ COptimizer_CD::COptimizer_CD(const size_t& dim,
                              const bool& binary):
   AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary){ }
 
-int COptimizer_CD::solve(void){
+int CoordinateDescentOptimizer::solve(){
   
   // svnvish: BUGBUG
   // only hard margin case 
@@ -43,11 +43,11 @@ int COptimizer_CD::solve(void){
   // no binary ERLPboost yet
   assert(!binary);
   
-  dvec W;
+  DenseVector W;
   W.val = x.val;
   W.dim = num_wl;
 
-  dvec UW;
+  DenseVector UW;
   
   // since the booster stores U transpose do transpose dot
   if(transposed)
@@ -80,7 +80,7 @@ int COptimizer_CD::solve(void){
     obj += 1e-10;
     obj = (log(obj)+ exp_max)/eta;
     
-    dvec grad_w;
+    DenseVector grad_w;
 
     // since the booster stores U transpose do normal dot and not
     // transpose dot
@@ -107,12 +107,12 @@ int COptimizer_CD::solve(void){
     size_t idx = argmax(grad_w);
     assert(grad_w.val[idx] > 0); 
     
-    dvec store(UW);
+    DenseVector store(UW);
     
     if(transposed){
-      dvec tmp(num_wl);
+      DenseVector tmp(num_wl);
       tmp.val[idx] = 1.0;
-      dvec U_idx;
+      DenseVector U_idx;
       transpose_dot(U, tmp, U_idx);
       axpy(-1.0, UW, U_idx, UW);
     }else
@@ -136,14 +136,14 @@ int COptimizer_CD::solve(void){
   return 1;
 }
 
-double COptimizer_CD::line_search(dvec& W, 
-                                  const dvec& grad_w, 
+double CoordinateDescentOptimizer::line_search(DenseVector& W, 
+                                  const DenseVector& grad_w, 
                                   const size_t& idx){
   
   double lower = 0.0;
   double upper = 1.0;
 
-  dvec orig_W(W);
+  DenseVector orig_W(W);
   
   for(size_t i = 0; i < CD::ls_max_iter; i++){
 
@@ -154,7 +154,7 @@ double COptimizer_CD::line_search(dvec& W,
 
     axpy(mid, grad_w, orig_W, W);
     fun();
-    dvec G = grad();
+    DenseVector G = grad();
     
     if(G.val[idx] > 0)
       lower = mid;
@@ -170,13 +170,13 @@ double COptimizer_CD::line_search(dvec& W,
 }
 
 // Return the dual objective function after projection
-double COptimizer_CD::proj_simplex(dvec& dist, const double& exp_max){
+double CoordinateDescentOptimizer::proj_simplex(DenseVector& dist, const double& exp_max){
 
   double cap = 1.0/nu;
   double theta = 0.0;
   size_t dim = dist.dim;
   int N = dist.dim - 1;
-  dvec tmpdist(dist);
+  DenseVector tmpdist(dist);
   // sort dist from smallest to largest
   std::sort(tmpdist.val, tmpdist.val+tmpdist.dim);
   // store the sum of the dist in Z			 

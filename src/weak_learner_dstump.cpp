@@ -23,14 +23,14 @@
 #include "weak_learner_dstump.hpp"
 #include "parse.hpp"
 
-CWeakLearnerDstump::CWeakLearnerDstump():
+DecisionStumpWeakLearner::DecisionStumpWeakLearner():
   WeakLearner(),
   thresh(0), direction(true), idx(0){}
 
 //BUG: wt is completely unnecessary. 
-CWeakLearnerDstump::CWeakLearnerDstump(const svec& wt, 
+DecisionStumpWeakLearner::DecisionStumpWeakLearner(const SparseVector& wt, 
 				       const double& edge, 
-				       const svec& prediction,
+				       const SparseVector& prediction,
 				       const double& thresh,
 				       const bool& direction,
 				       const int& idx):
@@ -39,15 +39,15 @@ CWeakLearnerDstump::CWeakLearnerDstump(const svec& wt,
 
 
 
-CWeakLearnerDstump::CWeakLearnerDstump(const CWeakLearnerDstump& wl): 
+DecisionStumpWeakLearner::DecisionStumpWeakLearner(const DecisionStumpWeakLearner& wl): 
 WeakLearner(wt,edge,prediction), thresh(thresh), direction(direction){}
 
-std::string CWeakLearnerDstump::get_type() const {
+std::string DecisionStumpWeakLearner::get_type() const {
   return "DSTUMP";
 }
 
 // these are the wrong thing to do
-double CWeakLearnerDstump::predict(const dvec& x) const{
+double DecisionStumpWeakLearner::predict(const DenseVector& x) const{
 
   double tmp = dot(wt,x);
   double result;
@@ -64,7 +64,7 @@ double CWeakLearnerDstump::predict(const dvec& x) const{
     return result;
 }
 
-double CWeakLearnerDstump::predict(const svec& x) const{
+double DecisionStumpWeakLearner::predict(const SparseVector& x) const{
 
   double tmp = dot(wt,x);
   double result;
@@ -82,9 +82,9 @@ double CWeakLearnerDstump::predict(const svec& x) const{
 }
 
 
-dvec CWeakLearnerDstump::predict(const std::vector<svec>& Data) const{
+DenseVector DecisionStumpWeakLearner::predict(const std::vector<SparseVector>& Data) const{
 
-  dvec result(Data[idx].dim);
+  DenseVector result(Data[idx].dim);
 
   for(size_t i = 0; i < Data[idx].nnz; i++){
     int tmpidx = Data[idx].idx[i];
@@ -107,7 +107,7 @@ dvec CWeakLearnerDstump::predict(const std::vector<svec>& Data) const{
     return result;
 }
 
-void CWeakLearnerDstump::dump(std::ostream& os) const{
+void DecisionStumpWeakLearner::dump(std::ostream& os) const{
   os  << wt;
   os << "edge: " << edge << std::endl;
   os << "thresh: " << thresh << std::endl;
@@ -116,7 +116,7 @@ void CWeakLearnerDstump::dump(std::ostream& os) const{
   return;
 }
 
-void CWeakLearnerDstump::load(std::istream& in){
+void DecisionStumpWeakLearner::load(std::istream& in){
   try {
     in >> wt;
     expect_keyword(in,"edge:");
@@ -135,25 +135,25 @@ void CWeakLearnerDstump::load(std::istream& in){
   return;
 }
 
-bool CWeakLearnerDstump::equal(const WeakLearner *wl) const{
+bool DecisionStumpWeakLearner::equal(const WeakLearner *wl) const{
   return ( this->thresh == wl->get_thresh() 
 	   && this->direction == wl->get_direction()
 	   && this->idx == wl->get_idx()
 	   && this->wt == wl->get_wt());
 }
 
-std::ostream& operator << (std::ostream& os, const CWeakLearnerDstump& wl){
+std::ostream& operator << (std::ostream& os, const DecisionStumpWeakLearner& wl){
   wl.dump(os);
   return os;
   
 }
 
-std::istream& operator >> (std::istream& in, CWeakLearnerDstump& wl){
+std::istream& operator >> (std::istream& in, DecisionStumpWeakLearner& wl){
   wl.load(in);
   return in;
 }
 
-bool operator == (const CWeakLearnerDstump& wl1, const CWeakLearnerDstump& wl2){
+bool operator == (const DecisionStumpWeakLearner& wl1, const DecisionStumpWeakLearner& wl2){
 
   return wl1.equal(&wl2);
 }

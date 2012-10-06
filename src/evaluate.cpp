@@ -20,15 +20,15 @@
 
 #include "evaluate.hpp"
 
-CEvaluate::CEvaluate():
+EvaluateLoss::EvaluateLoss():
   tie_breaking(true){}
 
-CEvaluate::CEvaluate(bool tie_breaking):
+EvaluateLoss::EvaluateLoss(bool tie_breaking):
   tie_breaking(tie_breaking){}
 
 
 
-int CEvaluate::binary_loss(const double pred, const int label) const{
+int EvaluateLoss::binary_loss(const double pred, const int label) const{
 
   int result = 0;
   double tmp_pred = pred;
@@ -47,7 +47,7 @@ int CEvaluate::binary_loss(const double pred, const int label) const{
 }
 
 
-void CEvaluate::binary_loss(const dvec pred, 
+void EvaluateLoss::binary_loss(const DenseVector pred, 
 			    const std::vector<int>& labels,
 			    int& total_loss,
 			    double& percent_err) const{

@@ -30,7 +30,7 @@
 // #include <cstdio>
 
 
-CTimer::CTimer()
+Timer::Timer()
   :_start_cpu(-1),
    _start_wc(-1),
    num_calls(0),
@@ -41,7 +41,7 @@ CTimer::CTimer()
    max_wc(-std::numeric_limits<double>::max()),
    min_wc(std::numeric_limits<double>::max()){}
 
-void CTimer::start(){
+void Timer::start(){
   struct tms start;
   times(&start); 
   _start_cpu = (double(start.tms_utime) + double(start.tms_stime))/TIMES_TICKS_PER_SEC;
@@ -53,7 +53,7 @@ void CTimer::start(){
 }
 
 
-void CTimer::stop(){
+void Timer::stop(){
   
   if (_start_cpu < 0){
     std::stringstream os;
@@ -83,7 +83,7 @@ void CTimer::stop(){
   return;
 }
 
-void CTimer::reset(){
+void Timer::reset(){
   num_calls = 0;
   _start_cpu = -1;
   _start_wc = -1;

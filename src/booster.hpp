@@ -51,10 +51,10 @@ protected:
   Ensemble model;
   
   /// Distribution on the examples
-  dvec dist;
+  DenseVector dist;
 
   /// Keep track of time per iteration
-  CTimer timer;
+  Timer timer;
 
     
   virtual void update_weights(const WeakLearner& wl)=0;

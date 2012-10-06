@@ -25,14 +25,14 @@
 #include <vector>
 #include "svec.hpp"
 
-class CLibSVMReader{
+class LibSVMReader{
   
 private:
   bool is_blank(const std::string& line);
   
 public:
   int readlibSVM(const std::string& filename, 
-                 std::vector<svec>& data,
+                 std::vector<SparseVector>& data,
                  std::vector<int>& labels);
   
   // Read data and store it as a vector
@@ -41,17 +41,17 @@ public:
   // This is the transpose of the normal representation 
   // where each data point is a svec 
   int readlibSVM_transpose(const std::string& filename, 
-                           std::vector<svec>& data,
+                           std::vector<SparseVector>& data,
                            std::vector<int>& labels);
 
   int readlibSVM_transpose_fast(const std::string& filename, 
-                           std::vector<svec>& data,
+                           std::vector<SparseVector>& data,
                            std::vector<int>& labels);
   
 };
 
 typedef std::vector<double>::iterator dbl_itr;
 typedef std::vector<size_t>::iterator uint_itr;
-typedef std::vector<svec>::iterator svec_itr;
+typedef std::vector<SparseVector>::iterator svec_itr;
 
 # endif

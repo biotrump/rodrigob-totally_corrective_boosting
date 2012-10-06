@@ -23,25 +23,25 @@
 #include <cmath>
 #include "optimizer_hz.hpp"
 
-COptimizer_HZ::COptimizer_HZ(const size_t& dim, 
+ZhangdAndHagerOptimizer::ZhangdAndHagerOptimizer(const size_t& dim, 
                              const bool& transposed, 
                              const double& eta, 
                              const double& nu,
                              const double& epsilon,
                              const bool& binary):
-  COptimizer_PG(dim, transposed, eta, nu, epsilon, binary){ }
+  ProjectedGradientOptimizer(dim, transposed, eta, nu, epsilon, binary){ }
 
-int COptimizer_HZ::solve(void){
+int ZhangdAndHagerOptimizer::solve(){
   
   // k-th iterate and gradient 
   // Initialize with initial guess 
-  dvec xk(x);
+  DenseVector xk(x);
   
   // k-th descent direction 
-  dvec dk(x.dim);
+  DenseVector dk(x.dim);
   
   // Intermediate iterate
-  dvec xplus(x.dim);
+  DenseVector xplus(x.dim);
   
   double etak = ProjGrad_HZ::etaup;
   double qk = 0.0; 
@@ -50,7 +50,7 @@ int COptimizer_HZ::solve(void){
   // Compute f and its gradient at x_{0}
   double obj = fun();
 
-  dvec gradk = grad();
+  DenseVector gradk = grad();
   
   // double min_primal = primal();
   
@@ -107,7 +107,7 @@ int COptimizer_HZ::solve(void){
         // s_{k} = x_{k+1} - x_{k} 
         // y_{k} = g_{k+1} - g_{k}
         
-        dvec gradplus = grad();
+        DenseVector gradplus = grad();
         
         sksk = diffnorm(x, xk);
         skyk = 0.0;

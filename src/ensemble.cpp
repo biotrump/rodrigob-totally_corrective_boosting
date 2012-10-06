@@ -35,7 +35,7 @@
 #include "parse.hpp"
 
 // predict on a single example
-double Ensemble::predict(const dvec& x) const{
+double Ensemble::predict(const DenseVector& x) const{
 
   double result = 0.0;
   for(wwl_citr it = ensemble.begin(); it != ensemble.end(); it++)
@@ -51,7 +51,7 @@ double Ensemble::predict(const dvec& x) const{
 }
 
 // predict on a single example
-double Ensemble::predict(const svec& x) const{
+double Ensemble::predict(const SparseVector& x) const{
 
 
   double result = 0.0;
@@ -69,12 +69,12 @@ double Ensemble::predict(const svec& x) const{
 }
 
 
-dvec Ensemble::predict(const std::vector<svec>& data) const{
+DenseVector Ensemble::predict(const std::vector<SparseVector>& data) const{
 
-  dvec result(data[0].dim);
+  DenseVector result(data[0].dim);
 
   for(wwl_citr it = ensemble.begin(); it != ensemble.end(); it++){
-    dvec pred = (*it).weighted_predict(data);
+    DenseVector pred = (*it).weighted_predict(data);
     axpy(1.0, result, pred, result);
   }
   // for(size_t i = 0; i < ensemble.size(); i++){
@@ -106,9 +106,9 @@ dvec Ensemble::predict(const std::vector<svec>& data) const{
 //   return false;
 // }
 
-dvec Ensemble::get_wts() const{
+DenseVector Ensemble::get_wts() const{
   int size = (int)ensemble.size();
-  dvec result(size);
+  DenseVector result(size);
 
   for(int i = 0; i < size; i++){
     result.val[i] = ensemble[i].get_wt();
@@ -116,7 +116,7 @@ dvec Ensemble::get_wts() const{
   return result;
 }
 
-void Ensemble::set_wts(const dvec& wts){
+void Ensemble::set_wts(const DenseVector& wts){
   assert(wts.dim >= ensemble.size());
   wwl_itr it = ensemble.begin();
   double* val = wts.val;
@@ -219,7 +219,7 @@ std::istream& operator >> (std::istream& in, Ensemble& e){
     e.ensemble.clear();
     for (int i = 0; i < num_wls; i++) {
       if (wl_type == "DSTUMP") {
-	CWeakLearnerDstump *wl = new CWeakLearnerDstump;
+	DecisionStumpWeakLearner *wl = new DecisionStumpWeakLearner;
 	WeightedWeakLearner wwl(wl,0.0);
 	in >> wwl;
 	e.ensemble.push_back(wwl);

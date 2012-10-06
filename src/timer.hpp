@@ -38,7 +38,7 @@
 
 // Keep track of CPU and wall-clock time (in seconds) of program segments
 
-class CTimer {
+class Timer {
 
 private:
   
@@ -63,8 +63,8 @@ public:
   double min_wc;       // shortest recorded interval
   double last_wc;      // last recorded interval 
   
-  CTimer();             
-  virtual ~CTimer(){}   
+  Timer();
+  virtual ~Timer(){}
   
   void   start();          // start stopwatch
   void   stop();           // stop stopwatch

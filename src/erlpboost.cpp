@@ -24,7 +24,7 @@
 #include "erlpboost.hpp"
 #include "vec.hpp"
 
-CERLPBoost::CERLPBoost(AbstractOracle* &oracle, 
+ERLPBoost::ERLPBoost(AbstractOracle* &oracle, 
                        const int& num_pt, 
                        const int& max_iter,
                        const double& eps, 
@@ -46,7 +46,7 @@ CERLPBoost::CERLPBoost(AbstractOracle* &oracle,
   return;
 }
 
-CERLPBoost::CERLPBoost(AbstractOracle* &oracle, 
+ERLPBoost::ERLPBoost(AbstractOracle* &oracle, 
                        const int& num_pt, 
                        const int& max_iter,
                        const double& eps, 
@@ -65,11 +65,11 @@ CERLPBoost::CERLPBoost(AbstractOracle* &oracle,
 }
 
 
-CERLPBoost::~CERLPBoost(void){
+ERLPBoost::~ERLPBoost(){
   
 }
 
-void CERLPBoost::update_linear_ensemble(const WeakLearner& wl){
+void ERLPBoost::update_linear_ensemble(const WeakLearner& wl){
   
   WeightedWeakLearner wwl(&wl, 0.0);
   found = model.add(wwl);
@@ -77,7 +77,7 @@ void CERLPBoost::update_linear_ensemble(const WeakLearner& wl){
   return;
 }
 
-bool CERLPBoost::stopping_criterion(std::ostream& os){
+bool ERLPBoost::stopping_criterion(std::ostream& os){
   std::cout << "min of Obj Values : " << minPqdq1 << std::endl;
   std::cout << "min Lower Bound : " << minPt1dt1 << std::endl;
   std::cout << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
@@ -86,7 +86,7 @@ bool CERLPBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void CERLPBoost::update_stopping_criterion(const WeakLearner& wl){
+void ERLPBoost::update_stopping_criterion(const WeakLearner& wl){
 
   double gamma = wl.get_edge();
   if(binary){
@@ -99,14 +99,14 @@ void CERLPBoost::update_stopping_criterion(const WeakLearner& wl){
   return;
 }
 
-void CERLPBoost::update_weights(const WeakLearner& wl){
+void ERLPBoost::update_weights(const WeakLearner& wl){
   
   // The predictions are already pre-multiplied with the labels already
   // in the weak learner
 
   if(!found){
     // need to push into the solver 
-    svec pred = wl.get_prediction();
+    SparseVector pred = wl.get_prediction();
     solver->push_back(pred);
   }
   

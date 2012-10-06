@@ -74,39 +74,39 @@ namespace ProjGrad{
   const size_t max_iter = 10000;
 }
 
-class COptimizer_PG : public AbstractOptimizer {
+class ProjectedGradientOptimizer : public AbstractOptimizer {
 
 private:
-  double phi(dvec& x, 
-             const dvec& a, 
+  double phi(DenseVector& x, 
+             const DenseVector& a, 
              const double& b, 
-             const dvec& z, 
-             const dvec& l, 
-             const dvec& u,
+             const DenseVector& z, 
+             const DenseVector& l, 
+             const DenseVector& u,
              const double& lambda);
   
-  size_t project(dvec& x,
-                 const dvec& a, 
+  size_t project(DenseVector& x,
+                 const DenseVector& a, 
                  const double& b, 
-                 const dvec& z, 
-                 const dvec& l, 
-                 const dvec& u, 
+                 const DenseVector& z, 
+                 const DenseVector& l, 
+                 const DenseVector& u, 
                  const size_t& max_iter);
   
 protected:
-  void project_erlp(dvec& z);
+  void project_erlp(DenseVector& z);
   
-  void project_binary(dvec& z);
+  void project_binary(DenseVector& z);
   
 public:
   
-  COptimizer_PG(const size_t& dim, 
+  ProjectedGradientOptimizer(const size_t& dim,
                 const bool& transposed, 
                 const double& eta, 
                 const double& nu,
                 const double& epsilon,
                 const bool& binary);
-  ~COptimizer_PG(void){ } 
+  ~ProjectedGradientOptimizer(void){ }
   
   virtual int solve(void);
 }; 

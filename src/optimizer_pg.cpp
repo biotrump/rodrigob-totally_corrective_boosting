@@ -26,7 +26,7 @@
 #include <cmath>
 #include "optimizer_pg.hpp"
 
-COptimizer_PG::COptimizer_PG(const size_t& dim, 
+ProjectedGradientOptimizer::ProjectedGradientOptimizer(const size_t& dim, 
                              const bool& transposed, 
                              const double& eta, 
                              const double& nu,
@@ -41,12 +41,12 @@ COptimizer_PG::COptimizer_PG(const size_t& dim,
 //
 // Return the optimal value in x
 
-double COptimizer_PG::phi(dvec& x, 
-                          const dvec& a, 
+double ProjectedGradientOptimizer::phi(DenseVector& x, 
+                          const DenseVector& a, 
                           const double& b, 
-                          const dvec& z, 
-                          const dvec& l, 
-                          const dvec& u,
+                          const DenseVector& z, 
+                          const DenseVector& l, 
+                          const DenseVector& u,
                           const double& lambda){
   double r = -b;
   
@@ -70,12 +70,12 @@ double COptimizer_PG::phi(dvec& x,
 //        l \leq x \leq u  
 //
 
-size_t COptimizer_PG::project(dvec& x,
-                              const dvec& a, 
+size_t ProjectedGradientOptimizer::project(DenseVector& x,
+                              const DenseVector& a, 
                               const double& b, 
-                              const dvec& z, 
-                              const dvec& l, 
-                              const dvec& u, 
+                              const DenseVector& z, 
+                              const DenseVector& l, 
+                              const DenseVector& u, 
                               const size_t& max_iter){
   
   double r, r_l, r_u, s;
@@ -187,10 +187,10 @@ size_t COptimizer_PG::project(dvec& x,
 
 }
 
-void COptimizer_PG::project_erlp(dvec& x){
+void ProjectedGradientOptimizer::project_erlp(DenseVector& x){
   
   // Create vectors of zeros
-  dvec a(x.dim, 0.0);
+  DenseVector a(x.dim, 0.0);
   // Fill the first num_wl values corresponding to w with 1
   // The rest which correspond to psi are simply 0
   for(size_t i = 0; i < num_wl; i++)
@@ -199,14 +199,14 @@ void COptimizer_PG::project_erlp(dvec& x){
   double b = 1.0;
   
   // z is simply a copy of x before projection 
-  dvec z(x);
+  DenseVector z(x);
   
   // Lower bound for all our variables is 0.0
-  dvec l(x.dim, 0.0);
+  DenseVector l(x.dim, 0.0);
   
   // Create vector of ones
   // That is the upper bound on w  
-  dvec u(x.dim, 1.0);
+  DenseVector u(x.dim, 1.0);
   
   // psi have essentially no upper bound
   for(size_t i = num_wl; i < x.dim; i++)
@@ -217,25 +217,25 @@ void COptimizer_PG::project_erlp(dvec& x){
   return;
 }
 
-void COptimizer_PG::project_binary(dvec& x){
+void ProjectedGradientOptimizer::project_binary(DenseVector& x){
   
   // Create vectors of ones
-  dvec a(x.dim, 1.0);
+  DenseVector a(x.dim, 1.0);
   // Set coefficient for beta = 0
   a.val[num_wl] = 0.0;
   double b = 1.0;
   
   // z is simply a copy of x before projection 
-  dvec z(x);
+  DenseVector z(x);
   
   // Lower bound for all our variables is 0.0
-  dvec l(x.dim, 0.0);
+  DenseVector l(x.dim, 0.0);
   // Except for beta it does not matter
   l.val[num_wl] = -Optimizer::INFTY;
 
   // Create vector of ones
   // That is the upper bound on w  
-  dvec u(x.dim, 1.0);
+  DenseVector u(x.dim, 1.0);
   // Except for beta it does not matter
   u.val[num_wl] = Optimizer::INFTY;
   
@@ -244,17 +244,17 @@ void COptimizer_PG::project_binary(dvec& x){
   return;
 }
 
-int COptimizer_PG::solve(void){
+int ProjectedGradientOptimizer::solve(){
   
   // k-th iterate and gradient 
   // Initialize with initial guess 
-  dvec xk(x);
+  DenseVector xk(x);
   
   // k-th descent direction 
-  dvec dk(x.dim);
+  DenseVector dk(x.dim);
   
   // Intermediate iterate
-  dvec xplus(x.dim);
+  DenseVector xplus(x.dim);
   
   // store last M function values
   double* fk = new double[ProjGrad::M];
@@ -265,7 +265,7 @@ int COptimizer_PG::solve(void){
   // Push into fk array
   double obj_max = fun();
   
-  dvec gradk = grad();
+  DenseVector gradk = grad();
   
   fk[0] = obj_max;
   
@@ -321,7 +321,7 @@ int COptimizer_PG::solve(void){
         // s_{k} = x_{k+1} - x_{k} 
         // y_{k} = g_{k+1} - g_{k}
         
-        dvec gradplus = grad();
+        DenseVector gradplus = grad();
         
         sksk = diffnorm(x, xk);
         skyk = 0.0;

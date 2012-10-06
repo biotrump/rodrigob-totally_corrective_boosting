@@ -26,8 +26,7 @@
 #include "vec.hpp"
 
 // evaluates binary loss
-// 
-class CEvaluate{
+class EvaluateLoss{
   
   // private:
   // if tie_breaking == true, break ties in favor of +1 class
@@ -36,11 +35,11 @@ class CEvaluate{
   
 public:
 
-  CEvaluate();
+  EvaluateLoss();
 
-  CEvaluate(bool tie_breaking);
+  EvaluateLoss(bool tie_breaking);
 
-  ~CEvaluate(){ }
+  ~EvaluateLoss(){ }
 
   // evaluate loss on single example
   // returns:
@@ -54,7 +53,7 @@ public:
   //     0 if prediction has same sign as label
   //     1 otherwise
   // percent_err is the error rate
-  void binary_loss(const dvec pred, const std::vector<int>& labels,
+  void binary_loss(const DenseVector pred, const std::vector<int>& labels,
 		   int& total_loss, double& percent_err) const;
   
 };
