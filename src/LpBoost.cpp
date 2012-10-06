@@ -122,7 +122,7 @@ void LpBoost::update_weights(const WeakLearner& wl){
     for(size_t i = 0; i < wtvec.dim; i++)
         wtvec.val[i] = -wt[i+1];
 
-    model.set_wts(wtvec);
+    model.set_weights(wtvec);
 
     // for(size_t i = 0; i < model.ensemble.size(); i++){
     //   model.ensemble[i].set_wt(-wt[i+1]);

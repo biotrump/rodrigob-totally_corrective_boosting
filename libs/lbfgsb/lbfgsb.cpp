@@ -260,7 +260,7 @@ int funcgrad(const ap::real_1d_array& x0,
              void *ctx){
     using namespace totally_corrective_boosting;
     LbfgsbOptimizer * solver = reinterpret_cast<LbfgsbOptimizer *>(ctx);
-    obj = solver->aug_lag_fg(x0, g);
+    obj = solver->augmented_lagrangian_and_function_gradient(x0, g);
     return 0;
 }
 

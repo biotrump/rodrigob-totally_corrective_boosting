@@ -33,9 +33,12 @@ double dot(const DenseVector& a, const SparseVector& b);
 // double dot(const dvec& a, const std::vector<double>& b);
 // double dot(const svec& a, const std::vector<double>& b);
 
-double relent(const DenseVector& d);
+/// Relative entropy with respect to the uniform distribution
+double relative_entropy(const DenseVector& d);
 
-double binary_relent(const DenseVector& d, const double& nu);
+/// Binary relative entropy with respect to the uniform distribution
+/// Elements restricted to 1/nu
+double binary_relative_entropy(const DenseVector& d, const double& nu);
 
 void normalize(SparseVector& a);
 void normalize(DenseVector& a);

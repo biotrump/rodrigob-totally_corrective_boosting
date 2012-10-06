@@ -171,25 +171,28 @@ double AbstractOptimizer::erlp_function(){
   double psi_sum = 0.0;
   for(size_t i = 0; i < dim; i++) psi_sum += psi[i];
 
-  DenseVector tmp_dist;
+  DenseVector tmp_distribution;
   // since the booster stores U transpose do transpose dot
   if(transposed)
-    transpose_dot(U, W, tmp_dist);
+  {
+    transpose_dot(U, W, tmp_distribution);
+  }
   else
-    dot(U, W, tmp_dist);
-  
+  {
+    dot(U, W, tmp_distribution);
+  }
   
   // Find max element 
   double exp_max = -std::numeric_limits<double>::max(); 
-  for(size_t i = 0; i < tmp_dist.dim; i++){
-    tmp_dist.val[i] = - eta*(tmp_dist.val[i] + psi[i]);
-    if(tmp_dist.val[i] > exp_max) exp_max = tmp_dist.val[i];
+  for(size_t i = 0; i < tmp_distribution.dim; i++){
+    tmp_distribution.val[i] = - eta*(tmp_distribution.val[i] + psi[i]);
+    if(tmp_distribution.val[i] > exp_max) exp_max = tmp_distribution.val[i];
   }
   
   // Safe exponentiation
   dual_obj = 0.0;
-  for(size_t i = 0; i < tmp_dist.dim; i++) {
-    distribution.val[i] = exp(tmp_dist.val[i] - exp_max)/dim;
+  for(size_t i = 0; i < tmp_distribution.dim; i++) {
+    distribution.val[i] = exp(tmp_distribution.val[i] - exp_max)/dim;
     dual_obj += distribution.val[i];
   }
 
@@ -227,10 +230,14 @@ DenseVector AbstractOptimizer::erlp_gradient(){
   // since the booster stores U transpose do normal dot and not
   // transpose dot
   if(transposed)
+  {
     dot(U, distribution, grad_w);
+  }
   else
+  {
     transpose_dot(U, distribution, grad_w);
-  
+  }
+
   edge = max(grad_w);
   // Adjust the gradient 
   scale(grad_w, -1.0);
@@ -272,9 +279,9 @@ DenseVector AbstractOptimizer::gradient(){
 // to grad  
 double AbstractOptimizer::primal(){
   if(binary)
-    return edge + (binary_relent(distribution, nu)/eta);
+    return edge + (binary_relative_entropy(distribution, nu)/eta);
   
-  return edge + (relent(distribution)/eta);
+  return edge + (relative_entropy(distribution)/eta);
   
 }
 

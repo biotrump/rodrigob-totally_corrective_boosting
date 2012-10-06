@@ -38,7 +38,7 @@ namespace totally_corrective_boosting
 
 
 
-namespace DaiFletcher{
+namespace DaiAndFletcher{
 const double tol_r = 1e-16;
 const double tol_lam = 1e-15;
 const size_t max_iter = 10000;
@@ -49,7 +49,7 @@ const size_t max_iter = 10000;
 // svnvish: BUGBUG
 // All constants are arbitrary
 
-namespace ProjGrad{
+namespace ProjectedGradient{
 const double alpha_min = 1e-30;
 const double alpha_max = 10;
 const double gamma = 1e-4;
@@ -59,16 +59,17 @@ const size_t M = 10;
 const size_t max_iter = 10000;
 }
 
+double phi(DenseVector& x,
+           const DenseVector& a,
+           const double& b,
+           const DenseVector& z,
+           const DenseVector& l,
+           const DenseVector& u,
+           const double& lambda);
+
 class ProjectedGradientOptimizer : public AbstractOptimizer {
 
 private:
-    double phi(DenseVector& x,
-               const DenseVector& a,
-               const double& b,
-               const DenseVector& z,
-               const DenseVector& l,
-               const DenseVector& u,
-               const double& lambda);
 
     size_t project(DenseVector& x,
                    const DenseVector& a,
@@ -91,7 +92,7 @@ public:
                                const double& nu,
                                const double& epsilon,
                                const bool& binary);
-    ~ProjectedGradientOptimizer(void){ }
+    ~ProjectedGradientOptimizer(void);
 
     int solve(void);
 }; 

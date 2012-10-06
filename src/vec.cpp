@@ -425,19 +425,21 @@ double min(const DenseVector& a){
   return min;
 }
 
-// Relative entropy with respect to the uniform distribution
-double relent(const DenseVector& d){
+/// Relative entropy with respect to the uniform distribution
+double relative_entropy(const DenseVector& d){
   double ent = 0.0;
   for(size_t i = 0; i < d.dim; i ++){
     if(d.val[i] != 0.0)
+    {
       ent += (d.val[i]*log(d.val[i]*d.dim));
+    }
   }
   return ent; 
 }
 
-// Binary relative entropy with respect to the uniform distribution
-// Elements restricted to 1/nu
-double binary_relent(const DenseVector& d, const double& nu){
+/// Binary relative entropy with respect to the uniform distribution
+/// Elements restricted to 1/nu
+double binary_relative_entropy(const DenseVector& d, const double& nu){
   double ent = 0.0;
   for(size_t i = 0; i < d.dim; i ++){
     if(d.val[i] != 0.0)

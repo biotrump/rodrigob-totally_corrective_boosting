@@ -167,7 +167,7 @@ int LbfgsbOptimizer::solve(){
     return 0;
 }
 
-double LbfgsbOptimizer::aug_lag_fg(const ap::real_1d_array& x0,
+double LbfgsbOptimizer::augmented_lagrangian_and_function_gradient(const ap::real_1d_array& x0,
                                    ap::real_1d_array& g){
 
     // Copy current iterate into solver solution vector
@@ -217,7 +217,7 @@ void LbfgsbOptimizer::bounds(ap::integer_1d_array& nbd,
     // psi have essentially no upper bound
     for(size_t i = num_weak_learners+1; i <= x.dim; i++){
         nbd(i) = 1;
-        u(i) = Optimizer::INFTY;
+        u(i) = Optimizer::infinity;
     }
 
     return;
@@ -237,8 +237,8 @@ void LbfgsbOptimizer::bounds_binary(ap::integer_1d_array& nbd,
 
     // beta has no lower bound
     nbd(num_weak_learners+1) = 0;
-    l(num_weak_learners+1) = -Optimizer::INFTY;
-    u(num_weak_learners+1) = Optimizer::INFTY;
+    l(num_weak_learners+1) = -Optimizer::infinity;
+    u(num_weak_learners+1) = Optimizer::infinity;
 
     return;
 }

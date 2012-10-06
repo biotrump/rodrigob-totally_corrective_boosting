@@ -91,48 +91,52 @@ DenseVector Ensemble::predict(const std::vector<SparseVector>& data) const{
 //   return false;
 // }
 
-DenseVector Ensemble::get_wts() const{
+DenseVector Ensemble::get_weights() const{
   int size = (int)ensemble.size();
   DenseVector result(size);
 
   for(int i = 0; i < size; i++){
-    result.val[i] = ensemble[i].get_wt();
+    result.val[i] = ensemble[i].get_weight();
   }
   return result;
 }
 
-void Ensemble::set_wts(const DenseVector& wts){
+void Ensemble::set_weights(const DenseVector& wts){
   assert(wts.dim >= ensemble.size());
   wwl_itr it = ensemble.begin();
   double* val = wts.val;
   for(; it != ensemble.end(); it++, val++)
-    (*it).set_wt(*val);
+  {
+    it->set_weight(*val);
+  }
   return;
 }
 
-void Ensemble::scale_wts(const double& scale){
+void Ensemble::scale_weights(const double& scale){
   for(wwl_itr it = ensemble.begin(); it != ensemble.end(); it++)
-    (*it).scale_wt(scale);
+  {
+    it->scale_weight(scale);
+  }
   return;
   
 }
 
-void Ensemble::set_wt(const double& wt, const size_t& idx){
+void Ensemble::set_weight(const double& wt, const size_t& idx){
   assert(idx < ensemble.size());
-  ensemble[idx].set_wt(wt);
+  ensemble[idx].set_weight(wt);
   return;
 }
 
-void Ensemble::add_wt(const double& wt, const size_t& idx){
+void Ensemble::add_weight(const double& wt, const size_t& idx){
   assert(idx < ensemble.size());
-  ensemble[idx].add_wt(wt);
+  ensemble[idx].add_weight(wt);
   return;
 }
 
-// return false if add was successful
-// true if weak learner already exists 
-// in that case simply add the wt to the 
-// found weak learner
+/// return false if add was successful
+/// true if weak learner already exists
+/// in that case simply add the wt to the
+/// found weak learner
 bool Ensemble::add(const WeightedWeakLearner& wwl){ 
   
   std::vector<WeightedWeakLearner>::iterator it = 
@@ -144,15 +148,14 @@ bool Ensemble::add(const WeightedWeakLearner& wwl){
     return false;
   }
   
-  (*it).add_wt(wwl.get_wt());
+  (*it).add_weight(wwl.get_weight());
   return true;
-  
 }  
 
 std::ostream& operator << (std::ostream& os, const WeightedWeakLearner& wwl){
   
-  os << *wwl.wl;
-  os << "weight: " << wwl.wt << std::endl; 
+  os << *wwl.weak_learner;
+  os << "weight: " << wwl.weight << std::endl;
   return os;
   
 }
@@ -160,9 +163,9 @@ std::ostream& operator << (std::ostream& os, const WeightedWeakLearner& wwl){
 std::istream& operator >> (std::istream& in, WeightedWeakLearner& wwl){
 
    try{
-     in >> *(const_cast<WeakLearner *> (wwl.wl));
+     in >> *(const_cast<WeakLearner *> (wwl.weak_learner));
      expect_keyword(in,"weight:");
-     in >> wwl.wt;
+     in >> wwl.weight;
    }
    catch (std::string s) {
      std::cerr << "Error when reading weighted weak learner: " << s << std::endl;

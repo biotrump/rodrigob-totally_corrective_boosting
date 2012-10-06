@@ -214,7 +214,7 @@ int TaoOptimizer::bounds(Vec& xl, Vec& xu){
   
   // psi have essentially no upper bound
   for(size_t i = num_weak_learners; i < num_weak_learners+dim; i++)
-    xu_array[i] = Optimizer::INFTY;
+    xu_array[i] = Optimizer::INFINITY;
   
   info = VecRestoreArray(xu, &xu_array); CHKERRQ(info);
   
@@ -231,7 +231,7 @@ int TaoOptimizer::bounds_binary(Vec& xl, Vec& xu){
   info = VecGetArray(xl, &xl_array); CHKERRQ(info);
 
   // beta has no lower bound
-  xl_array[num_weak_learners] = -Optimizer::INFTY;
+  xl_array[num_weak_learners] = -Optimizer::INFINITY;
 
   info = VecRestoreArray(xl, &xl_array); CHKERRQ(info);
 
@@ -242,7 +242,7 @@ int TaoOptimizer::bounds_binary(Vec& xl, Vec& xu){
   info = VecGetArray(xu, &xu_array); CHKERRQ(info);
   
   // beta has no upper bound
-  xu_array[num_weak_learners] = Optimizer::INFTY;
+  xu_array[num_weak_learners] = Optimizer::INFINITY;
   
   info = VecRestoreArray(xu, &xu_array); CHKERRQ(info);
   

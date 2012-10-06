@@ -14,22 +14,32 @@ ProjectedGradientOptimizer::ProjectedGradientOptimizer(const size_t& dim,
                                                        const double& nu,
                                                        const double& epsilon,
                                                        const bool& binary):
-    AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary){ }
+    AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary)
+{
+    // nothing to do here
+    return;
+}
 
-// Compute solution to the Dai Fletcher projection problem
-//
-// min_x 0.5*x'*x - x'*z - lambda*(a'*x - b)
-// s.t. l \leq x \leq u
-//
-// Return the optimal value in x
 
-double ProjectedGradientOptimizer::phi(DenseVector& x, 
-                                       const DenseVector& a,
-                                       const double& b,
-                                       const DenseVector& z,
-                                       const DenseVector& l,
-                                       const DenseVector& u,
-                                       const double& lambda){
+ProjectedGradientOptimizer::~ProjectedGradientOptimizer()
+{
+    // nothing to do here
+    return;
+}
+
+/// Compute solution to the Dai Fletcher projection problem
+///
+/// min_x 0.5*x'*x - x'*z - lambda*(a'*x - b)
+/// s.t. l \leq x \leq u
+///
+/// @returns the optimal value in x
+double phi(DenseVector& x,
+           const DenseVector& a,
+           const double& b,
+           const DenseVector& z,
+           const DenseVector& l,
+           const DenseVector& u,
+           const double& lambda){
     double r = -b;
 
     for (size_t i = 0; i < x.dim; i++){
@@ -74,7 +84,7 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
         r_l = r;
         lambda += d_lambda;
         r = phi(x, a, b, z, l, u, lambda);
-        while(r < 0 && d_lambda < Optimizer::INFTY){
+        while(r < 0 && d_lambda < Optimizer::infinity){
             lambda_l = lambda;
             s = std::max((r_l/r) - 1.0, 0.1);
             d_lambda += (d_lambda/s);
@@ -89,7 +99,7 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
         r_u = r;
         lambda -= d_lambda;
         r = phi(x, a, b, z, l, u, lambda);
-        while(r > 0 && d_lambda > -Optimizer::INFTY){
+        while(r > 0 && d_lambda > -Optimizer::infinity){
             lambda_u = lambda;
             s = std::max((r_u/r) - 1.0, 0.1);
             d_lambda += (d_lambda/s);
@@ -101,7 +111,7 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
         r_l = r;
     }
 
-    if(std::abs(d_lambda) > Optimizer::INFTY) {
+    if(std::abs(d_lambda) > Optimizer::infinity) {
         std::cout << "ERROR: Detected Infeasible QP!" << std::endl;
         return -1;
     }
@@ -119,8 +129,8 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
     lambda = lambda_u - d_lambda;
     r = phi(x, a, b, z, l, u, lambda);
 
-    while((std::abs(r) > DaiFletcher::tol_r) &&
-          (d_lambda > DaiFletcher::tol_lam * (1.0 + std::abs(lambda)))
+    while((std::abs(r) > DaiAndFletcher::tol_r) &&
+          (d_lambda > DaiAndFletcher::tol_lam * (1.0 + std::abs(lambda)))
           && inner_iter < max_iter ){
 
         inner_iter++;
@@ -193,10 +203,10 @@ void ProjectedGradientOptimizer::project_erlp(DenseVector& x){
     // psi have essentially no upper bound
     for(size_t i = num_weak_learners; i < x.dim; i++)
     {
-        u.val[i] = Optimizer::INFTY;
+        u.val[i] = Optimizer::infinity;
     }
 
-    project(x, a, b, z, l, u, DaiFletcher::max_iter);
+    project(x, a, b, z, l, u, DaiAndFletcher::max_iter);
 
     return;
 }
@@ -215,15 +225,15 @@ void ProjectedGradientOptimizer::project_binary(DenseVector& x){
     // Lower bound for all our variables is 0.0
     DenseVector l(x.dim, 0.0);
     // Except for beta it does not matter
-    l.val[num_weak_learners] = -Optimizer::INFTY;
+    l.val[num_weak_learners] = -Optimizer::infinity;
 
     // Create vector of ones
     // That is the upper bound on w
     DenseVector u(x.dim, 1.0);
     // Except for beta it does not matter
-    u.val[num_weak_learners] = Optimizer::INFTY;
+    u.val[num_weak_learners] = Optimizer::infinity;
 
-    project(x, a, b, z, l, u, DaiFletcher::max_iter);
+    project(x, a, b, z, l, u, DaiAndFletcher::max_iter);
 
     return;
 }
@@ -241,8 +251,8 @@ int ProjectedGradientOptimizer::solve(){
     DenseVector xplus(x.dim);
 
     // store last M function values
-    double* fk = new double[ProjGrad::M];
-    for(size_t j = 0; j < ProjGrad::M; j++)
+    double* fk = new double[ProjectedGradient::M];
+    for(size_t j = 0; j < ProjectedGradient::M; j++)
     {
         fk[j] = -std::numeric_limits<double>::max();
     }
@@ -263,7 +273,7 @@ int ProjectedGradientOptimizer::solve(){
     double alpha = 1.0; // Stepsize
     double lambda; // proposed stepsize
 
-    for(size_t i = 1; i <= ProjGrad::max_iter; i++){
+    for(size_t i = 1; i <= ProjectedGradient::max_iter; i++){
 
         // Step 1: Detect if we have already converged
         if(duality_gap_met()){
@@ -301,7 +311,7 @@ int ProjectedGradientOptimizer::solve(){
             // if f(x_{+}) \leq obj_max + \gamma * \inner{d_{k}}{g_{k}}}
             double objplus = function();
 
-            if(objplus <=  (obj_max + ProjGrad::gamma*lambda*dtg) ){
+            if(objplus <=  (obj_max + ProjectedGradient::gamma*lambda*dtg) ){
                 // Success in step 2.3
                 // x_{k+1} = x_{+}
                 // s_{k} = x_{k+1} - x_{k}
@@ -318,21 +328,21 @@ int ProjectedGradientOptimizer::solve(){
                 copy(xplus, xk);
                 copy(gradplus, gradk);
                 // Store function value
-                fk[i%ProjGrad::M] = objplus;
+                fk[i%ProjectedGradient::M] = objplus;
                 obj_max = fk[0];
-                for(size_t j = 1; j < ProjGrad::M; j++){
+                for(size_t j = 1; j < ProjectedGradient::M; j++){
                     if(fk[j] > obj_max) obj_max = fk[j];
                 }
                 if(skyk <= 0.0){
-                    alpha = ProjGrad::alpha_max;
+                    alpha = ProjectedGradient::alpha_max;
                 } else{
-                    alpha = std::min(ProjGrad::alpha_max, std::max(ProjGrad::alpha_min, sksk/skyk));
+                    alpha = std::min(ProjectedGradient::alpha_max, std::max(ProjectedGradient::alpha_min, sksk/skyk));
                 }
                 break;
             }else{
                 // Failure in step 2.3
                 // Compute a safeguarded new trial steplength
-                double obj = fk[(i-1)%ProjGrad::M];
+                double obj = fk[(i-1)%ProjectedGradient::M];
                 double lambdanew = - lambda * lambda * dtg / (2*(objplus - obj -lambda*dtg));
 
                 // svnvish: BUGBUG
@@ -343,8 +353,8 @@ int ProjectedGradientOptimizer::solve(){
                 // } else {
                 //   lambda = lambda/2.0;
                 // }
-                lambda = std::max(ProjGrad::sigma1*lambda,
-                                  std::min(ProjGrad::sigma2*lambda, lambdanew));
+                lambda = std::max(ProjectedGradient::sigma1*lambda,
+                                  std::min(ProjectedGradient::sigma2*lambda, lambdanew));
                 continue;
             }
         }

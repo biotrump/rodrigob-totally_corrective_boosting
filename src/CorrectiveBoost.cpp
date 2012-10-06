@@ -87,7 +87,7 @@ void CorrectiveBoost::update_linear_ensemble(const WeakLearner& wl){
   DenseVector ut_dense(x);
   
   if(UW.dim>0){
-    DenseVector w = model.get_wts();
+    DenseVector w = model.get_weights();
     // subtract Uw from x and store in x
     for(size_t i = 0; i < x.dim; i++){
       x.val[i] -=  UW.val[i];
@@ -113,7 +113,7 @@ void CorrectiveBoost::update_linear_ensemble(const WeakLearner& wl){
   // }
 
   // update the other weights
-  model.scale_wts(1.0-alpha);
+  model.scale_weights(1.0-alpha);
 
   WeightedWeakLearner wwl(&wl, alpha);
   model.add(wwl);
@@ -143,7 +143,7 @@ bool CorrectiveBoost::stopping_criterion(std::ostream& os){
 
 void CorrectiveBoost::update_stopping_criterion(const WeakLearner& wl){
   
-  minPqdq1 = std::min(wl.get_edge()+(relent(examples_distribution)/eta), minPqdq1);
+  minPqdq1 = std::min(wl.get_edge()+(relative_entropy(examples_distribution)/eta), minPqdq1);
   return;
 }
 

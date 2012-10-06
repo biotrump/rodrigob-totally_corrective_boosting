@@ -77,9 +77,9 @@ void ErlpBoost::update_stopping_criterion(const WeakLearner& wl){
 
     double gamma = wl.get_edge();
     if(binary){
-        gamma += (binary_relent(examples_distribution, nu)/eta);
+        gamma += (binary_relative_entropy(examples_distribution, nu)/eta);
     }else{
-        gamma += (relent(examples_distribution)/eta);
+        gamma += (relative_entropy(examples_distribution)/eta);
     }
 
     if(gamma < minPqdq1) minPqdq1 = gamma;
@@ -93,19 +93,20 @@ void ErlpBoost::update_weights(const WeakLearner& wl){
 
     if(!found){
         // need to push into the solver
-        SparseVector pred = wl.get_prediction();
-        solver->push_back(pred);
+        SparseVector prediction = wl.get_prediction();
+        solver->push_back(prediction);
     }
 
     // Call the solver
-    int info = solver->solve(); assert(!info);
+    const int info = solver->solve();
+    assert(!info);
 
-    // We get back dist and max edge for free.
+    // We get back the distribution and max edge for free.
     // Only need to read wts back
     // BEWARE:
     // Only the relevant entries of solver->x are copied over.
 
-    model.set_wts(solver->x);
+    model.set_weights(solver->x);
 
     minPt1dt1 = -solver->dual_obj;
 

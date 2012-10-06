@@ -45,11 +45,11 @@ public:
                      ap::real_1d_array& l,
                      ap::real_1d_array& u);
   
-  // Take as input an array to return the gradient
-  // Return as output the objective value of augmented
-  // lagrangian 
-  double aug_lag_fg(const ap::real_1d_array& x0,
-                    ap::real_1d_array& g);
+  /// Take as input an array to return the gradient
+  /// @return as output the objective value of augmented
+  /// lagrangian
+  double augmented_lagrangian_and_function_gradient(const ap::real_1d_array& x0,
+                                                    ap::real_1d_array& g);
   
 }; 
 

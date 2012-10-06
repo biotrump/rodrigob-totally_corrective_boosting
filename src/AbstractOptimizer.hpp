@@ -17,7 +17,7 @@ namespace totally_corrective_boosting
 // solve function 
 
 namespace Optimizer{
-  const double INFTY = 1e30;
+  const double infinity = 1e30;
   const double kkt_gap_tol = 1e-3; // KKT gap violation tolerance
   const double pgnorm_tol = 1e-3;  // Max norm of projected gradient 
   const double wt_sum_tol = 1e-3;  // How much tolerance for the sum of wt - 1 
@@ -117,7 +117,7 @@ public:
   /// ERLPBoost gradient
   DenseVector gradient(void);
 
-  // ERLPBoost primal function
+  /// ERLPBoost primal function
   double primal(void);
   
   bool converged(const DenseVector& gradk);
