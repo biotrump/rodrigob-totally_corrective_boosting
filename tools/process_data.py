@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Script for data management
 # 1. Checks for the existence of all data sets
 # 2. If data does not exist, it will download it
@@ -104,6 +106,8 @@ datasets['german.numer_scale'] = \
     'http://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/german.numer_scale'
 datasets['diabetes_scale'] = \
     'http://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/diabetes_scale'
+datasets['breast-cancer'] = \
+    'http://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/breast-cancer'
 #-----------------------------------------
 # if files don't exist, download them
 print "acquiring missing data"
@@ -155,6 +159,7 @@ if os.path.isfile('../data/astroph.train') and os.path.isfile('../data/astroph.t
 data_all = {'../data/a9a_all':'../data/a9a', 
 	    '../data/real-sim':'../data/real-sim',
 	    # '../data/rcv1_all':'../data/rcv1', 
+	    '../data/breast-cancer':'../data/breast-cancer',
 	    '../data/news20.binary':'../data/news20',
 	    '../data/german.numer_scale':'../data/german', 
 	    '../data/diabetes_scale':'../data/diabetes'}
