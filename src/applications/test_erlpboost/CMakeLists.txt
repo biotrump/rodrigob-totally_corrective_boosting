@@ -38,7 +38,7 @@ file(GLOB SrcCpp
   "${src_folder}/*.cpp"
 
   "${project_root_folder}/libs/lbfgsb/*.cpp"
-  "${project_root_folder}/libs/lbfgsb/ap/*.cpp"
+  "${project_root_folder}/libs/lbfgsb/libs/*.cpp"
 )
 
 # Files that will not compile on all setups
@@ -78,7 +78,8 @@ add_executable(test_erlpboost
 )
 
 target_link_libraries(test_erlpboost
-   boost_program_options-mt boost_filesystem-mt boost_system-mt boost_thread-mt protobuf
+   boost_program_options-mt boost_filesystem-mt boost_system-mt boost_thread-mt 
+   #protobuf
    gomp 
    
    #csparse sparse spblas mv

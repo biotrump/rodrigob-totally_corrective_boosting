@@ -25,7 +25,7 @@ quote at least one of the references given below:
 #ifndef _lbfgsb_h
 #define _lbfgsb_h
 
-#include "ap/ap.h"
+#include "libs/ap.h"
 
 /*-----------------------------------------------
 This routines must be defined by you:
