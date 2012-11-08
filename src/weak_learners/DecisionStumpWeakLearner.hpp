@@ -1,17 +1,17 @@
 #ifndef _WEAKLEARNERDSTUMP_HPP_
 #define _WEAKLEARNERDSTUMP_HPP_
 
-#include "WeakLearner.hpp"
+#include "LinearWeakLearner.hpp"
 
-#include "vec.hpp"
+#include "vector_operations.hpp"
 
 namespace totally_corrective_boosting
 {
 
-class DecisionStumpWeakLearner: public WeakLearner{
+class DecisionStumpWeakLearner: public LinearWeakLearner
+{
 
 private:
-
 
     // threshold
     double thresh;
@@ -31,9 +31,10 @@ public:
     DecisionStumpWeakLearner(const SparseVector& wt, const double& edge, const SparseVector& prediction,
                              const double& thresh, const bool& direction, const int& idx);
 
-    DecisionStumpWeakLearner(const DecisionStumpWeakLearner& wl);
+    /// Copy constructor
+    DecisionStumpWeakLearner(const DecisionStumpWeakLearner& other);
 
-    ~DecisionStumpWeakLearner(){ }
+    ~DecisionStumpWeakLearner();
 
     std::string get_type() const;
 
@@ -48,12 +49,12 @@ public:
     // methods to dump and load data
     void dump(std::ostream& os) const;
     void load(std::istream& in);
-    bool equal(const WeakLearner *wl) const;
+    bool equal(const AbstractWeakLearner *wl) const;
 
     // accessor methods
     bool get_direction(void) const {return direction; }
-    double get_thresh(void) const {return thresh; }
-    size_t get_idx(void) const {return idx;}
+    double get_threshold(void) const {return thresh; }
+    size_t get_index(void) const {return idx;}
 
     friend
     std::ostream& operator << (std::ostream& os, const DecisionStumpWeakLearner& wl);

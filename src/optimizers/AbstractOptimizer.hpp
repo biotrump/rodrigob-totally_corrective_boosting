@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "vec.hpp"
+#include "vector_operations.hpp"
 #include "Timer.hpp"
 
 namespace totally_corrective_boosting

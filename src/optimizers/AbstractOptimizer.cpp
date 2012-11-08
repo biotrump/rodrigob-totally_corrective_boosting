@@ -448,10 +448,10 @@ void AbstractOptimizer::report_stats(){
 //   double Malpha = std::numeric_limits<double>::max();
   
 //   for(size_t j = 0; j < num_wl; j++){
-//     if((x.val[j] < 1.0) && (malpha < -gradk.val[j]))
+//     if((x.val[j] < 1.0) and (malpha < -gradk.val[j]))
 //       malpha = -gradk.val[j];
     
-//     if((x.val[j] > 0.0) && (Malpha > -gradk.val[j]))
+//     if((x.val[j] > 0.0) and (Malpha > -gradk.val[j]))
 //       Malpha = -gradk.val[j];
 //   }
 //   // std::cout << "KKT Gap : " << (malpha - Malpha) << std::endl; 
@@ -477,12 +477,12 @@ void AbstractOptimizer::report_stats(){
 //     // converged = true if kkt_gap < kkt_gap_tol and 
 //     // norm of gradient w.r.t beta < pgnorm_tol
 //     double gradbetak = gradk.val[num_wl];
-//     return kkt_gap_met(gradk) && (std::abs(gradbetak) < Optimizer::pgnorm_tol);
+//     return kkt_gap_met(gradk) and (std::abs(gradbetak) < Optimizer::pgnorm_tol);
 //   } else {
 //     // for erlpboost
 //     // converged = true if kkt_gap < kkt_gap_tol and 
 //     // norm of projected gradient of psi < pgnorm_tol
-//     return kkt_gap_met(gradk) && pgnorm_met(gradk); 
+//     return kkt_gap_met(gradk) and pgnorm_met(gradk); 
 //   }
 //   return false;
 // }

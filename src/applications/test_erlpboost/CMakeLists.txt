@@ -6,7 +6,7 @@
 # http://www.cmake.org/Wiki/CMake_Useful_Variables
 # http://www.cmake.org/cmake/help/cmake-2-8-docs.html
 
-# to compile the local code you can use: cmake ./ && make -j2
+# to compile the local code you can use: cmake ./ and make -j2
 
 # ----------------------------------------------------------------------
 # Base CMake setup

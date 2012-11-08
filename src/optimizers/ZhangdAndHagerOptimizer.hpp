@@ -23,8 +23,8 @@ const double sigma2 = 0.9;
 
 const double etadown = 0.75;
 const double etaup = 0.999;
-// assert(0.0 < etadown && etadown <= 1.0);
-// assert(0.0 < etadown && etadown <= etaup);
+// assert(0.0 < etadown and etadown <= 1.0);
+// assert(0.0 < etadown and etadown <= etaup);
 const double min_step = 1e-64;
 const double decrease = 0.5;
 

@@ -3,14 +3,12 @@
 #define _DECISIONSTUMP_HPP_
 
 #include "AbstractOracle.hpp"
-#include "weak_learners/WeakLearner.hpp"
-#include "weak_learners/DecisionStumpWeakLearner.hpp"
 
 #include "Timer.hpp"
 
-#include "dvec.hpp"
-#include "svec.hpp"
-#include "ivec.hpp"
+#include "dense_vector.hpp"
+#include "sparse_vector.hpp"
+#include "dense_integer_vector.hpp"
 
 
 #include <vector>
@@ -45,7 +43,7 @@ public:
   ~DecisionStump();
 
   // given distribution return weak learner with maximum edge
-  DecisionStumpWeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist);  
+  AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist);
 
   /// given a hypothesis and distribution, return the best threshold
   /// the best edge, and the direction of the best threshold

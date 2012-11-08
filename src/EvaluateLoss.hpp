@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <iostream>
-#include "vec.hpp"
+#include "vector_operations.hpp"
 
 namespace totally_corrective_boosting
 {

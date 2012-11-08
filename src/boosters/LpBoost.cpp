@@ -1,7 +1,7 @@
 
 #include "LpBoost.hpp"
 
-#include "vec.hpp"
+#include "vector_operations.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -54,7 +54,7 @@ LpBoost::~LpBoost()
     return;
 }
 
-void LpBoost::update_linear_ensemble(const WeakLearner& wl){
+void LpBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
     WeightedWeakLearner wwl(&wl, 1.0);
     model.add(wwl);
     return;
@@ -66,14 +66,14 @@ bool LpBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void LpBoost::update_stopping_criterion(const WeakLearner& wl){
+void LpBoost::update_stopping_criterion(const AbstractWeakLearner &wl){
 
     double gamma = wl.get_edge();
     if(gamma < minPqdq1) minPqdq1 = gamma;
     return;
 }
 
-void LpBoost::update_weights(const WeakLearner& wl){
+void LpBoost::update_weights(const AbstractWeakLearner &wl){
 
     // The predictions are already pre-multiplied with the labels already
     // in the weak learner

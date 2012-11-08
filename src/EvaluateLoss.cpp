@@ -27,42 +27,65 @@ EvaluateLoss::~EvaluateLoss()
 }
 
 
-int EvaluateLoss::binary_loss(const double pred, const int label) const{
+int EvaluateLoss::binary_loss(const double pred, const int label) const
+{
 
     int result = 0;
     double tmp_pred = pred;
 
     // tie breaking is needed
-    if(tmp_pred == 0.0){
+    if(tmp_pred == 0.0)
+    {
         // if tie_breaking==true, tie broken in favor of 1
-        if(tie_breaking){tmp_pred = 1.0;}
-        else{tmp_pred = -1.0;}
+        if(tie_breaking)
+        {
+            tmp_pred = 1.0;
+        }
+        else
+        {
+            tmp_pred = -1.0;
+        }
     }
 
-    if((double)label * tmp_pred < 0.0){result = 1;}
+    if((double)label * tmp_pred < 0.0)
+    {
+        result = 1;
+    }
 
     return result;
 
 }
 
 
-void EvaluateLoss::binary_loss(const DenseVector pred, 
+void EvaluateLoss::binary_loss(const DenseVector pred,
                                const std::vector<int>& labels,
                                int& total_loss,
-                               double& percent_err) const{
+                               double& percent_err) const
+{
 
     int tmp_loss = 0;
 
-    for(size_t i = 0; i < pred.dim; i++){
+    for(size_t i = 0; i < pred.dim; i++)
+    {
 
         double tmp_pred = pred.val[i];
 
-        if(tmp_pred == 0.0){
-            if(tie_breaking){tmp_pred = 1.0;}
-            else{tmp_pred = -1.0;}
+        if(tmp_pred == 0.0)
+        {
+            if(tie_breaking)
+            {
+                tmp_pred = 1.0;
+            }
+            else
+            {
+                tmp_pred = -1.0;
+            }
         }
 
-        if((double)labels[i] * tmp_pred < 0.0){tmp_loss += 1;}
+        if((double)labels[i] * tmp_pred < 0.0)
+        {
+            tmp_loss += 1;
+        }
 
     }
 

@@ -7,7 +7,7 @@
 
 #include "AbstractOracle.hpp"
 
-#include "vec.hpp"
+#include "vector_operations.hpp"
 
 #include <vector>
 
@@ -29,7 +29,7 @@ public:
     ~Svm();
 
     /// given distribution return weak learner with maximum edge
-    WeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist);
+    AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist);
 
 };
 

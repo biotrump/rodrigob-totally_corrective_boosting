@@ -2,22 +2,22 @@
 #ifndef _VEC_HPP_
 #define _VEC_HPP_
 
-#include "svec.hpp"
-#include "dvec.hpp"
-#include "ivec.hpp"
+#include "sparse_vector.hpp"
+#include "dense_vector.hpp"
+#include "dense_integer_vector.hpp"
 
 namespace totally_corrective_boosting
 {
 
 /// Encapsulate operations on vectors
 
-template <class T, class X> 
+template <class T, class X>
 void dot(const std::vector<T>& mat, const X& vec, SparseVector& res);
 
-template <class T, class X> 
+template <class T, class X>
 void dot(const std::vector<T>& mat, const X& vec, DenseVector& res);
 
-template <class T> 
+template <class T>
 void transpose_dot(const std::vector<T>& mat, const DenseVector& vec, DenseVector& res);
 
 void transpose_dot(const std::vector<SparseVector>& mat, const SparseVector& vec, SparseVector& res);

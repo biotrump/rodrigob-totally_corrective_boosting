@@ -21,7 +21,7 @@ AdaBoost::~AdaBoost()
     return;
 }
 
-void AdaBoost::update_weights(const WeakLearner& wl){
+void AdaBoost::update_weights(const AbstractWeakLearner& wl){
   
   SparseVector pred = wl.get_prediction();
   
@@ -39,7 +39,7 @@ void AdaBoost::update_weights(const WeakLearner& wl){
 }
 
 
-void AdaBoost::update_linear_ensemble(const WeakLearner& wl){
+void AdaBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
   
   double gamma = wl.get_edge();
   double eps = 0.5*(1.0 - gamma);
@@ -55,7 +55,7 @@ bool AdaBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void AdaBoost::update_stopping_criterion(const WeakLearner& wl)
+void AdaBoost::update_stopping_criterion(const AbstractWeakLearner& wl)
 {
     // nothing to update
     return;

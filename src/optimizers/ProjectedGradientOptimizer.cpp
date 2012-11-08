@@ -84,7 +84,7 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
         r_l = r;
         lambda += d_lambda;
         r = phi(x, a, b, z, l, u, lambda);
-        while(r < 0 && d_lambda < Optimizer::infinity){
+        while(r < 0 and d_lambda < Optimizer::infinity){
             lambda_l = lambda;
             s = std::max((r_l/r) - 1.0, 0.1);
             d_lambda += (d_lambda/s);
@@ -99,7 +99,7 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
         r_u = r;
         lambda -= d_lambda;
         r = phi(x, a, b, z, l, u, lambda);
-        while(r > 0 && d_lambda > -Optimizer::infinity){
+        while(r > 0 and d_lambda > -Optimizer::infinity){
             lambda_u = lambda;
             s = std::max((r_u/r) - 1.0, 0.1);
             d_lambda += (d_lambda/s);
@@ -129,9 +129,9 @@ size_t ProjectedGradientOptimizer::project(DenseVector& x,
     lambda = lambda_u - d_lambda;
     r = phi(x, a, b, z, l, u, lambda);
 
-    while((std::abs(r) > DaiAndFletcher::tol_r) &&
+    while((std::abs(r) > DaiAndFletcher::tol_r) and
           (d_lambda > DaiAndFletcher::tol_lam * (1.0 + std::abs(lambda)))
-          && inner_iter < max_iter ){
+          and inner_iter < max_iter ){
 
         inner_iter++;
         if(r > 0){
@@ -347,7 +347,7 @@ int ProjectedGradientOptimizer::solve(){
 
                 // svnvish: BUGBUG
                 // Need to confirm if this is a typo in the paper or not
-                // if((lambdanew >= ProjGrad::sigma1) &&
+                // if((lambdanew >= ProjGrad::sigma1) and
                 //    (lambdanew <= ProjGrad::sigma2*lambda)){
                 //   lambda = lambdanew;
                 // } else {

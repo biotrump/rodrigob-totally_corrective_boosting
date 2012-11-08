@@ -22,43 +22,50 @@ namespace totally_corrective_boosting
 {
 
 /// Keep track of CPU and wall-clock time (in seconds) of program segments
-class Timer {
+class Timer
+{
 
 private:
-  
-  
-  double _start_cpu;    // CPU time at start of stopwatch 
-  
-  double _start_wc;     // wall clock time at start of stopwatch  
-  
+
+
+    double _start_cpu;    // CPU time at start of stopwatch
+
+    double _start_wc;     // wall clock time at start of stopwatch
+
 public:
 
-  int  num_calls;        // number of intervals
+    int  num_calls;        // number of intervals
 
-  // CPU time 
-  double total_cpu;     // total 
-  double max_cpu;       // longest recorded interval
-  double min_cpu;       // shortest recorded interval
-  double last_cpu;      // last recorded interval 
+    // CPU time
+    double total_cpu;     // total
+    double max_cpu;       // longest recorded interval
+    double min_cpu;       // shortest recorded interval
+    double last_cpu;      // last recorded interval
 
-  // Wall clock time 
-  double total_wc;     // total 
-  double max_wc;       // longest recorded interval
-  double min_wc;       // shortest recorded interval
-  double last_wc;      // last recorded interval 
-  
-  Timer();
-  virtual ~Timer(){}
-  
-  void   start();          // start stopwatch
-  void   stop();           // stop stopwatch
-  void   reset();          // reset 
-  
-  double avg_cpu() const { return total_cpu/num_calls; }           
-  // double CurrentCPUTotal(); // return current cpu_total_time
-  
-  double avg_wc() const { return total_wc/num_calls; }         
-  // double CurrentWallclockTotal();// return current wallclock_total_time
+    // Wall clock time
+    double total_wc;     // total
+    double max_wc;       // longest recorded interval
+    double min_wc;       // shortest recorded interval
+    double last_wc;      // last recorded interval
+
+    Timer();
+    virtual ~Timer() {}
+
+    void   start();          // start stopwatch
+    void   stop();           // stop stopwatch
+    void   reset();          // reset
+
+    double avg_cpu() const
+    {
+        return total_cpu/num_calls;
+    }
+    // double CurrentCPUTotal(); // return current cpu_total_time
+
+    double avg_wc() const
+    {
+        return total_wc/num_calls;
+    }
+    // double CurrentWallclockTotal();// return current wallclock_total_time
 };
 
 } // end of namespace totally_corrective_boosting

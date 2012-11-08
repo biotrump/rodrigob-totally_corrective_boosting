@@ -6,7 +6,6 @@
 #endif
 
 #include "AbstractBooster.hpp"
-#include "weak_learners/WeakLearner.hpp"
 
 #include <coin/ClpSimplex.hpp>
 
@@ -37,13 +36,13 @@ private:
   
 protected:
   
-  void update_weights(const WeakLearner& wl);
+  void update_weights(const AbstractWeakLearner& wl);
   
-  void update_linear_ensemble(const WeakLearner& wl);
+  void update_linear_ensemble(const AbstractWeakLearner& wl);
 
   bool stopping_criterion(std::ostream& os);
 
-  void update_stopping_criterion(const WeakLearner& wl);
+  void update_stopping_criterion(const AbstractWeakLearner& wl);
   
 public:
 

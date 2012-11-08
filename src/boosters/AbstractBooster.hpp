@@ -42,12 +42,12 @@ protected:
     
   /// Update the strong classifier
   /// (add the new weak learner and update the weights of the weak classifiers)
-  virtual void update_linear_ensemble(const WeakLearner& wl)=0;
+  virtual void update_linear_ensemble(const AbstractWeakLearner& wl)=0;
 
   /// Update the weights of the examples distribution
-  virtual void update_weights(const WeakLearner& wl)=0;
+  virtual void update_weights(const AbstractWeakLearner& wl)=0;
 
-  virtual void update_stopping_criterion(const WeakLearner& wl)=0;
+  virtual void update_stopping_criterion(const AbstractWeakLearner& wl)=0;
 
   /// should we stop now ?
   virtual bool stopping_criterion(std::ostream& os)=0;

@@ -2,39 +2,65 @@
 #ifndef _ENSEMBLE_HPP_
 #define _ENSEMBLE_HPP_
 
+#include "weak_learners/AbstractWeakLearner.hpp"
+
+#include "vector_operations.hpp"
+
 #include <vector>
 #include <iostream>
 
-#include "weak_learners/WeakLearner.hpp"
 
 namespace totally_corrective_boosting
 {
 
 class Ensemble;
 
-class WeightedWeakLearner{
+class WeightedWeakLearner
+{
 protected:
     /// Weak Learner
-    const WeakLearner* weak_learner;
+    const AbstractWeakLearner* weak_learner;
 
     /// Weight associated with the wl
     double weight;
 
 public:
-    WeightedWeakLearner(const WeakLearner* _wl, const double& _wt):weak_learner(_wl), weight(_wt){}
-    WeightedWeakLearner(const WeightedWeakLearner& wwl):weak_learner(wwl.weak_learner), weight(wwl.weight){}
-    ~WeightedWeakLearner(){}
+    WeightedWeakLearner(const AbstractWeakLearner* _wl, const double& _wt):weak_learner(_wl), weight(_wt) {}
+    WeightedWeakLearner(const WeightedWeakLearner& wwl):weak_learner(wwl.weak_learner), weight(wwl.weight) {}
+    ~WeightedWeakLearner() {}
 
-    void set_weight(double _wt){ weight = _wt; }
-    double get_weight(void) const { return weight; }
-    void scale_weight(double scale){ weight *= scale; }
-    void add_weight(double alpha){weight += alpha;}
-    std::string get_type() const {return weak_learner->get_type();}
-    double weighted_predict(const DenseVector& x) const { return weight*(weak_learner->predict(x)); }
+    void set_weight(double _wt)
+    {
+        weight = _wt;
+    }
+    double get_weight(void) const
+    {
+        return weight;
+    }
+    void scale_weight(double scale)
+    {
+        weight *= scale;
+    }
+    void add_weight(double alpha)
+    {
+        weight += alpha;
+    }
+    std::string get_type() const
+    {
+        return weak_learner->get_type();
+    }
+    double weighted_predict(const DenseVector& x) const
+    {
+        return weight*(weak_learner->predict(x));
+    }
 
-    double weighted_predict(const SparseVector& x) const { return weight*(weak_learner->predict(x)); }
+    double weighted_predict(const SparseVector& x) const
+    {
+        return weight*(weak_learner->predict(x));
+    }
 
-    DenseVector weighted_predict(const std::vector<SparseVector>& data) const {
+    DenseVector weighted_predict(const std::vector<SparseVector>& data) const
+    {
         DenseVector result = weak_learner->predict(data);
         scale(result, weight);
         return result;
@@ -42,12 +68,13 @@ public:
 
     friend
     bool operator == (const WeightedWeakLearner& w1,
-                      const WeightedWeakLearner& w2){
+                      const WeightedWeakLearner& w2)
+    {
         return (*(w1.weak_learner) == *(w2.weak_learner));
     }
 
 
-    // bool wl_equal(const CWeakLearner* _wl){ return (*wl == *_wl); };
+    // bool wl_equal(const AbstractWeakLearner* _wl){ return (*wl == *_wl); };
 
     friend
     std::ostream& operator << (std::ostream& os, const WeightedWeakLearner& wwl);
@@ -60,7 +87,8 @@ public:
 typedef std::vector<WeightedWeakLearner>::const_iterator wwl_citr;
 typedef std::vector<WeightedWeakLearner>::iterator wwl_itr;
 
-class Ensemble{
+class Ensemble
+{
 
 private:
 
@@ -95,7 +123,10 @@ public:
 
     // bool find_wl(const CWeakLearner* wl, size_t& idx);
 
-    size_t size(void) const { return ensemble.size(); }
+    size_t size(void) const
+    {
+        return ensemble.size();
+    }
 
     friend
     std::ostream& operator << (std::ostream& os, const Ensemble& e);

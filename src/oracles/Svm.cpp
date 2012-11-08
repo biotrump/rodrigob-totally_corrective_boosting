@@ -1,8 +1,9 @@
+#include "Svm.hpp"
 
 #include <cassert>
 #include <limits>
 
-#include "Svm.hpp"
+#include "weak_learners/LinearWeakLearner.hpp"
 
 namespace totally_corrective_boosting
 {
@@ -20,7 +21,8 @@ Svm::~Svm()
     return;
 }
 
-WeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist){
+
+AbstractWeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist){
 
     DenseVector edges;
 
@@ -62,7 +64,7 @@ WeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist){
     }
 
     // std::cout << min_edge << "  " << min_idx << "  " << max_edge << " " << max_idx << std::endl;
-    if(reflexive && (min_edge < 0) && (-min_edge > max_edge)){
+    if(reflexive and (min_edge < 0) and (-min_edge > max_edge)){
         // wt = -x of the point with the max edge
         SparseVector wt;
         SparseVector prediction;
@@ -85,7 +87,7 @@ WeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist){
         double edge = -min_edge;
         // std::cout << "reflexive : " << min_idx << "  " << edge << std::endl;
 
-        WeakLearner* wl = new WeakLearner(wt, edge, prediction);
+        AbstractWeakLearner* wl = new LinearWeakLearner(wt, edge, prediction);
         return wl;
     }
 
@@ -112,7 +114,7 @@ WeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist){
     double edge = max_edge;
     // std::cout << "non reflexive : " << max_idx << "  " << edge << std::endl;
 
-    WeakLearner* wl = new WeakLearner(wt, edge, prediction);
+    AbstractWeakLearner* wl = new LinearWeakLearner(wt, edge, prediction);
     return wl;
 }
 

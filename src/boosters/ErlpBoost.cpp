@@ -1,6 +1,6 @@
 
 #include "ErlpBoost.hpp"
-#include "vec.hpp"
+#include "vector_operations.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -56,7 +56,7 @@ ErlpBoost::~ErlpBoost()
     return;
 }
 
-void ErlpBoost::update_linear_ensemble(const WeakLearner& wl){
+void ErlpBoost::update_linear_ensemble(const AbstractWeakLearner& wl){
 
     WeightedWeakLearner wwl(&wl, 0.0);
     found = model.add(wwl);
@@ -73,7 +73,7 @@ bool ErlpBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void ErlpBoost::update_stopping_criterion(const WeakLearner& wl){
+void ErlpBoost::update_stopping_criterion(const AbstractWeakLearner& wl){
 
     double gamma = wl.get_edge();
     if(binary){
@@ -86,7 +86,7 @@ void ErlpBoost::update_stopping_criterion(const WeakLearner& wl){
     return;
 }
 
-void ErlpBoost::update_weights(const WeakLearner& wl){
+void ErlpBoost::update_weights(const AbstractWeakLearner& wl){
 
     // The predictions are already pre-multiplied with the labels already
     // in the weak learner

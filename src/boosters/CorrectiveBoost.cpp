@@ -1,8 +1,6 @@
 
 #include "CorrectiveBoost.hpp"
 
-#include "weak_learners/WeakLearner.hpp"
-
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -52,7 +50,7 @@ CorrectiveBoost::~CorrectiveBoost()
     return;
 }
 
-void CorrectiveBoost::update_weights(const WeakLearner& wl){
+void CorrectiveBoost::update_weights(const AbstractWeakLearner &wl){
   
   double exp_max = 0.0;
   
@@ -73,7 +71,7 @@ void CorrectiveBoost::update_weights(const WeakLearner& wl){
 }
 
 
-void CorrectiveBoost::update_linear_ensemble(const WeakLearner& wl){
+void CorrectiveBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
 
   std::cout << "Num of wl: " << model.size() << std::endl;
   
@@ -141,7 +139,7 @@ bool CorrectiveBoost::stopping_criterion(std::ostream& os){
   return(minPqdq1 <=  minPt1dt1 + eps/2.0);
 }
 
-void CorrectiveBoost::update_stopping_criterion(const WeakLearner& wl){
+void CorrectiveBoost::update_stopping_criterion(const AbstractWeakLearner &wl){
   
   minPqdq1 = std::min(wl.get_edge()+(relative_entropy(examples_distribution)/eta), minPqdq1);
   return;

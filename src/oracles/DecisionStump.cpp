@@ -1,6 +1,9 @@
 
-#include <algorithm>
 #include "DecisionStump.hpp"
+
+#include "weak_learners/DecisionStumpWeakLearner.hpp"
+
+#include <algorithm>
 
 namespace totally_corrective_boosting
 {
@@ -33,7 +36,7 @@ DecisionStump::~DecisionStump(){
     return;
 }
 
-DecisionStumpWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVector& dist){
+AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVector& dist){
 
     double best_threshold = 1.0;
     double best_edge = -1.0;
@@ -82,8 +85,8 @@ DecisionStumpWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const De
     for(size_t i = 0; i < result.dim; i++){
 
         // threshold prediction
-        if((ge && (result.val[i] >= best_threshold)) ||
-           (!ge && (result.val[i] <= best_threshold)))
+        if((ge and (result.val[i] >= best_threshold)) or
+           (!ge and (result.val[i] <= best_threshold)))
             result.val[i] = 1.0;
         else
             result.val[i] = -1.0;
@@ -99,24 +102,25 @@ DecisionStumpWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const De
     //std::cout << "thresh: " << best_threshold << " dir: " << ge;
     //std::cout << " idx: " << max_idx << " edge: " << edge << std::endl;
 
-    DecisionStumpWeakLearner* wl = new DecisionStumpWeakLearner(wt,
-                                                                edge,
-                                                                result,
-                                                                best_threshold,
-                                                                ge,
-                                                                max_idx);
+    AbstractWeakLearner* wl = new DecisionStumpWeakLearner(wt,
+                                                           edge,
+                                                           result,
+                                                           best_threshold,
+                                                           ge,
+                                                           max_idx);
 
     timer.stop();
     std::cout << "Weak learner time: " << timer.last_cpu << std::endl;
     return wl;
 }
 
+
 void DecisionStump::find_best_threshold_greater_or_equal(const size_t& idx,
-                                const double& dist_diff,
-                                const DenseVector& dist,
-                                const double& init_edge,
-                                double& best_threshold,
-                                double& best_edge) const{
+                                                         const double& dist_diff,
+                                                         const DenseVector& dist,
+                                                         const double& init_edge,
+                                                         double& best_threshold,
+                                                         double& best_edge) const{
 
     DenseIntegerVector indices = sorted_data[idx]; // sorted indices for hyp idx
     double max_so_far = init_edge;
@@ -174,11 +178,11 @@ void DecisionStump::find_best_threshold_greater_or_equal(const size_t& idx,
 
 
 void DecisionStump::find_best_threshold_less_or_equal(const size_t& idx,
-                                const double& dist_diff,
-                                const DenseVector& dist,
-                                const double& init_edge,
-                                double& best_threshold,
-                                double& best_edge) const{
+                                                      const double& dist_diff,
+                                                      const DenseVector& dist,
+                                                      const double& init_edge,
+                                                      double& best_threshold,
+                                                      double& best_edge) const{
 
     DenseIntegerVector indices = sorted_data[idx]; // sorted indices for hyp idx
     double max_so_far = init_edge;

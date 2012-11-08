@@ -51,7 +51,7 @@ size_t AbstractBooster::boost(std::ostream& output_stream){
     for(i = 0; i < max_iterations; i++)
     {
         timer.start();
-        WeakLearner* new_weak_learner = oracle->find_maximum_edge_weak_learner(examples_distribution);
+        AbstractWeakLearner* new_weak_learner = oracle->find_maximum_edge_weak_learner(examples_distribution);
         update_stopping_criterion(*new_weak_learner);
         if(stopping_criterion(output_stream))
         {
