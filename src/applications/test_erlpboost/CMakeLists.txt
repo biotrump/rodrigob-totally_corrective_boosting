@@ -38,7 +38,7 @@ file(GLOB SrcCpp
   "${src_folder}/*.cpp"
 
   "${project_root_folder}/libs/lbfgsb/*.cpp"
-  "${project_root_folder}/libs/lbfgsb/libs/*.cpp"
+  "${project_root_folder}/libs/lbfgsb/ap/*.cpp"
 )
 
 # Files that will not compile on all setups
