@@ -1,6 +1,10 @@
 # use glob syntax.
 syntax: glob
 
+data/*
+src/applications/test_erlpboost/test_erlpboost
+
+
 applications/biclop/biclop
 applications/simple_stereo/simple_stereo
 applications/simple_stereo_lib/test_simple_stereo_lib
