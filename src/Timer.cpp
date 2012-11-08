@@ -1,8 +1,5 @@
-
-
 #ifndef _TIMER_CPP_
 #define _TIMER_CPP_
-
 
 #include "Timer.hpp"
 
@@ -16,17 +13,27 @@ namespace totally_corrective_boosting
 {
 
 
-
 Timer::Timer()
     :_start_cpu(-1),
-     _start_wc(-1),
-     num_calls(0),
-     total_cpu(0),
-     max_cpu(-std::numeric_limits<double>::max()),
-     min_cpu(std::numeric_limits<double>::max()),
-     total_wc(0),
-     max_wc(-std::numeric_limits<double>::max()),
-     min_wc(std::numeric_limits<double>::max()) {}
+      _start_wall_clock(-1),
+      num_calls(0),
+      total_cpu(0),
+      max_cpu(-std::numeric_limits<double>::max()),
+      min_cpu(std::numeric_limits<double>::max()),
+      total_wall_clock(0),
+      max_wall_clock(-std::numeric_limits<double>::max()),
+      min_wall_clock(std::numeric_limits<double>::max())
+{
+    // nothing to do here
+    return;
+}
+
+
+Timer::~Timer()
+{
+    // nothing to do here
+    return;
+}
 
 void Timer::start()
 {
@@ -36,7 +43,7 @@ void Timer::start()
 
     timeval wc;
     gettimeofday(&wc, NULL);
-    _start_wc = double(wc.tv_sec) + double(wc.tv_usec)/1e6;
+    _start_wall_clock = double(wc.tv_sec) + double(wc.tv_usec)/1e6;
     return;
 }
 
@@ -62,12 +69,12 @@ void Timer::stop()
 
     timeval wc;
     gettimeofday(&wc, NULL);
-    last_wc = (double(wc.tv_sec) + double(wc.tv_usec)/1e6) - _start_wc;
+    last_wall_clock = (double(wc.tv_sec) + double(wc.tv_usec)/1e6) - _start_wall_clock;
 
-    _start_wc = -1;
-    total_wc += last_wc;
-    max_wc = std::max(max_wc, last_wc);
-    min_wc = std::min(min_wc, last_wc);
+    _start_wall_clock = -1;
+    total_wall_clock += last_wall_clock;
+    max_wall_clock = std::max(max_wall_clock, last_wall_clock);
+    min_wall_clock = std::min(min_wall_clock, last_wall_clock);
 
     num_calls++;
     return;
@@ -77,13 +84,13 @@ void Timer::reset()
 {
     num_calls = 0;
     _start_cpu = -1;
-    _start_wc = -1;
+    _start_wall_clock = -1;
     total_cpu = 0;
     max_cpu = -std::numeric_limits<double>::max();
     min_cpu = std::numeric_limits<double>::max();
-    total_wc = 0;
-    max_wc = -std::numeric_limits<double>::max();
-    min_wc = std::numeric_limits<double>::max();
+    total_wall_clock = 0;
+    max_wall_clock = -std::numeric_limits<double>::max();
+    min_wall_clock = std::numeric_limits<double>::max();
     return;
 }
 

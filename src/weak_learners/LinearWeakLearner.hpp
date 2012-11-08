@@ -41,12 +41,12 @@ public:
     bool equal(const AbstractWeakLearner *other_p) const;
     std::string get_type() const;
 
-    SparseVector get_wt(void) const { return wt;}
+    SparseVector get_wt() const { return wt;}
 
     // ugly hack. Need to figure out how to avoid.
-    bool get_direction(void) const {return false; }
-    double get_threshold(void) const {return 0.0; }
-    size_t get_index(void) const {return 0;}
+    bool get_direction() const {return false; }
+    double get_threshold() const {return 0.0; }
+    size_t get_index() const {return 0;}
 
 };
 

@@ -41,7 +41,7 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
     double best_threshold = 1.0;
     double best_edge = -1.0;
     bool ge;
-    size_t max_idx = 0;
+    size_t max_index = 0;
     size_t size = data.size();
     double init_edge = 0.0;
 
@@ -63,22 +63,22 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
             best_edge = tmp_edge;
             best_threshold = tmp_threshold;
             ge = tmp_ge;
-            max_idx = i;
+            max_index = i;
         }
     }
 
-    SparseVector result(data[max_idx].dim, data[max_idx].dim);
+    SparseVector result(data[max_index].dim, data[max_index].dim);
 
     // initially set result to zero
     for(size_t i = 0; i < result.dim; i++){
         result.val[i] = 0.0;
-        result.idx[i] = i;
+        result.index[i] = i;
     }
 
     // copy nonzero elements of best hypothesis into result
-    for(size_t i = 0; i < data[max_idx].nnz; i++){
-        size_t idx = data[max_idx].idx[i];
-        result.val[idx] = data[max_idx].val[i];
+    for(size_t i = 0; i < data[max_index].nnz; i++){
+        size_t index = data[max_index].index[i];
+        result.val[index] = data[max_index].val[i];
     }
 
     double edge = 0.0; // just for checking that we're thresholding well
@@ -96,33 +96,33 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
         edge += result.val[i]*dist.val[i];
     }
     SparseVector wt(size, 1);
-    wt.idx[0] = max_idx;
+    wt.index[0] = max_index;
     wt.val[0] = 1.0;
 
     //std::cout << "thresh: " << best_threshold << " dir: " << ge;
-    //std::cout << " idx: " << max_idx << " edge: " << edge << std::endl;
+    //std::cout << " index: " << max_index << " edge: " << edge << std::endl;
 
     AbstractWeakLearner* wl = new DecisionStumpWeakLearner(wt,
                                                            edge,
                                                            result,
                                                            best_threshold,
                                                            ge,
-                                                           max_idx);
+                                                           max_index);
 
     timer.stop();
-    std::cout << "Weak learner time: " << timer.last_cpu << std::endl;
+    std::cout << "Weak learner time: " << timer.last_cpu << " seconds" << std::endl;
     return wl;
 }
 
 
-void DecisionStump::find_best_threshold_greater_or_equal(const size_t& idx,
+void DecisionStump::find_best_threshold_greater_or_equal(const size_t& index,
                                                          const double& dist_diff,
                                                          const DenseVector& dist,
                                                          const double& init_edge,
                                                          double& best_threshold,
                                                          double& best_edge) const{
 
-    DenseIntegerVector indices = sorted_data[idx]; // sorted indices for hyp idx
+    DenseIntegerVector indices = sorted_data[index]; // sorted indices for hyp index
     double max_so_far = init_edge;
     double edgeChunk = 0.0;
     double edge;
@@ -131,7 +131,7 @@ void DecisionStump::find_best_threshold_greater_or_equal(const size_t& idx,
 
     if((int)indices.val[0] >= 0)
     {
-        tmp_threshold = data[idx].val[indices.val[0]];
+        tmp_threshold = data[index].val[indices.val[0]];
     }
     else
     {
@@ -142,30 +142,41 @@ void DecisionStump::find_best_threshold_greater_or_equal(const size_t& idx,
     edge = max_so_far;
     prev = tmp_threshold;
 
-    for(size_t i = 0; i < indices.dim; i++){
-        size_t sparseidx = indices.val[i];
-        size_t denseidx = data[idx].idx[indices.val[i]];
+    for(size_t i = 0; i < indices.dim; i++)
+    {
+        size_t sparseindex = indices.val[i];
+        size_t denseindex = data[index].index[indices.val[i]];
         double tmpdata;
 
-        if((int)sparseidx >=0)
-            tmpdata = data[idx].val[sparseidx];
+        if((int)sparseindex >=0)
+        {
+            tmpdata = data[index].val[sparseindex];
+        }
         else
+        {
             tmpdata = 0.0;
+        }
 
-        if(tmpdata != prev){
+        if(tmpdata != prev)
+        {
             edge -= 2*edgeChunk;
             edgeChunk = 0.0;
         }
 
-        if (edge > max_so_far){
-            tmp_threshold = tmpdata ;
+        if (edge > max_so_far)
+        {
+            tmp_threshold = tmpdata;
             max_so_far = edge;
         }
 
-        if((int)sparseidx >=0)
-            edgeChunk += dist.val[denseidx] * labels[denseidx];
+        if((int)sparseindex >=0)
+        {
+            edgeChunk += dist.val[denseindex] * labels[denseindex];
+        }
         else
+        {
             edgeChunk += dist_diff;
+        }
 
         prev = tmpdata;
     }
@@ -177,14 +188,14 @@ void DecisionStump::find_best_threshold_greater_or_equal(const size_t& idx,
 }
 
 
-void DecisionStump::find_best_threshold_less_or_equal(const size_t& idx,
+void DecisionStump::find_best_threshold_less_or_equal(const size_t& index,
                                                       const double& dist_diff,
                                                       const DenseVector& dist,
                                                       const double& init_edge,
                                                       double& best_threshold,
                                                       double& best_edge) const{
 
-    DenseIntegerVector indices = sorted_data[idx]; // sorted indices for hyp idx
+    DenseIntegerVector indices = sorted_data[index]; // sorted indices for hyp index
     double max_so_far = init_edge;
     double edgeChunk = 0.0;
     double edge;
@@ -193,7 +204,7 @@ void DecisionStump::find_best_threshold_less_or_equal(const size_t& idx,
     int N = indices.dim-1;
 
     if((int)indices.val[N] >= 0)
-        tmp_threshold = data[idx].val[indices.val[N]];
+        tmp_threshold = data[index].val[indices.val[N]];
     else
         tmp_threshold = 0.0;
 
@@ -201,12 +212,12 @@ void DecisionStump::find_best_threshold_less_or_equal(const size_t& idx,
     prev = tmp_threshold;
 
     for(int i = N; i >= 0; i--){
-        size_t sparseidx = indices.val[i];
-        size_t denseidx = data[idx].idx[indices.val[i]];
+        size_t sparseindex = indices.val[i];
+        size_t denseindex = data[index].index[indices.val[i]];
         double tmpdata;
 
-        if((int)sparseidx >=0)
-            tmpdata = data[idx].val[sparseidx];
+        if((int)sparseindex >=0)
+            tmpdata = data[index].val[sparseindex];
         else
             tmpdata = 0.0;
 
@@ -220,8 +231,8 @@ void DecisionStump::find_best_threshold_less_or_equal(const size_t& idx,
             max_so_far = edge;
         }
 
-        if((int)sparseidx >=0)
-            edgeChunk += dist.val[denseidx] * labels[denseidx];
+        if((int)sparseindex >=0)
+            edgeChunk += dist.val[denseindex] * labels[denseindex];
         else
             edgeChunk += dist_diff;
 
@@ -235,7 +246,7 @@ void DecisionStump::find_best_threshold_less_or_equal(const size_t& idx,
 }
 
 
-void DecisionStump::find_best_threshold(const size_t& idx,
+void DecisionStump::find_best_threshold(const size_t& index,
                                         const DenseVector& dist,
                                         const double& init_edge,
                                         double& best_threshold,
@@ -250,15 +261,15 @@ void DecisionStump::find_best_threshold(const size_t& idx,
 
 
     dist_diff = init_edge;
-    for(size_t i = 0; i < data[idx].nnz; i++){
-        size_t tmpidx = data[idx].idx[i];
-        //tmplabels[tmpidx] = 0;
-        dist_diff -= dist.val[tmpidx] * labels[tmpidx];
+    for(size_t i = 0; i < data[index].nnz; i++){
+        size_t tmpindex = data[index].index[i];
+        //tmplabels[tmpindex] = 0;
+        dist_diff -= dist.val[tmpindex] * labels[tmpindex];
     }
 
 
     // get the best ge threshold
-    find_best_threshold_greater_or_equal(idx,dist_diff,dist,init_edge, ge_threshold, ge_edge);
+    find_best_threshold_greater_or_equal(index,dist_diff,dist,init_edge, ge_threshold, ge_edge);
 
     best_edge = ge_edge;
     best_threshold = ge_threshold;
@@ -266,7 +277,7 @@ void DecisionStump::find_best_threshold(const size_t& idx,
 
     // potentially get the best le threshold
     if(less_than==true){
-        find_best_threshold_less_or_equal(idx,dist_diff,dist,init_edge, le_threshold, le_edge);
+        find_best_threshold_less_or_equal(index,dist_diff,dist,init_edge, le_threshold, le_edge);
         if( le_edge > ge_edge){
             best_edge = le_edge;
             best_threshold = le_threshold;

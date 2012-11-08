@@ -54,7 +54,7 @@ int ZhangdAndHagerOptimizer::solve(){
         // Step 1: Detect if we have already converged
         if(duality_gap_met())
         {
-            report_stats();
+            report_statistics();
             return 0;
         }
 

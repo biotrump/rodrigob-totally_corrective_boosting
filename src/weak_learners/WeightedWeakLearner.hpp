@@ -25,7 +25,7 @@ public:
         weight = _wt;
     }
 
-    double get_weight(void) const
+    double get_weight() const
     {
         return weight;
     }

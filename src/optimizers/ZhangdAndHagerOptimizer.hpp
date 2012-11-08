@@ -47,9 +47,9 @@ public:
                             const double& nu,
                             const double& epsilon,
                             const bool& binary);
-    ~ZhangdAndHagerOptimizer(void){ }
+    ~ZhangdAndHagerOptimizer(){ }
 
-    int solve(void);
+    int solve();
 
 }; 
 

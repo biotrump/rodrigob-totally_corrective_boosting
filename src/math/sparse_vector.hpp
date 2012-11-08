@@ -37,7 +37,7 @@ public:
     double *val;
 
     // List of indices
-    size_t *idx;
+    size_t *index;
 
     // Number of non zero elements
     size_t nnz;
@@ -46,17 +46,17 @@ public:
     size_t dim;
 
     // default constructor
-    SparseVector(void):val(NULL), idx(NULL), nnz(0), dim(0) { }
+    SparseVector():val(NULL), index(NULL), nnz(0), dim(0) { }
 
     // Copy constructor
     SparseVector(const SparseVector& s): nnz(s.nnz), dim(s.dim)
     {
         val = new double[nnz];
-        idx = new size_t[nnz];
+        index = new size_t[nnz];
         for(size_t i = 0; i < nnz; i++)
         {
             val[i] = s.val[i];
-            idx[i] = s.idx[i];
+            index[i] = s.index[i];
         }
         return;
     }
@@ -66,11 +66,11 @@ public:
     SparseVector(const size_t& dim, const size_t& nnz):nnz(nnz), dim(dim)
     {
         val = new double[nnz];
-        idx = new size_t[nnz];
+        index = new size_t[nnz];
         for(size_t i = 0; i < nnz; i++)
         {
             val[i] = 0.0;
-            idx[i] = 0;
+            index[i] = 0;
         }
         return;
     }
@@ -78,21 +78,21 @@ public:
     {
         if(val != NULL) delete[] val;
         val = NULL;
-        if(idx != NULL) delete[] idx;
-        idx = NULL;
+        if(index != NULL) delete[] index;
+        index = NULL;
         dim = _dim;
         nnz = _nnz;
         val = new double[nnz];
-        idx = new size_t[nnz];
+        index = new size_t[nnz];
         for(size_t i = 0; i < nnz; i++)
         {
             val[i] = 0.0;
-            idx[i] = 0;
+            index[i] = 0;
         }
         return;
     }
 
-    ~SparseVector(void)
+    ~SparseVector()
     {
         reset();
         return;
@@ -101,25 +101,25 @@ public:
     SparseVector& operator=(const SparseVector &rhs)
     {
         if(val != NULL) delete [] val;
-        if(idx != NULL) delete [] idx;
+        if(index != NULL) delete [] index;
         dim = rhs.dim;
         nnz = rhs.nnz;
         val = new double[nnz];
-        idx = new size_t[nnz];
+        index = new size_t[nnz];
         for(size_t i = 0; i < nnz; i++)
         {
-            idx[i] = rhs.idx[i];
+            index[i] = rhs.index[i];
             val[i] = rhs.val[i];
         }
         return *this;
     }
 
-    void reset(void)
+    void reset()
     {
         if(val != NULL) delete[] val;
         val = NULL;
-        if(idx != NULL) delete [] idx;
-        idx = NULL;
+        if(index != NULL) delete [] index;
+        index = NULL;
         nnz = 0;
         dim = 0;
         return;

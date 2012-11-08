@@ -39,13 +39,13 @@ public:
     virtual bool equal(const AbstractWeakLearner *wl) const = 0;
     virtual std::string get_type() const = 0;
 
-    double get_edge(void) const { return edge; }
-    SparseVector get_prediction(void) const { return prediction; }
+    double get_edge() const { return edge; }
+    SparseVector get_prediction() const { return prediction; }
 
     // ugly hack. Need to figure out how to avoid.
-    virtual bool get_direction(void) const {return false; }
-    virtual double get_threshold(void) const {return 0.0; }
-    virtual size_t get_index(void) const {return 0;}
+    virtual bool get_direction() const {return false; }
+    virtual double get_threshold() const {return 0.0; }
+    virtual size_t get_index() const {return 0;}
 
     friend
     bool operator == (const AbstractWeakLearner& wl1, const AbstractWeakLearner& wl2);

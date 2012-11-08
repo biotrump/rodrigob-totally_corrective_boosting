@@ -12,7 +12,7 @@ namespace totally_corrective_boosting
 
 DecisionStumpWeakLearner::DecisionStumpWeakLearner():
     LinearWeakLearner(),
-    thresh(0), direction(true), idx(0)
+    thresh(0), direction(true), index(0)
 {
     // nothing to do here
     return;
@@ -25,9 +25,9 @@ DecisionStumpWeakLearner::DecisionStumpWeakLearner(
         const SparseVector& prediction,
         const double& thresh,
         const bool& direction,
-        const int& idx)
+        const int& index)
     : LinearWeakLearner(wt, edge, prediction),
-      thresh(thresh), direction(direction), idx(idx)
+      thresh(thresh), direction(direction), index(index)
 {
     // nothing to do here
     return;
@@ -99,14 +99,14 @@ double DecisionStumpWeakLearner::predict(const SparseVector& x) const
 DenseVector DecisionStumpWeakLearner::predict(const std::vector<SparseVector>& Data) const
 {
 
-    DenseVector result(Data[idx].dim);
+    DenseVector result(Data[index].dim);
 
-    for(size_t i = 0; i < Data[idx].nnz; i++){
-        int tmpidx = Data[idx].idx[i];
-        result.val[tmpidx] = Data[idx].val[i];
+    for(size_t i = 0; i < Data[index].nnz; i++){
+        int tmpindex = Data[index].index[i];
+        result.val[tmpindex] = Data[index].val[i];
     }
 
-    for(size_t i = 0; i < Data[idx].dim; i++){
+    for(size_t i = 0; i < Data[index].dim; i++){
 
         if(direction){
             if( result.val[i] >= thresh){result.val[i] = 1.0;}
@@ -129,7 +129,7 @@ void DecisionStumpWeakLearner::dump(std::ostream& os) const
     os << "edge: " << edge << std::endl;
     os << "thresh: " << thresh << std::endl;
     os << "dir: " << direction << std::endl;
-    os << "idx: " << idx << std::endl;
+    os << "index: " << index << std::endl;
     return;
 }
 
@@ -144,8 +144,8 @@ void DecisionStumpWeakLearner::load(std::istream& in)
         in >> thresh;
         expect_keyword(in,"dir:");
         in >> direction;
-        expect_keyword(in,"idx:");
-        in >> idx;
+        expect_keyword(in,"index:");
+        in >> index;
     }
     catch (std::string s) {
         std::cerr << "Error when reading ensemble: " << s << std::endl;
@@ -161,7 +161,7 @@ bool DecisionStumpWeakLearner::equal(const AbstractWeakLearner *other_p) const
     return (wl_p != NULL)
             and ( this->thresh == wl_p->get_threshold()
                   and this->direction == wl_p->get_direction()
-                  and this->idx == wl_p->get_index()
+                  and this->index == wl_p->get_index()
                   and this->wt == wl_p->get_wt());
 }
 

@@ -9,7 +9,8 @@ namespace totally_corrective_boosting
 
 
 /// Derived class. Implements AdaBoost
-class AdaBoost: public AbstractBooster{
+class AdaBoost: public AbstractBooster
+{
 
 private:
   double alpha;
@@ -26,10 +27,10 @@ protected:
   
 public:
 
-  AdaBoost(AbstractOracle* &oracle,
-            const int& num_data_points,
-            const int& max_iterations,
-            const int& display_frequency);
+  AdaBoost(AbstractOracle* oracle,
+            const int num_data_points,
+            const int max_iterations,
+            const int display_frequency);
   ~AdaBoost();
   
 };

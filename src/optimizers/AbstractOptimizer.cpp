@@ -115,7 +115,7 @@ void AbstractOptimizer::push_back(const SparseVector& u){
   DenseVector u_dense(u.dim);
   for(size_t i = 0; i < u.nnz; i++)
   {
-    u_dense.val[u.idx[i]] = u.val[i];
+    u_dense.val[u.index[i]] = u.val[i];
   }
   
   U.push_back(u_dense);
@@ -387,7 +387,8 @@ double AbstractOptimizer::binary_function(){
 }
 
 // Assume that dist has been set by previous call to fun
-DenseVector AbstractOptimizer::binary_gradient(){
+DenseVector AbstractOptimizer::binary_gradient()
+{
   
   gradient_timer.start();
   DenseVector grad_w;
@@ -423,7 +424,8 @@ DenseVector AbstractOptimizer::binary_gradient(){
 }
 
 
-void AbstractOptimizer::report_stats(){
+void AbstractOptimizer::report_statistics()
+{
   // dvec W;
   // W.val = x.val;
   // W.dim = num_wl;
@@ -434,10 +436,10 @@ void AbstractOptimizer::report_stats(){
   // std::cout << "dist: " << dist << std::endl;
   std::cout << "Time spent in " <<  function_timer.num_calls
             << " function evaluations: " 
-            << function_timer.total_cpu << std::endl;
+            << function_timer.total_cpu << " seconds" << std::endl;
   std::cout << "Time spent in " << gradient_timer.num_calls
             << " gradient evaluations: " 
-            << gradient_timer.total_cpu << std::endl;
+            << gradient_timer.total_cpu << " seconds" << std::endl;
   function_timer.reset();
   gradient_timer.reset();
   return;

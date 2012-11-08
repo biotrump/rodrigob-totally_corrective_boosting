@@ -55,22 +55,22 @@ protected:
   
 public:
     
-  AbstractBooster(AbstractOracle* &oracle,
-           const int& num_data_points,
-           const int& max_iterations);
+  AbstractBooster(AbstractOracle* oracle_,
+           const int num_data_points_,
+           const int max_iterations_);
 
 
-  AbstractBooster(AbstractOracle* &oracle,
-           const int& num_data_points,
-           const int& max_iterations,
-           const int& display_frequency);
+  AbstractBooster(AbstractOracle* oracle,
+           const int num_data_points,
+           const int max_iterations,
+           const int disp_frequency_);
 
   virtual ~AbstractBooster();
 
   /// Boost and save intermediate results
   size_t boost(std::ostream& os = std::cout);
   
-  Ensemble get_ensemble(void){ return model; }
+  Ensemble get_ensemble(){ return model; }
 
 };
 

@@ -39,15 +39,15 @@ public:
 
     void scale_weights(const double& scale);
 
-    void set_weight(const double& wt, const size_t& idx);
+    void set_weight(const double& wt, const size_t& index);
 
-    void add_weight(const double& wt, const size_t& idx);
+    void add_weight(const double& wt, const size_t& index);
 
-    DenseVector get_weights(void) const;
+    DenseVector get_weights() const;
 
-    // bool find_wl(const CWeakLearner* wl, size_t& idx);
+    // bool find_wl(const CWeakLearner* wl, size_t& index);
 
-    size_t size(void) const
+    size_t size() const
     {
         return ensemble.size();
     }

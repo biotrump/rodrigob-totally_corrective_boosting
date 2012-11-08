@@ -35,7 +35,7 @@ int LibSVMReader::readlibSVM(const std::string& filename,
     }
 
     std::string line;
-    size_t max_idx = 0;        // maximum index
+    size_t max_index = 0;        // maximum index
     size_t tot_nnz = 0;        // number of non zero elements
 
     // Iterate over lines of a file
@@ -55,7 +55,7 @@ int LibSVMReader::readlibSVM(const std::string& filename,
 
         std::string token;
         std::vector<double> pt_val;
-        std::vector<size_t> pt_idx;
+        std::vector<size_t> pt_index;
 
         while(!iss.eof())
         {
@@ -64,14 +64,14 @@ int LibSVMReader::readlibSVM(const std::string& filename,
 
             if(is_blank(token)) break;
 
-            size_t idx;
+            size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &idx, &val);
+            sscanf(token.c_str(), "%lu:%lf", &index, &val);
 
             pt_val.push_back(val);
-            pt_idx.push_back(idx);
+            pt_index.push_back(index);
 
-            if(idx > max_idx) max_idx = idx;
+            if(index > max_index) max_index = index;
             tot_nnz ++;
         }
 
@@ -79,28 +79,28 @@ int LibSVMReader::readlibSVM(const std::string& filename,
         SparseVector data_pt;
         data_pt.nnz = pt_val.size();
         data_pt.val = new double[data_pt.nnz];
-        data_pt.idx = new size_t[data_pt.nnz];
+        data_pt.index = new size_t[data_pt.nnz];
         size_t i =0;
         for (dbl_itr it = pt_val.begin(); it!=pt_val.end(); it++, i++)
             data_pt.val[i] = *it;
         i = 0;
-        for (uint_itr it = pt_idx.begin(); it!=pt_idx.end(); it++, i++)
-            data_pt.idx[i] = *it;
+        for (uint_itr it = pt_index.begin(); it!=pt_index.end(); it++, i++)
+            data_pt.index[i] = *it;
         data.push_back(data_pt);
     }
 
-    max_idx++;
+    max_index++;
 
     std::cout << "Data File: " << filename << std::endl;
     std::cout << "# of data points " << data.size() << std::endl;
-    std::cout << "Maximum index " << max_idx << std::endl;
+    std::cout << "Maximum index " << max_index << std::endl;
     std::cout << "Non zero elements " << tot_nnz << std::endl;
-    std::cout << "Total elements " << data.size()*max_idx << std::endl;
-    std::cout << "Sparsity " << 1.0 - tot_nnz/(1.0*data.size()*max_idx) << std::endl;
+    std::cout << "Total elements " << data.size()*max_index << std::endl;
+    std::cout << "Sparsity " << 1.0 - tot_nnz/(1.0*data.size()*max_index) << std::endl;
 
     // adjust the dimensions
     for (svec_itr it = data.begin(); it!=data.end(); it++)
-        (*it).dim = max_idx;
+        (*it).dim = max_index;
 
     df.close();
 
@@ -124,7 +124,7 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
     }
 
     std::string line;
-    size_t max_idx = 0;        // maximum index
+    size_t max_index = 0;        // maximum index
     size_t tot_nnz = 0;        // number of non zero elements
 
     // Iterate over lines of a file
@@ -155,20 +155,20 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
 
             if(is_blank(token)) break;
 
-            size_t idx;
+            size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &idx, &val);
+            sscanf(token.c_str(), "%lu:%lf", &index, &val);
 
-            if(idx > max_idx) max_idx = idx;
+            if(index > max_index) max_index = index;
             tot_nnz ++;
         }
     }
 
     size_t num_pt = labels.size();
 
-    max_idx++;
+    max_index++;
 
-    std::vector<size_t> idx_counter(max_idx);
+    std::vector<size_t> index_counter(max_index);
 
     df.clear();
     df.seekg(0, std::ios::beg);
@@ -196,20 +196,20 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
 
             if(is_blank(token)) break;
 
-            size_t idx;
+            size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &idx, &val);
-            idx_counter[idx]++;
+            sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            index_counter[index]++;
         }
     }
 
 
-    data.reserve(max_idx);
+    data.reserve(max_index);
 
-    for(size_t i = 0; i < max_idx; i++)
+    for(size_t i = 0; i < max_index; i++)
     {
-        data.push_back(SparseVector(num_pt, idx_counter[i]));
-        idx_counter[i] = 0;
+        data.push_back(SparseVector(num_pt, index_counter[i]));
+        index_counter[i] = 0;
     }
 
     df.clear();
@@ -240,20 +240,20 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
 
             if(is_blank(token)) break;
 
-            size_t idx;
+            size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &idx, &val);
+            sscanf(token.c_str(), "%lu:%lf", &index, &val);
 
-            // We need idx_counter to keep track of how many spots we have
-            // already used in data[idx] sparse vector thus far
+            // We need index_counter to keep track of how many spots we have
+            // already used in data[index] sparse vector thus far
 
             // The index is nothing but the data point # that we observed
-            data[idx].idx[idx_counter[idx]] = pt_num;
+            data[index].index[index_counter[index]] = pt_num;
 
             // Value is what we read in
-            data[idx].val[idx_counter[idx]]= val;
+            data[index].val[index_counter[index]]= val;
 
-            idx_counter[idx]++;
+            index_counter[index]++;
         }
 
         pt_num++;
@@ -261,7 +261,7 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
 
     std::cout << "Data File: " << filename << std::endl;
     std::cout << "# of data points " << labels.size() << std::endl;
-    std::cout << "Maximum index " << max_idx << std::endl;
+    std::cout << "Maximum index " << max_index << std::endl;
     std::cout << "Non zero elements " << tot_nnz << std::endl;
     std::cout << "Total elements " << data.size()*pt_num << std::endl;
     std::cout << "Sparsity " << 1.0 - tot_nnz/(1.0*data.size()*pt_num) << std::endl;
@@ -323,15 +323,15 @@ int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
 
             if(is_blank(token)) break;
 
-            size_t idx;
+            size_t index;
             double val;
 
-            sscanf(token.c_str(), "%lu:%lf", &idx, &val);
+            sscanf(token.c_str(), "%lu:%lf", &index, &val);
             pt.push_back(val);
-            col.push_back(idx);
+            col.push_back(index);
             row.push_back(max_row);
 
-            if(idx > max_col) max_col = idx;
+            if(index > max_col) max_col = index;
 
             tot_nnz ++;
         }
@@ -348,8 +348,8 @@ int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
     {
 
         std::pair<size_t,double> tmppair(row[j],pt[j]);
-        size_t col_idx = col[j];
-        tmpmat[col_idx].push_back(tmppair);
+        size_t col_index = col[j];
+        tmpmat[col_index].push_back(tmppair);
     }
 
     // test vector of vectors
@@ -364,13 +364,13 @@ int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
         SparseVector hyp;
         hyp.nnz = it->size();
         hyp.val = new double[hyp.nnz];
-        hyp.idx = new size_t[hyp.nnz];
+        hyp.index = new size_t[hyp.nnz];
         hyp.dim = max_row;
 
         size_t j=0;
         for(it2 = it->begin(); it2 != it->end(); it2++,j++)
         {
-            hyp.idx[j] = it2->first;
+            hyp.index[j] = it2->first;
             hyp.val[j] = it2->second;
         }
 

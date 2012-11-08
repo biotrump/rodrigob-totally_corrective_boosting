@@ -9,40 +9,48 @@
 namespace totally_corrective_boosting
 {
 
-ErlpBoost::ErlpBoost(AbstractOracle* &oracle,
-                     const int& num_pt,
-                     const int& max_iter,
-                     const double& eps,
-                     const double& nu,
-                     const bool& binary,
-                     AbstractOptimizer* &solver):
-    AbstractBooster(oracle, num_pt, max_iter), found(false),
-    binary(binary), minPt1dt1(-1.0), minPqdq1(1.0),
-    eps(eps), nu(nu), solver(solver){
+ErlpBoost::ErlpBoost(AbstractOracle *oracle_,
+                     const int num_data_points,
+                     const int max_iterations,
+                     const double eps_,
+                     const double nu_,
+                     const bool binary,
+                     AbstractOptimizer *solver_)
+    : AbstractBooster(oracle_, num_data_points, max_iterations),
+      found(false),
+      binary(binary),
+      minPt1dt1(-1.0), minPqdq1(1.0),
+      eps(eps_), nu(nu_), solver(solver_)
+{
 
-    if(binary){
-        eta = 2.0*(1.0+log(num_pt/nu))/eps;
-    }else{
-        eta = 2.0*log(num_pt/nu)/eps;
+    if(binary)
+    {
+        eta = 2.0*(1.0+log(num_data_points/nu_))/eps_;
     }
+    else
+    {
+        eta = 2.0*log(num_data_points/nu_)/eps_;
+    }
+
     assert(solver);
     // Set reference to the dist array in the solver
     solver->set_distribution(examples_distribution);
     return;
 }
 
-ErlpBoost::ErlpBoost(AbstractOracle* &oracle,
-                     const int& num_pt,
-                     const int& max_iter,
-                     const double& eps,
-                     const double& eta,
-                     const double& nu,
-                     const bool& binary,
-                     AbstractOptimizer* &solver):
-    AbstractBooster(oracle, num_pt, max_iter), found(false),
-    binary(binary), minPt1dt1(-1.0), minPqdq1(1.0), eps(eps),
-    nu(nu), eta(eta), solver(solver){
-
+ErlpBoost::ErlpBoost(AbstractOracle *oracle,
+                     const int num_data_points,
+                     const int max_iterations,
+                     const double eps_,
+                     const double eta_,
+                     const double nu_,
+                     const bool binary,
+                     AbstractOptimizer *solver_)
+    : AbstractBooster(oracle, num_data_points, max_iterations),
+      found(false),
+      binary(binary), minPt1dt1(-1.0), minPqdq1(1.0), eps(eps_),
+      nu(nu_), eta(eta_), solver(solver_)
+{
     assert(solver);
     // Set reference to the dist array in the solver
     solver->set_distribution(examples_distribution);
@@ -56,7 +64,9 @@ ErlpBoost::~ErlpBoost()
     return;
 }
 
-void ErlpBoost::update_linear_ensemble(const AbstractWeakLearner& wl){
+
+void ErlpBoost::update_linear_ensemble(const AbstractWeakLearner& wl)
+{
 
     WeightedWeakLearner wwl(&wl, 0.0);
     found = model.add(wwl);
@@ -64,7 +74,9 @@ void ErlpBoost::update_linear_ensemble(const AbstractWeakLearner& wl){
     return;
 }
 
-bool ErlpBoost::stopping_criterion(std::ostream& os){
+
+bool ErlpBoost::stopping_criterion(std::ostream& os)
+{
     std::cout << "min of Obj Values : " << minPqdq1 << std::endl;
     std::cout << "min Lower Bound : " << minPt1dt1 << std::endl;
     std::cout << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
@@ -73,7 +85,8 @@ bool ErlpBoost::stopping_criterion(std::ostream& os){
 }
 
 
-void ErlpBoost::update_stopping_criterion(const AbstractWeakLearner& wl){
+void ErlpBoost::update_stopping_criterion(const AbstractWeakLearner& wl)
+{
 
     double gamma = wl.get_edge();
     if(binary){
@@ -86,7 +99,9 @@ void ErlpBoost::update_stopping_criterion(const AbstractWeakLearner& wl){
     return;
 }
 
-void ErlpBoost::update_weights(const AbstractWeakLearner& wl){
+
+void ErlpBoost::update_weights(const AbstractWeakLearner& wl)
+{
 
     // The predictions are already pre-multiplied with the labels already
     // in the weak learner
@@ -109,7 +124,6 @@ void ErlpBoost::update_weights(const AbstractWeakLearner& wl){
     model.set_weights(solver->x);
 
     minPt1dt1 = -solver->dual_obj;
-
     return;
 }
 

@@ -31,14 +31,14 @@ class AbstractOptimizer{
 private:
 
   // ERLPBoost function value and gradient
-  double erlp_function(void);
+  double erlp_function();
   
-  DenseVector erlp_gradient(void);
+  DenseVector erlp_gradient();
 
   // Binary ERLPBoost function value and gradient
-  double binary_function(void);
+  double binary_function();
   
-  DenseVector binary_gradient(void);
+  DenseVector binary_gradient();
   
   // duality gap
   double gap;
@@ -80,7 +80,7 @@ protected:
   /// Keep track of time spent in function and gradient evaluation
   Timer function_timer, gradient_timer;
 
-  void report_stats(void);
+  void report_statistics();
   
 public:
   
@@ -106,28 +106,28 @@ public:
              const double& epsilon,
              const bool& binary = false); 
   
-  virtual ~AbstractOptimizer(void);
+  virtual ~AbstractOptimizer();
   
   void set_distribution(const DenseVector& _distribution);
   
   void push_back(const SparseVector& u);
   
   /// ERLPBoost function
-  double function(void);
+  double function();
   
   /// ERLPBoost gradient
-  DenseVector gradient(void);
+  DenseVector gradient();
 
   /// ERLPBoost primal function
-  double primal(void);
+  double primal();
   
   bool converged(const DenseVector& gradk);
 
-  bool duality_gap_met(void);
+  bool duality_gap_met();
   
   
   /// Derived classes will implement this method
-  virtual int solve(void) = 0;
+  virtual int solve() = 0;
   
 }; 
 

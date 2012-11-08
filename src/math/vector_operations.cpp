@@ -12,14 +12,14 @@ namespace totally_corrective_boosting
 // store result in sparse vector res
 // We will allocate memory for the result.
 // To explicitly encourage the callers to deallocate
-// we will assert that res.idx and res.val are NULL
+// we will assert that res.index and res.val are NULL
 template <class T, class X>
 void dot(const std::vector<T>& mat, const X& vec, SparseVector& res)
 {
 
     // paranoia
     assert(res.val == NULL);
-    assert(res.idx == NULL);
+    assert(res.index == NULL);
 
     assert(mat.size());
     // might slow things down ...
@@ -27,7 +27,7 @@ void dot(const std::vector<T>& mat, const X& vec, SparseVector& res)
 
     res.nnz = mat.size();
     res.val = new double[res.nnz];
-    res.idx = new size_t[res.nnz];
+    res.index = new size_t[res.nnz];
     res.dim = res.nnz;
 
     size_t i =0;
@@ -35,7 +35,7 @@ void dot(const std::vector<T>& mat, const X& vec, SparseVector& res)
     for (it = mat.begin(); it!=mat.end(); it++)
     {
         res.val[i] = dot(*it, vec);
-        res.idx[i] = i;
+        res.index[i] = i;
         i++;
     }
 
@@ -153,11 +153,11 @@ void transpose_dot(const std::vector<SparseVector>& mat, const SparseVector& vec
 
     for(size_t i = 0; i < vec.nnz; i++)
     {
-        size_t idx = vec.idx[i];
+        size_t index = vec.index[i];
         double scale = vec.val[i];
-        SparseVector row = mat[idx];
+        SparseVector row = mat[index];
         for(size_t i = 0; i < row.nnz; i++)
-            res.val[row.idx[i]] += scale*row.val[i];
+            res.val[row.index[i]] += scale*row.val[i];
     }
 
     return;
@@ -173,9 +173,9 @@ double dot(const SparseVector& a, const SparseVector& b)
 
     while((i<a.nnz) and (j<b.nnz))
     {
-        if(a.idx[i] < b.idx[j]) i++;
-        if(a.idx[i] > b.idx[j]) j++;
-        if(a.idx[i] == b.idx[j])
+        if(a.index[i] < b.index[j]) i++;
+        if(a.index[i] > b.index[j]) j++;
+        if(a.index[i] == b.index[j])
         {
             val += a.val[i]*b.val[j];
             i++;
@@ -193,7 +193,7 @@ double dot(const SparseVector& a, const DenseVector& b)
 
     for(size_t i = 0; i < a.nnz; i++)
     {
-        val += b.val[a.idx[i]]*a.val[i];
+        val += b.val[a.index[i]]*a.val[i];
     }
     return val;
 }
@@ -208,7 +208,7 @@ double dot(const DenseVector& a, const SparseVector& b)
 //   double val = 0;
 
 //   for(size_t i = 0; i < a.nnz; i++){
-//     val += b[a.idx[i]]*a.val[i];
+//     val += b[a.index[i]]*a.val[i];
 //   }
 //   return val;
 // }
@@ -234,29 +234,29 @@ double dot(const DenseVector& a, const DenseVector& b)
 // store result in res
 // We will allocate memory for the result.
 // To explicitly encourage the callers to deallocate
-// we will assert that res.idx and res.val are NULL
+// we will assert that res.index and res.val are NULL
 
 void hadamard(const SparseVector& a, const SparseVector& b, SparseVector& res)
 {
 
     // paranoia
     assert(res.val == NULL);
-    assert(res.idx == NULL);
+    assert(res.index == NULL);
 
     assert(a.dim == b.dim);
 
     size_t i = 0, j = 0;
     std::vector<double> val;
-    std::vector<size_t> idx;
+    std::vector<size_t> index;
 
     while((i<a.nnz) and (j<b.nnz))
     {
-        if(a.idx[i] < b.idx[j]) i++;
-        if(a.idx[i] > b.idx[j]) j++;
-        if(a.idx[i] == b.idx[j])
+        if(a.index[i] < b.index[j]) i++;
+        if(a.index[i] > b.index[j]) j++;
+        if(a.index[i] == b.index[j])
         {
             val.push_back(a.val[i]*b.val[j]);
-            idx.push_back(a.idx[i]);
+            index.push_back(a.index[i]);
             i++;
             j++;
         }
@@ -269,12 +269,12 @@ void hadamard(const SparseVector& a, const SparseVector& b, SparseVector& res)
     {
 
         res.val = new double[res.nnz];
-        res.idx = new size_t[res.nnz];
+        res.index = new size_t[res.nnz];
 
         for(size_t i = 0; i < res.nnz; i++)
         {
             res.val[i] = val[i];
-            res.idx[i] = idx[i];
+            res.index[i] = index[i];
         }
     }
 
@@ -329,7 +329,7 @@ void axpy(const double& a, const DenseVector& x, const SparseVector& y, DenseVec
     // svnvish:BUGBUG
     // Not the most efficient way to do this
     for(size_t i = 0; i < y.nnz; i++)
-        res.val[y.idx[i]] += y.val[i];
+        res.val[y.index[i]] += y.val[i];
 
     return;
 }
@@ -344,7 +344,7 @@ void axpy(const double& a, const SparseVector& x, const DenseVector& y, DenseVec
     // svnvish:BUGBUG
     // Not the most efficient way to do this
     for(size_t i = 0; i < x.nnz; i++)
-        res.val[x.idx[i]] += a*x.val[i];
+        res.val[x.index[i]] += a*x.val[i];
 
     return;
 }
@@ -354,7 +354,7 @@ void axpy(const double& a, const SparseVector& x, const DenseVector& y, DenseVec
 double sum(const SparseVector& a)
 {
     double sum = 0.0;
-    for(size_t i = 0; i < a.nnz; i++) sum += a.val[a.idx[i]];
+    for(size_t i = 0; i < a.nnz; i++) sum += a.val[a.index[i]];
     return sum;
 }
 
@@ -398,46 +398,46 @@ double diffnorm(const DenseVector& a, const DenseVector& b)
 size_t argmin(const DenseVector& a)
 {
     double min = std::numeric_limits<double>::max();
-    size_t idx = -1;
+    size_t index = -1;
     for(size_t i = 0; i < a.dim; i++)
     {
         if(a.val[i] < min)
         {
             min = a.val[i];
-            idx = i;
+            index = i;
         }
     }
-    return idx;
+    return index;
 }
 
 size_t argmax(const DenseVector& a)
 {
     double max = -std::numeric_limits<double>::max();
-    size_t idx = -1;
+    size_t index = -1;
     for(size_t i = 0; i < a.dim; i++)
     {
         if(a.val[i] > max)
         {
             max = a.val[i];
-            idx = i;
+            index = i;
         }
     }
-    return idx;
+    return index;
 }
 
 size_t abs_argmax(const DenseVector& a)
 {
     double max = -std::numeric_limits<double>::max();
-    size_t idx = -1;
+    size_t index = -1;
     for(size_t i = 0; i < a.dim; i++)
     {
         if(std::abs(a.val[i]) > max)
         {
             max = std::abs(a.val[i]);
-            idx = i;
+            index = i;
         }
     }
-    return idx;
+    return index;
 }
 
 double max(const DenseVector& a)
@@ -529,7 +529,7 @@ std::ostream& operator << (std::ostream& os, const SparseVector& s)
     os << "(" << s.dim << ")" << " ";
     for(size_t i = 0; i < s.nnz; i++)
     {
-        os << "[" << s.idx[i] << "]  "<< s.val[i];
+        os << "[" << s.index[i] << "]  "<< s.val[i];
         if (i != (s.nnz-1))
             os << "  ";
     }
@@ -542,10 +542,10 @@ std::istream& operator >> (std::istream& in, SparseVector& s)
     try
     {
 
-        std::vector<int> idxs;
+        std::vector<int> indices;
         std::vector<double> vals;
         char v;
-        int idx;
+        int index;
         int dim;
 
         // get the dimension
@@ -558,7 +558,7 @@ std::istream& operator >> (std::istream& in, SparseVector& s)
             throw std::string("must end with )");
 
 
-        // get all of the idx,val pairs of the sparse vector
+        // get all of the index,val pairs of the sparse vector
         while(in.peek()!= '\n')
         {
 
@@ -566,7 +566,7 @@ std::istream& operator >> (std::istream& in, SparseVector& s)
             in >> v;
             if( v != '[')
                 throw std::string("must start with [");
-            in >> idx;
+            in >> index;
             in >> v;
             if( v != ']')
                 throw std::string("must end with ]");
@@ -574,17 +574,17 @@ std::istream& operator >> (std::istream& in, SparseVector& s)
             double wt;
             in >> wt;
 
-            idxs.push_back(idx);
+            indices.push_back(index);
             vals.push_back(wt);
 
         }
 
-        int nnz = (int)idxs.size();
+        int nnz = (int)indices.size();
         SparseVector tmp(dim,nnz);
         for(int i = 0; i < nnz; i++)
         {
             tmp.val[i] = vals[i];
-            tmp.idx[i] = idxs[i];
+            tmp.index[i] = indices[i];
         }
         s = tmp;
     }
@@ -602,7 +602,7 @@ bool operator == (const SparseVector& s1, const SparseVector& s2)
     return (s1.dim == s2.dim) and
            (s1.nnz == s2.nnz) and
            std::equal(s1.val, s1.val+s1.nnz, s2.val) and
-           std::equal(s1.idx, s1.idx+s1.nnz, s2.idx);
+           std::equal(s1.index, s1.index+s1.nnz, s2.index);
 }
 
 bool operator == (const DenseVector& d1, const DenseVector& d2)

@@ -43,7 +43,7 @@ public:
     size_t dim;
 
     // default constructor
-    DenseIntegerVector(void)
+    DenseIntegerVector()
     {
         dim = 0;
         val = NULL;
@@ -82,7 +82,7 @@ public:
         return;
     }
 
-    ~DenseIntegerVector(void)
+    ~DenseIntegerVector()
     {
         if(val != NULL) delete[] val;
         val = NULL;

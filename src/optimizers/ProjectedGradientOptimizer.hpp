@@ -92,9 +92,9 @@ public:
                                const double& nu,
                                const double& epsilon,
                                const bool& binary);
-    ~ProjectedGradientOptimizer(void);
+    ~ProjectedGradientOptimizer();
 
-    int solve(void);
+    int solve();
 }; 
 
 } // end of namespace totally_corrective_boosting

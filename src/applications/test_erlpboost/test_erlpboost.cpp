@@ -91,9 +91,9 @@ int main(int argc, char **argv)
     int max_iter = 0;
     config.readInto(max_iter, "max_iter");
 
-    std::ofstream of;
-    of.open(output_file.c_str());
-    if(!of.good()) {
+    std::ofstream output_stream;
+    output_stream.open(output_file.c_str());
+    if(!output_stream.good()) {
         std::stringstream os;
         os <<"Cannot open data file : " << output_file << std::endl;
         throw std::invalid_argument(os.str());
@@ -161,10 +161,10 @@ int main(int argc, char **argv)
         else
             config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/eps);
 
-        of << "Maximum Iterations: " << max_iter << std::endl;
-        of << "Epsilon (Tolerance): " << eps << std::endl;
-        of << "Nu (softening): " << 1.0/nu << std::endl << std::endl;
-        of << "eta: " << eta << std::endl << std::endl;
+        output_stream << "Maximum Iterations: " << max_iter << std::endl;
+        output_stream << "Epsilon (Tolerance): " << eps << std::endl;
+        output_stream << "Nu (softening): " << 1.0/nu << std::endl << std::endl;
+        output_stream << "eta: " << eta << std::endl << std::endl;
 
         printf("Using optimizer_type == %s\n", optimizer_type.c_str());
 
@@ -244,10 +244,13 @@ int main(int argc, char **argv)
 
     assert(eb);
 
-    size_t num_models = eb->boost(of);
+    size_t num_models = eb->boost(output_stream);
 
     Ensemble model = eb->get_ensemble();
-    // of << "model" << std::endl << model;
+    // output_stream << "model" << std::endl << model;
+
+    std::cout << std::endl << "-----------------------" << std::endl;
+    output_stream << std::endl << "-----------------------" << std::endl;
 
     EvaluateLoss score;
 
@@ -256,8 +259,12 @@ int main(int argc, char **argv)
     int train_loss;
     double train_err;
     score.binary_loss(trainpred, labels, train_loss, train_err);
+
     std::cout << "training error: " << train_err*100 << "%" << std::endl;
-    of << "training error: " << train_err*100 << "%" << std::endl;
+    std::cout << std::endl << "-----------------------" << std::endl;
+
+    output_stream << "training error: " << train_err*100 << "%" << std::endl;
+    output_stream << std::endl << "-----------------------" << std::endl;
 
     // get test error
     std::vector<SparseVector> test_data;
@@ -273,17 +280,23 @@ int main(int argc, char **argv)
     int test_loss;
     double test_err;
     score.binary_loss(testpred, test_labels, test_loss, test_err);
-    std::cout  << "test error: " << test_err*100 << "%" << std::endl;
-    of << "test error: " << test_err*100 << "%" << std::endl;
+
+    std::cout << "test error: " << test_err*100 << "%" << std::endl;
+    std::cout << std::endl << "-----------------------" << std::endl;
+
+    output_stream << "test error: " << test_err*100 << "%" << std::endl;
+    output_stream << std::endl << "-----------------------" << std::endl;
 
     // get validation error
     std::vector<SparseVector> valid_data;
     std::vector<int> valid_labels;
-    if(valid_file != "no_valid"){
+    if(valid_file != "no_valid")
+    {
         c.readlibSVM_transpose(valid_file, valid_data, valid_labels);
 
         // backfill
-        while(valid_data.size() < data.size()){
+        while(valid_data.size() < data.size())
+        {
             SparseVector empty(data[0].dim,1);
             valid_data.push_back(empty);
         }
@@ -291,10 +304,14 @@ int main(int argc, char **argv)
         double valid_err;
         DenseVector validpred = model.predict(valid_data);
         score.binary_loss(validpred,valid_labels, valid_loss, valid_err);
+
         std::cout << "validation error: " << valid_err*100 << "%" << std::endl;
-        of << "validation error: " << valid_err*100 << "%" << std::endl;
+        std::cout << std::endl << "-----------------------" << std::endl;
+
+        output_stream << "validation error: " << valid_err*100 << "%" << std::endl;
+        output_stream << std::endl << "-----------------------" << std::endl;
     }
-    of.close();
+    output_stream.close();
 
     // get generalization error per iteration
     std::ifstream in;
@@ -333,25 +350,25 @@ int main(int argc, char **argv)
     in.close();
 
     // apepend validation and generalization error per iter to output file
-    of.open(output_file.c_str(),std::ofstream::app);
-    if(!of.good()) {
+    output_stream.open(output_file.c_str(),std::ofstream::app);
+    if(!output_stream.good()) {
         std::stringstream os;
         os <<"Cannot open data file : " << output_file << std::endl;
         throw std::invalid_argument(os.str());
     }
 
-    of << "val iter ";
+    output_stream << "val iter ";
     for(size_t i = 0; i < num_models; i++){
-        of << val_error[i] << " ";
+        output_stream << val_error[i] << " ";
     }
-    of << std::endl;
+    output_stream << std::endl;
 
-    of << "generalization iter ";
+    output_stream << "generalization iter ";
     for(size_t i = 0; i < num_models; i++){
-        of << gen_error[i] << " ";
+        output_stream << gen_error[i] << " ";
     }
-    of << std::endl;
-    of.close();
+    output_stream << std::endl;
+    output_stream.close();
 
     delete [] gen_error;
     delete [] val_error;

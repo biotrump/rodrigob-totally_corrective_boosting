@@ -25,12 +25,13 @@ namespace totally_corrective_boosting
 class Timer
 {
 
-private:
+protected:
 
+    /// CPU time at start of stopwatch
+    double _start_cpu;
 
-    double _start_cpu;    // CPU time at start of stopwatch
-
-    double _start_wc;     // wall clock time at start of stopwatch
+    /// wall clock time at start of stopwatch
+    double _start_wall_clock;
 
 public:
 
@@ -43,27 +44,27 @@ public:
     double last_cpu;      // last recorded interval
 
     // Wall clock time
-    double total_wc;     // total
-    double max_wc;       // longest recorded interval
-    double min_wc;       // shortest recorded interval
-    double last_wc;      // last recorded interval
+    double total_wall_clock;     // total
+    double max_wall_clock;       // longest recorded interval
+    double min_wall_clock;       // shortest recorded interval
+    double last_wall_clock;      // last recorded interval
 
     Timer();
-    virtual ~Timer() {}
+    virtual ~Timer();
 
     void   start();          // start stopwatch
     void   stop();           // stop stopwatch
     void   reset();          // reset
 
-    double avg_cpu() const
+    double average_cpu() const
     {
         return total_cpu/num_calls;
     }
     // double CurrentCPUTotal(); // return current cpu_total_time
 
-    double avg_wc() const
+    double average_wall_clock() const
     {
-        return total_wc/num_calls;
+        return total_wall_clock/num_calls;
     }
     // double CurrentWallclockTotal();// return current wallclock_total_time
 };

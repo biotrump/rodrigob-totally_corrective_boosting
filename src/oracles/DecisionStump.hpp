@@ -48,7 +48,7 @@ public:
   /// given a hypothesis and distribution, return the best threshold
   /// the best edge, and the direction of the best threshold
   /// if ge==true, then x >= thresh else x <= thresh
-  void find_best_threshold(const size_t& idx,
+  void find_best_threshold(const size_t& index,
                 const DenseVector& dist, 
                 const double& init_edge,
                 double& best_threshold,
@@ -57,7 +57,7 @@ public:
   
   /// given a sorted vector of (hyp,label,dist) triplets,
   /// return the best threshold and edge for hyp <= thresh
-  void find_best_threshold_less_or_equal(const size_t& idx,
+  void find_best_threshold_less_or_equal(const size_t& index,
                    const double& dist_diff, 
                    const DenseVector& dist, 
                    const double& init_edge,
@@ -66,7 +66,7 @@ public:
 
   // given a sorted vector of (hyp,label,dist) triplets,
   // return the best threshold and edge for hyp >= thresh
-  void find_best_threshold_greater_or_equal(const size_t& idx,
+  void find_best_threshold_greater_or_equal(const size_t& index,
                    const double& dist_diff, 
                    const DenseVector& dist, 
                    const double& init_edge,

@@ -40,22 +40,22 @@ AbstractWeakLearner* RawDataOracle::find_maximum_edge_weak_learner(const DenseVe
     else
         transpose_dot(data, dist_labels, edges);
 
-    size_t max_idx = 0;
+    size_t max_index = 0;
     double max_edge = -std::numeric_limits<double>::max();
 
-    size_t min_idx = 0;
+    size_t min_index = 0;
     double min_edge = std::numeric_limits<double>::max();
 
     for(size_t i = 0; i < edges.dim; i++){
         // identify the max
         if(edges.val[i] > max_edge){
             max_edge = edges.val[i];
-            max_idx = i;
+            max_index = i;
         }
         // identify the min
         if(edges.val[i] < min_edge){
             min_edge = edges.val[i];
-            min_idx = i;
+            min_index = i;
         }
     }
 
@@ -65,12 +65,12 @@ AbstractWeakLearner* RawDataOracle::find_maximum_edge_weak_learner(const DenseVe
         // return the negation of the min_edge feature
         SparseVector wt(edges.dim, 1);
 
-        wt.idx[0] = min_idx;
+        wt.index[0] = min_index;
         wt.val[0] = -1.0;
 
         SparseVector prediction;
         if(transposed){
-            prediction = data[min_idx];
+            prediction = data[min_index];
             scale(prediction, -1.0);
         }else
             dot(data, wt, prediction);
@@ -78,7 +78,7 @@ AbstractWeakLearner* RawDataOracle::find_maximum_edge_weak_learner(const DenseVe
 
         // Multiply the predictions with the labels here
         for(size_t i = 0; i < prediction.nnz; i++)
-            prediction.val[i] *= labels[prediction.idx[i]];
+            prediction.val[i] *= labels[prediction.index[i]];
 
         double edge = -min_edge;
 
@@ -87,31 +87,31 @@ AbstractWeakLearner* RawDataOracle::find_maximum_edge_weak_learner(const DenseVe
 
         //return CWeakLearner(wt, edge, prediction);
         AbstractWeakLearner* wl = new LinearWeakLearner(wt, edge, prediction);
-        //std::cout << "hyp: " << min_idx << std::endl;
+        //std::cout << "hyp: " << min_index << std::endl;
         return wl;
     }
 
     // return the max_edge feature
 
     SparseVector wt(edges.dim, 1);
-    wt.idx[0] = max_idx;
+    wt.index[0] = max_index;
     wt.val[0] = 1.0;
 
     SparseVector prediction;
     if(transposed)
-        prediction = data[max_idx];
+        prediction = data[max_index];
     else
         dot(data, wt, prediction);
 
 
     // Multiply the predictions with the labels here
     for(size_t i = 0; i < prediction.nnz; i++)
-        prediction.val[i] *= labels[prediction.idx[i]];
+        prediction.val[i] *= labels[prediction.index[i]];
 
     double edge = max_edge;
 
     AbstractWeakLearner* wl = new LinearWeakLearner(wt, edge, prediction);
-    //std::cout << "hyp: " << min_idx << std::endl;
+    //std::cout << "hyp: " << min_index << std::endl;
     return wl;
 }
 

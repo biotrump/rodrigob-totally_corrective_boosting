@@ -3,8 +3,8 @@ This project is based on the original 2009 code from Professors Vishwanathan and
 http://www.stat.purdue.edu/~vishy/erlpboost
 
 there are significant changes. In particular:
-  - Compilation using cmake 
-  - Massive renamings and file moves, to improve readability (e.g. wl becomes weak_learner)
+      - Compilation using cmake 
+      - Massive renamings and file moves, to improve readability (e.g. wl becomes weak_learner)
 
 
 
@@ -19,18 +19,18 @@ This software package provides a framework for implementing and testing
 a variety of boosting algorithms. Currently implemented algorithms
 include:
 
-1) LP Boost [1]
-2) ERLP Boost [2]
-3) Adaboost [3]
-4) Corrective algorithm [4] 
+	1) LP Boost [1]
+	2) ERLP Boost [2]
+	3) Adaboost [3]
+	4) Corrective algorithm [4] 
 
 For ERLP Boost, which is the main focus of this package, a number of
 optimizers have been implemented:
 
-1) Spectral Projected Gradient [5]
-2) Hager and Zhang algorithm [6]
-3) Augmented Lagrangian Algorithm [7]
-4) Coordinate Descent 
+	   1) Spectral Projected Gradient [5]
+	   2) Hager and Zhang algorithm [6]
+	   3) Augmented Lagrangian Algorithm [7]
+	   4) Coordinate Descent 
 
 Some sample datasets and configuration files are also included with the
 distribution. Currently, we can read and handle datasets such as
@@ -45,13 +45,8 @@ the TAO solver then read on.
 
 In order to compile with TAO support (needed for one variant of the
 Augmented Lagrangian Algorithm) you need to first install PETSc (release 
-3.0.0-p4) from
-
-http://www.mcs.anl.gov/petsc/petsc-as/
-
-and TAO (release 1.10, not yet available to the public) from 
-
-http://www.mcs.anl.gov/research/projects/tao/
+3.0.0-p4) from http://www.mcs.anl.gov/petsc/petsc-as/
+and TAO (release 1.10, not yet available to the public) from http://www.mcs.anl.gov/research/projects/tao/
 
 Then
 
@@ -61,32 +56,30 @@ The configure script expects PETSC_DIR, TAO_DIR and PETSC_ARCH
 environment variables to be set. 
 
 In order to compile LPBoost support you need to install the COIN-OR LP
-solver available from:
-
-https://projects.coin-or.org/Clp
+solver available from: https://projects.coin-or.org/Clp
 
 Then
 
-./configure --with-clp
+	./configure --with-clp
 
 To specify the location of the CLP install use
 
-./configure --with-clp --with-clpdir=PREFIX
+   ./configure --with-clp --with-clpdir=PREFIX
 
 where PREFIX points to the installation prefix of CLP (the include files
 are installed in PREFIX/include/coin/ directory). 
 
 To compile run
 
-make 
+   make 
 
 To run the code you 
 
-cd src 
+   cd src 
 
 and 
 
-./erlpboost name_of_config_file
+    ./erlpboost name_of_config_file
 
 For sample configuration files look in the conf directory. 
 

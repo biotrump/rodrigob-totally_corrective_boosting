@@ -39,7 +39,7 @@ public:
     size_t dim;
 
     // default constructor
-    DenseVector(void)
+    DenseVector()
     {
         dim = 0;
         val = NULL;
@@ -78,7 +78,7 @@ public:
         return;
     }
 
-    ~DenseVector(void)
+    ~DenseVector()
     {
         if(val != NULL) delete[] val;
         val = NULL;
@@ -109,7 +109,7 @@ public:
     }
 
     // clear contents of current vector
-    void clear(void)
+    void clear()
     {
         if(val != NULL) delete[] val;
         val = NULL;

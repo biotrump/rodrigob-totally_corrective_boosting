@@ -33,9 +33,9 @@ public:
                     const double& nu,
                     const double& epsilon, 
                     const bool& binary);
-  ~LbfgsbOptimizer(void);
+  ~LbfgsbOptimizer();
   
-  int solve(void);
+  int solve();
   
   void bounds(ap::integer_1d_array& nbd,
               ap::real_1d_array& l,

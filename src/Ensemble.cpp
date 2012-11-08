@@ -87,16 +87,16 @@ DenseVector Ensemble::predict(const std::vector<SparseVector>& data) const
 // // input: wl pointer
 // // returns: true if wl is already in the ensemble, else false
 // // side effect: if true, then index contains the index of the wl
-// bool CEnsemble::find_wl(const CWeakLearner* wl, size_t& idx){
-//   size_t tmpidx = 0;
-//   for(wwl_itr it = ensemble.begin(); it != ensemble.end(); it++,tmpidx++){
+// bool CEnsemble::find_wl(const CWeakLearner* wl, size_t& index){
+//   size_t tmpindex = 0;
+//   for(wwl_itr it = ensemble.begin(); it != ensemble.end(); it++,tmpindex++){
 //     bool found = it->wl_equal(wl);
 //     if( found ){
-//       idx = tmpidx;
+//       index = tmpindex;
 //       return true;
 //     }
 //   }
-//   idx = 0;
+//   index = 0;
 //   return false;
 // }
 
@@ -134,17 +134,17 @@ void Ensemble::scale_weights(const double& scale)
 
 }
 
-void Ensemble::set_weight(const double& wt, const size_t& idx)
+void Ensemble::set_weight(const double& wt, const size_t& index)
 {
-    assert(idx < ensemble.size());
-    ensemble[idx].set_weight(wt);
+    assert(index < ensemble.size());
+    ensemble[index].set_weight(wt);
     return;
 }
 
-void Ensemble::add_weight(const double& wt, const size_t& idx)
+void Ensemble::add_weight(const double& wt, const size_t& index)
 {
-    assert(idx < ensemble.size());
-    ensemble[idx].add_weight(wt);
+    assert(index < ensemble.size());
+    ensemble[index].add_weight(wt);
     return;
 }
 

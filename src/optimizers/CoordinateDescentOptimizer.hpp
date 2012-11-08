@@ -22,7 +22,7 @@ private:
 
   double line_search(DenseVector& W, 
                      const DenseVector& grad_w, 
-                     const size_t& idx);
+                     const size_t& index);
     
 public:
   
@@ -32,9 +32,9 @@ public:
                 const double& nu,
                 const double& epsilon,
                 const bool& binary);
-  ~CoordinateDescentOptimizer(void){ }
+  ~CoordinateDescentOptimizer(){ }
   
-  int solve(void);
+  int solve();
   
 }; 
 

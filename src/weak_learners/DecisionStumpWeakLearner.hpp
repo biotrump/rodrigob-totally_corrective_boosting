@@ -22,14 +22,14 @@ private:
     bool direction;
 
     // index of hypothesis for best decision stump
-    size_t idx;
+    size_t index;
 
 public:
 
     DecisionStumpWeakLearner();
 
     DecisionStumpWeakLearner(const SparseVector& wt, const double& edge, const SparseVector& prediction,
-                             const double& thresh, const bool& direction, const int& idx);
+                             const double& thresh, const bool& direction, const int& index);
 
     /// Copy constructor
     DecisionStumpWeakLearner(const DecisionStumpWeakLearner& other);
@@ -52,9 +52,9 @@ public:
     bool equal(const AbstractWeakLearner *wl) const;
 
     // accessor methods
-    bool get_direction(void) const {return direction; }
-    double get_threshold(void) const {return thresh; }
-    size_t get_index(void) const {return idx;}
+    bool get_direction() const {return direction; }
+    double get_threshold() const {return thresh; }
+    size_t get_index() const {return index;}
 
     friend
     std::ostream& operator << (std::ostream& os, const DecisionStumpWeakLearner& wl);

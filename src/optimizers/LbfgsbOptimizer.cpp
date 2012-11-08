@@ -142,7 +142,7 @@ int LbfgsbOptimizer::solve(){
                     // dvec gradk = grad();
 
                     // if(converged(grad())){
-                    report_stats();
+                    report_statistics();
                     break;
                 }
             }

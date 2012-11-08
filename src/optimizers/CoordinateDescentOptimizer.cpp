@@ -90,35 +90,35 @@ int CoordinateDescentOptimizer::solve(){
 
         if(gap < 0.05*epsilon){
             std::cout << "Converged in " << j << " iterations" << std::endl;
-            report_stats();
+            report_statistics();
             // This is not a memory leak!
             W.val = NULL;
             W.dim = 0;
             return 0;
         }
 
-        size_t idx = argmax(grad_w);
-        assert(grad_w.val[idx] > 0);
+        size_t index = argmax(grad_w);
+        assert(grad_w.val[index] > 0);
 
         DenseVector store(UW);
 
         if(transposed){
             DenseVector tmp(num_weak_learners);
-            tmp.val[idx] = 1.0;
-            DenseVector U_idx;
-            transpose_dot(U, tmp, U_idx);
-            axpy(-1.0, UW, U_idx, UW);
+            tmp.val[index] = 1.0;
+            DenseVector U_index;
+            transpose_dot(U, tmp, U_index);
+            axpy(-1.0, UW, U_index, UW);
         }else
-            axpy(-1.0, UW, U[idx], UW);
+            axpy(-1.0, UW, U[index], UW);
 
-        double eta_t = line_search(W, grad_w, idx);
+        double eta_t = line_search(W, grad_w, index);
         // double denom = abs_max(UW);
         // denom *= denom;
         // double eta_t = std::max(0.0,
         //                         std::min(1.0, dot(dist, UW)/eta/denom));
 
         scale(W, (1.0-eta_t));
-        W.val[idx] += eta_t;
+        W.val[index] += eta_t;
         axpy(eta_t, UW, store, UW);
     }
 
@@ -131,7 +131,7 @@ int CoordinateDescentOptimizer::solve(){
 
 double CoordinateDescentOptimizer::line_search(DenseVector& W,
                                                const DenseVector& grad_w,
-                                               const size_t& idx){
+                                               const size_t& index){
 
     double lower = 0.0;
     double upper = 1.0;
@@ -149,7 +149,7 @@ double CoordinateDescentOptimizer::line_search(DenseVector& W,
         function();
         DenseVector G = gradient();
 
-        if(G.val[idx] > 0)
+        if(G.val[index] > 0)
             lower = mid;
         else
             upper = mid;

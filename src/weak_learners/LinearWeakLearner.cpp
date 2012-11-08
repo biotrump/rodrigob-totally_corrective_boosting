@@ -54,10 +54,10 @@ DenseVector LinearWeakLearner::predict(const std::vector<SparseVector>& Data) co
     DenseVector result(Data[0].dim);
 
     if(wt.nnz == 1){
-        int idx = wt.idx[0];
-        for(size_t i = 0; i < Data[idx].nnz; i++){
-            int tmpidx = Data[idx].idx[i];
-            result.val[tmpidx] = wt.val[0]*Data[idx].val[i];
+        int index = wt.index[0];
+        for(size_t i = 0; i < Data[index].nnz; i++){
+            int tmpindex = Data[index].index[i];
+            result.val[tmpindex] = wt.val[0]*Data[index].val[i];
         }
     }
     else{

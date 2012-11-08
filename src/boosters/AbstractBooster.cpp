@@ -7,33 +7,40 @@
 namespace totally_corrective_boosting
 {
 
-AbstractBooster::AbstractBooster(AbstractOracle* &oracle, 
-                                 const int& num_pt,
-                                 const int& max_iter):
-    oracle(oracle), num_data_points(num_pt), max_iterations(max_iter), display_frequency(1){
+AbstractBooster::AbstractBooster(AbstractOracle* oracle_,
+                                 const int num_data_points_,
+                                 const int max_iterations_)
+    : oracle(oracle_), num_data_points(num_data_points_),
+      max_iterations(max_iterations_), display_frequency(10)
+{
 
-    assert(oracle);
+    assert(oracle_);
 
     // Initialize to uniform distribution
-    examples_distribution.dim = num_pt;
-    examples_distribution.val = new double[num_pt];
-    for(size_t i = 0; i < examples_distribution.dim; i++) examples_distribution.val[i] = (1.0/num_pt);
+    examples_distribution.dim = num_data_points_;
+    examples_distribution.val = new double[num_data_points_];
+    for(size_t i = 0; i < examples_distribution.dim; i++)
+    {
+        examples_distribution.val[i] = (1.0/num_data_points_);
+    }
 
     return;
 }
 
-AbstractBooster::AbstractBooster(AbstractOracle* &oracle, 
-                                 const int& num_pt,
-                                 const int& max_iter,
-                                 const int& disp_freq):
-    oracle(oracle), num_data_points(num_pt), max_iterations(max_iter), display_frequency(disp_freq){
+AbstractBooster::AbstractBooster(AbstractOracle* oracle,
+                                 const int num_data_points_,
+                                 const int max_iterations_,
+                                 const int disp_frequency_)
+    : oracle(oracle), num_data_points(num_data_points_),
+      max_iterations(max_iterations_), display_frequency(disp_frequency_)
+{
 
     assert(oracle);
 
     // Initialize to uniform distribution
-    examples_distribution.dim = num_pt;
-    examples_distribution.val = new double[num_pt];
-    for(size_t i = 0; i < examples_distribution.dim; i++) examples_distribution.val[i] = (1.0/num_pt);
+    examples_distribution.dim = num_data_points_;
+    examples_distribution.val = new double[num_data_points_];
+    for(size_t i = 0; i < examples_distribution.dim; i++) examples_distribution.val[i] = (1.0/num_data_points_);
     return;
 }
 
@@ -100,14 +107,24 @@ size_t AbstractBooster::boost(std::ostream& output_stream){
         num_models++;
     }
 
+
+    std::cout << "Total CPU time expended: "
+                  << timer.total_cpu << " seconds" << std::endl;
+    std::cout << "Maximum iteration time: "
+                  << timer.max_cpu << " seconds" << std::endl;
+    std::cout << "Minimum iteration time: "
+                  << timer.min_cpu << " seconds" << std::endl;
+    std::cout << "Average time per iteration: "
+                  << timer.average_cpu() << " seconds" << std::endl;
+
     output_stream << "Total CPU time expended: "
-                  << timer.total_cpu << std::endl;
+                  << timer.total_cpu << " seconds" << std::endl;
     output_stream << "Maximum iteration time: "
-                  << timer.max_cpu << std::endl;
+                  << timer.max_cpu << " seconds" << std::endl;
     output_stream << "Minimum iteration time: "
-                  << timer.min_cpu << std::endl;
+                  << timer.min_cpu << " seconds" << std::endl;
     output_stream << "Average time per iteration: "
-                  << timer.avg_cpu() << std::endl;
+                  << timer.average_cpu() << " seconds" << std::endl;
     //os << model;
     return num_models;
 }
