@@ -11,6 +11,7 @@
 namespace totally_corrective_boosting
 {
 
+
 bool LibSVMReader::is_blank(const std::string& line)
 {
 
@@ -20,14 +21,15 @@ bool LibSVMReader::is_blank(const std::string& line)
     return true;
 }
 
+
 int LibSVMReader::readlibSVM(const std::string& filename,
                              std::vector<SparseVector>& data,
                              std::vector<int>& labels)
 {
 
-    std::ifstream df;
-    df.open(filename.c_str());
-    if(!df.good())
+    std::ifstream data_file;
+    data_file.open(filename.c_str());
+    if(!data_file.good())
     {
         std::stringstream os;
         os <<"Cannot open data file : " << filename << std::endl;
@@ -35,34 +37,41 @@ int LibSVMReader::readlibSVM(const std::string& filename,
     }
 
     std::string line;
-    size_t max_index = 0;        // maximum index
-    size_t tot_nnz = 0;        // number of non zero elements
+    size_t
+            max_index = 0,        // maximum index
+            non_zero_elements_counter = 0;        // number of non zero elements
 
     // Iterate over lines of a file
-    while(!df.eof())
+    while(!data_file.eof())
     {
 
-        getline(df, line);
+        getline(data_file, line);
 
-        if(is_blank(line)) break;
+        if(is_blank(line))
+        {
+            break;
+        }
 
-        std::istringstream iss(line);
+        std::istringstream line_stream(line);
 
         // Read and store label
-        int pt_label = 0;
-        iss >> pt_label;
-        labels.push_back(pt_label);
+        float point_label = 0;
+        line_stream >> point_label;
+        labels.push_back(static_cast<int>(point_label));
 
         std::string token;
         std::vector<double> pt_val;
         std::vector<size_t> pt_index;
 
-        while(!iss.eof())
+        while(!line_stream.eof())
         {
             token.clear();
-            iss >> token;
+            line_stream >> token;
 
-            if(is_blank(token)) break;
+            if(is_blank(token))
+            {
+                break;
+            }
 
             size_t index;
             double val;
@@ -71,9 +80,12 @@ int LibSVMReader::readlibSVM(const std::string& filename,
             pt_val.push_back(val);
             pt_index.push_back(index);
 
-            if(index > max_index) max_index = index;
-            tot_nnz ++;
-        }
+            if(index > max_index)
+            {
+                max_index = index;
+            }
+            non_zero_elements_counter += 1;
+        } // end of "for each element in the line"
 
         // Create a new data point and push it back into the data vector
         SparseVector data_pt;
@@ -82,27 +94,34 @@ int LibSVMReader::readlibSVM(const std::string& filename,
         data_pt.index = new size_t[data_pt.nnz];
         size_t i =0;
         for (dbl_itr it = pt_val.begin(); it!=pt_val.end(); it++, i++)
+        {
             data_pt.val[i] = *it;
+        }
         i = 0;
         for (uint_itr it = pt_index.begin(); it!=pt_index.end(); it++, i++)
+        {
             data_pt.index[i] = *it;
+        }
         data.push_back(data_pt);
-    }
+    } // end of "for each line in the data file"
 
     max_index++;
 
     std::cout << "Data File: " << filename << std::endl;
-    std::cout << "# of data points " << data.size() << std::endl;
+    std::cout << "Number of data points " << data.size() << std::endl;
     std::cout << "Maximum index " << max_index << std::endl;
-    std::cout << "Non zero elements " << tot_nnz << std::endl;
+    std::cout << "Non zero elements " << non_zero_elements_counter << std::endl;
     std::cout << "Total elements " << data.size()*max_index << std::endl;
-    std::cout << "Sparsity " << 1.0 - tot_nnz/(1.0*data.size()*max_index) << std::endl;
+    std::cout << "Sparsity " << 1.0 - non_zero_elements_counter/(1.0*data.size()*max_index) << std::endl;
+    std::cout << std::endl << "-----------------------" << std::endl;
 
     // adjust the dimensions
     for (svec_itr it = data.begin(); it!=data.end(); it++)
+    {
         (*it).dim = max_index;
+    }
 
-    df.close();
+    data_file.close();
 
     return 0;
 }
@@ -114,9 +133,9 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
                                        std::vector<int>& labels)
 {
 
-    std::ifstream df;
-    df.open(filename.c_str());
-    if(!df.good())
+    std::ifstream data_file;
+    data_file.open(filename.c_str());
+    if(!data_file.good())
     {
         std::stringstream os;
         os <<"Cannot open data file : " << filename << std::endl;
@@ -124,157 +143,210 @@ int LibSVMReader::readlibSVM_transpose(const std::string& filename,
     }
 
     std::string line;
-    size_t max_index = 0;        // maximum index
-    size_t tot_nnz = 0;        // number of non zero elements
+    size_t
+            max_index = 0, // maximum index
+            non_zero_elements_counter = 0, // number of non zero elements
+            line_counter = 0;
 
     // Iterate over lines of a file
     // Find maximum index
     // Total number of data points
     // Total number of non-zero elements
     // Read labels
-    while(!df.eof())
+    while(!data_file.eof())
     {
+        line_counter += 1;
+        getline(data_file, line);
 
-        getline(df, line);
+        if(is_blank(line))
+        {
+            break;
+        }
 
-        if(is_blank(line)) break;
-
-        std::istringstream iss(line);
+        std::istringstream line_stream(line);
 
         // Read and store label
-        int pt_label = 0;
-        iss >> pt_label;
-        labels.push_back(pt_label);
+        float point_label = 0;
+        line_stream >> point_label;
+        labels.push_back(static_cast<int>(point_label));
 
         std::string token;
 
-        while(!iss.eof())
+        while(!line_stream.eof())
         {
             token.clear();
-            iss >> token;
+            line_stream >> token;
 
-            if(is_blank(token)) break;
+            if(is_blank(token))
+            {
+                break;
+            }
 
             size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            const int ret = sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            if(ret != 2)
+            {
+                printf("Failed to parse token '%s' in line %zu\n", token.c_str(), line_counter);
+                printf("Line %zu content is: %s", line_counter, line.c_str());
+                fflush(stdout);
+                throw std::runtime_error("Failed to parse a token in the input file.");
+            }
 
-            if(index > max_index) max_index = index;
-            tot_nnz ++;
-        }
-    }
+            if(index > max_index)
+            {
+                max_index = index;
+            }
+            non_zero_elements_counter+=1;
+        } // end of "for each element in the line"
+    } // end of "for each line in the file"
 
-    size_t num_pt = labels.size();
+    const size_t num_data_points = labels.size();
 
     max_index++;
 
+    printf("Max index found %zu\n", max_index);
+
     std::vector<size_t> index_counter(max_index);
 
-    df.clear();
-    df.seekg(0, std::ios::beg);
+    data_file.clear();
+    data_file.seekg(0, std::ios::beg);
 
+    line_counter = 0;
     // Iterate again over lines of the file
     // This time to find out number of data points per feature
-    while(!df.eof())
+    while(!data_file.eof())
     {
+        line_counter +=1;
+        getline(data_file, line);
+        if(is_blank(line))
+        {
+            break;
+        }
 
-        getline(df, line);
-        if(is_blank(line)) break;
-
-        std::istringstream iss(line);
+        std::istringstream line_stream(line);
 
         // Read label
-        int pt_label = 0;
-        iss >> pt_label;
+        float point_label = 0;
+        line_stream >> point_label;
 
         std::string token;
 
-        while(!iss.eof())
+        while(!line_stream.eof())
         {
             token.clear();
-            iss >> token;
+            line_stream >> token;
 
-            if(is_blank(token)) break;
+            if(is_blank(token))
+            {
+                break;
+            }
 
             size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            const int ret = sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            if(ret != 2)
+            {
+                printf("Failed to parse token '%s' in line %zu\n", token.c_str(), line_counter);
+                printf("Line %zu content is: %s", line_counter, line.c_str());
+                fflush(stdout);
+                throw std::runtime_error("Failed to parse a token in the input file.");
+            }
+
+
             index_counter[index]++;
-        }
-    }
+        } // end of "for each element in the line"
+    } // end of "for each line in the file"
 
 
     data.reserve(max_index);
 
     for(size_t i = 0; i < max_index; i++)
     {
-        data.push_back(SparseVector(num_pt, index_counter[i]));
+        data.push_back(SparseVector(num_data_points, index_counter[i]));
         index_counter[i] = 0;
     }
 
-    df.clear();
-    df.seekg(0, std::ios::beg);
+    data_file.clear();
+    data_file.seekg(0, std::ios::beg);
 
-    size_t pt_num = 0;
+    size_t point_number = 0;
 
+    line_counter = 0;
     // Finally iterate to load data
-    while(!df.eof())
+    while(!data_file.eof())
     {
+        line_counter +=1;
+        getline(data_file, line);
 
-        getline(df, line);
+        if(is_blank(line))
+        {
+            break;
+        }
 
-        if(is_blank(line)) break;
-
-        std::istringstream iss(line);
+        std::istringstream line_stream(line);
 
         // Read label
-        int pt_label = 0;
-        iss >> pt_label;
+        float point_label = 0;
+        line_stream >> point_label;
 
         std::string token;
 
-        while(!iss.eof())
+        while(!line_stream.eof())
         {
             token.clear();
-            iss >> token;
+            line_stream >> token;
 
-            if(is_blank(token)) break;
+            if(is_blank(token))
+            {
+                break;
+            }
 
             size_t index;
             double val;
-            sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            const int ret = sscanf(token.c_str(), "%lu:%lf", &index, &val);
+            if(ret != 2)
+            {
+                printf("Failed to parse token '%s' in line %zu\n", token.c_str(), line_counter);
+                printf("Line %zu content is: %s", line_counter, line.c_str());
+                fflush(stdout);
+                throw std::runtime_error("Failed to parse a token in the input file.");
+            }
+
 
             // We need index_counter to keep track of how many spots we have
             // already used in data[index] sparse vector thus far
 
             // The index is nothing but the data point # that we observed
-            data[index].index[index_counter[index]] = pt_num;
+            data[index].index[index_counter[index]] = point_number;
 
             // Value is what we read in
             data[index].val[index_counter[index]]= val;
 
             index_counter[index]++;
-        }
+        } // end of "for each element in the line"
 
-        pt_num++;
-    }
+        point_number++;
+    } // end of "for each line in the file"
+
+    data_file.close();
+
 
     std::cout << "Data File: " << filename << std::endl;
-    std::cout << "# of data points " << labels.size() << std::endl;
+    std::cout << "Number of data points " << labels.size() << std::endl;
     std::cout << "Maximum index " << max_index << std::endl;
-    std::cout << "Non zero elements " << tot_nnz << std::endl;
-    std::cout << "Total elements " << data.size()*pt_num << std::endl;
-    std::cout << "Sparsity " << 1.0 - tot_nnz/(1.0*data.size()*pt_num) << std::endl;
-
-    df.close();
+    std::cout << "Non zero elements " << non_zero_elements_counter << std::endl;
+    std::cout << "Total elements " << data.size()*point_number << std::endl;
+    std::cout << "Sparsity " << 1.0 - non_zero_elements_counter/(1.0*data.size()*point_number) << std::endl;
+    std::cout << std::endl << "-----------------------" << std::endl;
 
     return 0;
 }
 
 
 int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
-        std::vector<SparseVector>& data,
-        std::vector<int>& labels)
+                                            std::vector<SparseVector>& data,
+                                            std::vector<int>& labels)
 {
 
 

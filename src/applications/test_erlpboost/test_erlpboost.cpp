@@ -324,11 +324,12 @@ int main(int argc, char **argv)
     EvaluateLoss score;
 
     // get training error
-    DenseVector trainpred = model.predict(data);
+    DenseVector train_predictions = model.predict(data);
     int train_loss;
     double train_err;
-    score.binary_loss(trainpred, labels, train_loss, train_err);
+    score.binary_loss(train_predictions, labels, train_loss, train_err);
 
+    std::cout << "Evaluated " << train_predictions.dim << " predictions" << std::endl;
     std::cout << "training error: " << train_err*100 << "%" << std::endl;
     std::cout << std::endl << "-----------------------" << std::endl;
 

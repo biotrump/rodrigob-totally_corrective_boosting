@@ -27,11 +27,11 @@ EvaluateLoss::~EvaluateLoss()
 }
 
 
-int EvaluateLoss::binary_loss(const double pred, const int label) const
+int EvaluateLoss::binary_loss(const double prediction, const int label) const
 {
 
     int result = 0;
-    double tmp_pred = pred;
+    double tmp_pred = prediction;
 
     // tie breaking is needed
     if(tmp_pred == 0.0)
@@ -57,7 +57,7 @@ int EvaluateLoss::binary_loss(const double pred, const int label) const
 }
 
 
-void EvaluateLoss::binary_loss(const DenseVector pred,
+void EvaluateLoss::binary_loss(const DenseVector predictions,
                                const std::vector<int>& labels,
                                int& total_loss,
                                double& percent_err) const
@@ -65,10 +65,10 @@ void EvaluateLoss::binary_loss(const DenseVector pred,
 
     int tmp_loss = 0;
 
-    for(size_t i = 0; i < pred.dim; i++)
+    for(size_t i = 0; i < predictions.dim; i++)
     {
 
-        double tmp_pred = pred.val[i];
+        double tmp_pred = predictions.val[i];
 
         if(tmp_pred == 0.0)
         {
@@ -90,7 +90,7 @@ void EvaluateLoss::binary_loss(const DenseVector pred,
     }
 
     total_loss = tmp_loss;
-    percent_err = ((double)tmp_loss) / ((double)pred.dim);
+    percent_err = ((double)tmp_loss) / ((double)predictions.dim);
 
     return;
 }
