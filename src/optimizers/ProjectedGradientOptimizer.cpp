@@ -1,6 +1,7 @@
 
-
 #include "ProjectedGradientOptimizer.hpp"
+
+#include "math/vector_operations.hpp"
 
 #include <limits>
 #include <cmath>

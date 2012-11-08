@@ -2,7 +2,7 @@
 #include "DecisionStumpWeakLearner.hpp"
 
 #include "parse.hpp"
-#include "vector_operations.hpp"
+#include "math/vector_operations.hpp"
 
 #include <cassert>
 #include <iostream>

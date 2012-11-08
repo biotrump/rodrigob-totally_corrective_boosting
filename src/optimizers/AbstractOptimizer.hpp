@@ -4,10 +4,13 @@
 
 // Implement the projected gradient algorithm in the w domain. 
 
+#include "math/dense_vector.hpp"
+#include "math/sparse_vector.hpp"
+
+#include "Timer.hpp"
+
 #include <vector>
 
-#include "vector_operations.hpp"
-#include "Timer.hpp"
 
 namespace totally_corrective_boosting
 {

@@ -2,7 +2,7 @@
 
 #include "parse.hpp"
 
-#include "vector_operations.hpp"
+#include "math/vector_operations.hpp"
 
 namespace totally_corrective_boosting {
 

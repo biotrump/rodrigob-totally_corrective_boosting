@@ -1,8 +1,8 @@
 #ifndef TOTALLY_CORRECTIVE_BOOSTING_ABSTRACTWEAKLEARNER_HPP
 #define TOTALLY_CORRECTIVE_BOOSTING_ABSTRACTWEAKLEARNER_HPP
 
-#include "sparse_vector.hpp"
-#include "dense_vector.hpp"
+#include "math/sparse_vector.hpp"
+#include "math/dense_vector.hpp"
 
 namespace totally_corrective_boosting {
 

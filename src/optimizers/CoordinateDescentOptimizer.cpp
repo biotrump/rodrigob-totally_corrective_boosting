@@ -1,6 +1,8 @@
 
 #include "CoordinateDescentOptimizer.hpp"
 
+#include "math/vector_operations.hpp"
+
 #include <cmath>
 #include <algorithm>
 #include <limits>

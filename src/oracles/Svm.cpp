@@ -1,9 +1,11 @@
 #include "Svm.hpp"
 
-#include <cassert>
-#include <limits>
+#include "math/vector_operations.hpp"
 
 #include "weak_learners/LinearWeakLearner.hpp"
+
+#include <cassert>
+#include <limits>
 
 namespace totally_corrective_boosting
 {

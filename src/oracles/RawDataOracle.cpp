@@ -3,6 +3,8 @@
 
 #include "weak_learners/LinearWeakLearner.hpp"
 
+#include "math/vector_operations.hpp"
+
 #include <cassert>
 #include <limits>
 

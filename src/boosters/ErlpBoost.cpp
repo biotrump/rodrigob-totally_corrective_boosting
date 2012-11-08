@@ -1,6 +1,6 @@
 
 #include "ErlpBoost.hpp"
-#include "vector_operations.hpp"
+#include "math/vector_operations.hpp"
 
 #include <iostream>
 #include <cmath>

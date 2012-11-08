@@ -2,7 +2,7 @@
 #ifndef _LIBSVMREADER_HPP_
 #define _LIBSVMREADER_HPP_
 
-#include "sparse_vector.hpp"
+#include "math/sparse_vector.hpp"
 
 #include <string>
 #include <vector>

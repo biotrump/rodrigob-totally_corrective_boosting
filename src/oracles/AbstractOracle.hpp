@@ -2,7 +2,7 @@
 #define _ORACLE_HPP_
 
 
-#include "vector_operations.hpp"
+#include "math/vector_operations.hpp"
 
 #include <vector>
 

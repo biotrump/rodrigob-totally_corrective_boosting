@@ -4,7 +4,6 @@
 
 #include "weak_learners/AbstractWeakLearner.hpp"
 
-#include "vector_operations.hpp"
 
 #include <vector>
 #include <iostream>
@@ -59,12 +58,7 @@ public:
         return weight*(weak_learner->predict(x));
     }
 
-    DenseVector weighted_predict(const std::vector<SparseVector>& data) const
-    {
-        DenseVector result = weak_learner->predict(data);
-        scale(result, weight);
-        return result;
-    }
+    DenseVector weighted_predict(const std::vector<SparseVector>& data) const;
 
     friend
     bool operator == (const WeightedWeakLearner& w1,

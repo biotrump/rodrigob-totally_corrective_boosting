@@ -3,10 +3,7 @@
 
 #include "AbstractOracle.hpp"
 
-#include "vector_operations.hpp"
-
 #include <vector>
-
 
 namespace totally_corrective_boosting
 {

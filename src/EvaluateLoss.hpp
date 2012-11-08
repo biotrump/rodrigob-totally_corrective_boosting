@@ -1,10 +1,10 @@
-
 #ifndef _EVALUATE_HPP_
 #define _EVALUATE_HPP_
 
+#include "math/vector_operations.hpp"
+
 #include <vector>
 #include <iostream>
-#include "vector_operations.hpp"
 
 namespace totally_corrective_boosting
 {

@@ -6,9 +6,9 @@
 
 #include "Timer.hpp"
 
-#include "dense_vector.hpp"
-#include "sparse_vector.hpp"
-#include "dense_integer_vector.hpp"
+#include "math/dense_vector.hpp"
+#include "math/sparse_vector.hpp"
+#include "math/dense_integer_vector.hpp"
 
 
 #include <vector>

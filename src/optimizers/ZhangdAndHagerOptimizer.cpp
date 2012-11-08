@@ -1,7 +1,11 @@
 
+#include "ZhangdAndHagerOptimizer.hpp"
+
+#include "math/vector_operations.hpp"
+
 #include <limits>
 #include <cmath>
-#include "ZhangdAndHagerOptimizer.hpp"
+
 
 namespace totally_corrective_boosting
 {

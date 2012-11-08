@@ -40,6 +40,8 @@ file(GLOB SrcCpp
   "${src_folder}/oracles/*.cpp"
   "${src_folder}/optimizers/*.cpp"
   "${src_folder}/boosters/*.cpp"
+  "${src_folder}/math/*.cpp"
+
 
 
   "${project_root_folder}/libs/lbfgsb/*.cpp"

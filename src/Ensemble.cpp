@@ -8,7 +8,7 @@
 #include "LibSvmReader.hpp"
 #include "Ensemble.hpp"
 
-#include "vector_operations.hpp"
+#include "math/vector_operations.hpp"
 #include "parse.hpp"
 
 #include <cmath>
@@ -19,6 +19,16 @@
 
 namespace totally_corrective_boosting
 {
+
+
+DenseVector WeightedWeakLearner::weighted_predict(const std::vector<SparseVector>& data) const
+{
+    DenseVector result = weak_learner->predict(data);
+    scale(result, weight);
+    return result;
+}
+
+
 
 // predict on a single example
 double Ensemble::predict(const DenseVector& x) const
