@@ -77,10 +77,8 @@ protected:
   // projected gradient norm for psi < pgnorm_tol
   bool pgnorm_met(const DenseVector& gradk);
 
-  // Keep track of time spent in function and gradient evaluation 
-  Timer fun_timer;
-  
-  Timer grad_timer;
+  /// Keep track of time spent in function and gradient evaluation
+  Timer function_timer, gradient_timer;
 
   void report_stats(void);
   

@@ -20,14 +20,8 @@
 namespace totally_corrective_boosting
 {
 
-
-DenseVector WeightedWeakLearner::weighted_predict(const std::vector<SparseVector>& data) const
-{
-    DenseVector result = weak_learner->predict(data);
-    scale(result, weight);
-    return result;
-}
-
+typedef std::vector<WeightedWeakLearner>::const_iterator wwl_citr;
+typedef std::vector<WeightedWeakLearner>::iterator wwl_itr;
 
 
 // predict on a single example
@@ -175,31 +169,6 @@ bool Ensemble::add(const WeightedWeakLearner& wwl)
     return true;
 }
 
-std::ostream& operator << (std::ostream& os, const WeightedWeakLearner& wwl)
-{
-
-    os << *wwl.weak_learner;
-    os << "weight: " << wwl.weight << std::endl;
-    return os;
-
-}
-
-std::istream& operator >> (std::istream& in, WeightedWeakLearner& wwl)
-{
-
-    try
-    {
-        in >> *(const_cast<AbstractWeakLearner *> (wwl.weak_learner));
-        expect_keyword(in,"weight:");
-        in >> wwl.weight;
-    }
-    catch (std::string s)
-    {
-        std::cerr << "Error when reading weighted weak learner: " << s << std::endl;
-        exit(1);
-    }
-    return in;
-}
 
 std::ostream& operator << (std::ostream& os, const Ensemble& e)
 {

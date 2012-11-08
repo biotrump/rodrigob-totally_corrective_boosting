@@ -161,7 +161,7 @@ void AbstractOptimizer::push_back(const SparseVector& u){
 
 
 double AbstractOptimizer::erlp_function(){
-  fun_timer.start();  
+  function_timer.start();
   
   DenseVector W;
   W.val = x.val;
@@ -208,7 +208,7 @@ double AbstractOptimizer::erlp_function(){
   W.val = NULL;
   W.dim = 0;
   
-  fun_timer.stop();
+  function_timer.stop();
   return dual_obj;
 }
 
@@ -226,7 +226,7 @@ double AbstractOptimizer::function(){
 }
 
 DenseVector AbstractOptimizer::erlp_gradient(){
-  grad_timer.start();
+  gradient_timer.start();
   DenseVector grad_w;
   
   // since the booster stores U transpose do normal dot and not
@@ -261,7 +261,7 @@ DenseVector AbstractOptimizer::erlp_gradient(){
   // duality gap w.r.t last known function value 
   gap = min_primal + dual_obj;
 
-  grad_timer.stop();
+  gradient_timer.stop();
   return grad;
 }
 
@@ -296,7 +296,7 @@ bool AbstractOptimizer::duality_gap_met(){
 // Compute objective function value for binary boost  
 double AbstractOptimizer::binary_function(){
   
-  fun_timer.start();
+  function_timer.start();
   DenseVector W;
   W.val = x.val;
   W.dim = num_weak_learners;
@@ -382,14 +382,14 @@ double AbstractOptimizer::binary_function(){
   dual_obj /= (nu*eta);
   dual_obj += beta;
     
-  fun_timer.stop();
+  function_timer.stop();
   return dual_obj;
 }
 
 // Assume that dist has been set by previous call to fun
 DenseVector AbstractOptimizer::binary_gradient(){
   
-  grad_timer.start();
+  gradient_timer.start();
   DenseVector grad_w;
 
   // since the booster stores U transpose do normal dot and not
@@ -418,7 +418,7 @@ DenseVector AbstractOptimizer::binary_gradient(){
   // duality gap w.r.t last known function value 
   gap = min_primal + dual_obj;
   
-  grad_timer.stop();
+  gradient_timer.stop();
   return grad;
 }
 
@@ -432,14 +432,14 @@ void AbstractOptimizer::report_stats(){
   // W.dim = 0; 
   // std::cout << "X: " << x << std::endl;
   // std::cout << "dist: " << dist << std::endl;
-  std::cout << "Time spent in " <<  fun_timer.num_calls 
+  std::cout << "Time spent in " <<  function_timer.num_calls
             << " function evaluations: " 
-            << fun_timer.total_cpu << std::endl;
-  std::cout << "Time spent in " << grad_timer.num_calls 
+            << function_timer.total_cpu << std::endl;
+  std::cout << "Time spent in " << gradient_timer.num_calls
             << " gradient evaluations: " 
-            << grad_timer.total_cpu << std::endl;
-  fun_timer.reset();
-  grad_timer.reset();
+            << gradient_timer.total_cpu << std::endl;
+  function_timer.reset();
+  gradient_timer.reset();
   return;
 }
 

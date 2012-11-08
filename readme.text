@@ -3,7 +3,8 @@ This project is based on the original 2009 code from Professors Vishwanathan and
 http://www.stat.purdue.edu/~vishy/erlpboost
 
 there are significant changes. In particular:
- - Compilation using cmake 
+  - Compilation using cmake 
+  - Massive renamings and file moves, to improve readability (e.g. wl becomes weak_learner)
 
 
 
