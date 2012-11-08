@@ -20,28 +20,28 @@
 
 
 #include "LibSvmReader.hpp"
-#include "RawDataOracle.hpp"
-#include "DecisionStump.hpp"
-#include "Svm.hpp"
-#include "ErlpBoost.hpp"
-#include "AdaBoost.hpp"
-#include "CorrectiveBoost.hpp"
+#include "oracles/RawDataOracle.hpp"
+#include "oracles/DecisionStump.hpp"
+#include "oracles/Svm.hpp"
+#include "boosters/ErlpBoost.hpp"
+#include "boosters/AdaBoost.hpp"
+#include "boosters/CorrectiveBoost.hpp"
 
-#include "ProjectedGradientOptimizer.hpp"
-#include "ZhangdAndHagerOptimizer.hpp"
-#include "LbfgsbOptimizer.hpp"
-#include "CoordinateDescentOptimizer.hpp"
+#include "optimizers/ProjectedGradientOptimizer.hpp"
+#include "optimizers/ZhangdAndHagerOptimizer.hpp"
+#include "optimizers/LbfgsbOptimizer.hpp"
+#include "optimizers/CoordinateDescentOptimizer.hpp"
 
 #include "EvaluateLoss.hpp"
 #include "parse.hpp"
 #include "ConfigFile.hpp"
 
 #ifdef USE_TAO
-#include "TaoOptimizer.hpp"
+#include "optimizers/TaoOptimizer.hpp"
 #endif
 
 #ifdef USE_CLP
-#include "LpBoost.hpp"
+#include "boosters/LpBoost.hpp"
 #endif
 
 #include <iostream>

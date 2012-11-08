@@ -20,6 +20,13 @@ EvaluateLoss::EvaluateLoss(bool tie_breaking):
 }
 
 
+EvaluateLoss::~EvaluateLoss()
+{
+    // nothing to do here
+    return;
+}
+
+
 int EvaluateLoss::binary_loss(const double pred, const int label) const{
 
     int result = 0;

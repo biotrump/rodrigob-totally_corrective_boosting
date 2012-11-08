@@ -9,7 +9,7 @@
 namespace totally_corrective_boosting
 {
 
-/** Encapsulate operations on vectors */
+/// Encapsulate operations on vectors
 
 template <class T, class X> 
 void dot(const std::vector<T>& mat, const X& vec, SparseVector& res);

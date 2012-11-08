@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-#include "WeakLearner.hpp"
+#include "weak_learners/WeakLearner.hpp"
 
 namespace totally_corrective_boosting
 {

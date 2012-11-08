@@ -36,6 +36,11 @@ include_directories(
 file(GLOB SrcCpp 
   "./*.cpp"
   "${src_folder}/*.cpp"
+  "${src_folder}/weak_learners/*.cpp"
+  "${src_folder}/oracles/*.cpp"
+  "${src_folder}/optimizers/*.cpp"
+  "${src_folder}/boosters/*.cpp"
+
 
   "${project_root_folder}/libs/lbfgsb/*.cpp"
   "${project_root_folder}/libs/lbfgsb/ap/*.cpp"
@@ -43,15 +48,15 @@ file(GLOB SrcCpp
 
 # Files that will not compile on all setups
 file(GLOB BlackListCpp
-  "${src_folder}/LpBoost.cpp"
-  "${src_folder}/TaoOptimizer.cpp"
+  "${src_folder}/boosters/LpBoost.cpp"
+  "${src_folder}/optimizers/TaoOptimizer.cpp"
 )
 
 list(REMOVE_ITEM SrcCpp ${BlackListCpp})
 
 if(USE_TAO)
 file(GLOB TaoCpp
-  "${src_folder}/TaoOptimizer.cpp"
+  "${src_folder}/optimizers/TaoOptimizer.cpp"
 )
 
 list(APPEND SrcCpp ${TaoCpp})
@@ -61,7 +66,7 @@ endif(USE_TAO)
 if(USE_CLP)
 
 file(GLOB ClpCpp
-  "${src_folder}/LpBoost.cpp"
+  "${src_folder}/boosters/LpBoost.cpp"
 )
 
 list(APPEND SrcCpp ${ClpCpp})

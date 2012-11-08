@@ -2,7 +2,7 @@
 #define _ADABOOST_HPP_
 
 #include "AbstractBooster.hpp"
-#include "WeakLearner.hpp"
+#include "weak_learners/WeakLearner.hpp"
 
 namespace totally_corrective_boosting
 {

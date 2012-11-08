@@ -2,8 +2,8 @@
 #define _ERLPBOOST_HPP_
 
 #include "AbstractBooster.hpp"
-#include "WeakLearner.hpp"
-#include "AbstractOptimizer.hpp"
+#include "weak_learners/WeakLearner.hpp"
+#include "optimizers/AbstractOptimizer.hpp"
 
 namespace totally_corrective_boosting
 {

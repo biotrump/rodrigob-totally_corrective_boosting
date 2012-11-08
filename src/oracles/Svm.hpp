@@ -16,20 +16,21 @@ namespace totally_corrective_boosting
 
 
 class Svm: public AbstractOracle {
-  
+
 private:
-  bool reflexive; // if true then training set is [data, -data]
-  
+    /// if true then training set is [data, -data]
+    bool reflexive;
+
 public:
-  Svm(std::vector<SparseVector>& data,
-       std::vector<int>& labels,
-       const bool& transposed, 
-       const bool& reflexive);
-  ~Svm();
-  
-  // given distribution return weak learner with maximum edge
-  WeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist); 
-  
+    Svm(std::vector<SparseVector>& data,
+        std::vector<int>& labels,
+        const bool& transposed,
+        const bool& reflexive);
+    ~Svm();
+
+    /// given distribution return weak learner with maximum edge
+    WeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist);
+
 };
 
 } // end of namespace totally_corrective_boosting

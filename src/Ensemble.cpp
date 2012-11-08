@@ -1,11 +1,12 @@
 
-#include "RawDataOracle.hpp"
-#include "Svm.hpp"
+#include "oracles/RawDataOracle.hpp"
+#include "oracles/Svm.hpp"
+#include "oracles/DecisionStump.hpp"
+#include "weak_learners/WeakLearner.hpp"
+#include "weak_learners/DecisionStumpWeakLearner.hpp"
+
 #include "LibSvmReader.hpp"
 #include "Ensemble.hpp"
-#include "WeakLearner.hpp"
-#include "DecisionStumpWeakLearner.hpp"
-#include "DecisionStump.hpp"
 
 #include "vec.hpp"
 #include "parse.hpp"

@@ -24,7 +24,7 @@ quote at least one of the references given below:
 
 #include "lbfgsb.h"
 
-#include "LbfgsbOptimizer.hpp"
+#include "optimizers/LbfgsbOptimizer.hpp"
 
 void lbfgsbactive(const int& n,
                   const ap::real_1d_array& l,

@@ -2,7 +2,7 @@
 #define _BOOSTER_HPP_
 
 #include "Ensemble.hpp"
-#include "AbstractOracle.hpp"
+#include "oracles/AbstractOracle.hpp"
 #include "Timer.hpp"
 
 #include <vector>

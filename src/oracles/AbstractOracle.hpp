@@ -1,9 +1,9 @@
 #ifndef _ORACLE_HPP_
 #define _ORACLE_HPP_
 
+#include "weak_learners/WeakLearner.hpp"
 
 #include "vec.hpp"
-#include "WeakLearner.hpp"
 
 #include <vector>
 

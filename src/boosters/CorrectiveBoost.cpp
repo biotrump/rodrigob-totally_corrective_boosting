@@ -1,7 +1,7 @@
 
 #include "CorrectiveBoost.hpp"
 
-#include "WeakLearner.hpp"
+#include "weak_learners/WeakLearner.hpp"
 
 #include <iostream>
 #include <cmath>

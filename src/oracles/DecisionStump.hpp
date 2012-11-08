@@ -3,8 +3,9 @@
 #define _DECISIONSTUMP_HPP_
 
 #include "AbstractOracle.hpp"
-#include "WeakLearner.hpp"
-#include "DecisionStumpWeakLearner.hpp"
+#include "weak_learners/WeakLearner.hpp"
+#include "weak_learners/DecisionStumpWeakLearner.hpp"
+
 #include "Timer.hpp"
 
 #include "dvec.hpp"

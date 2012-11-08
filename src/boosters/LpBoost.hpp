@@ -6,7 +6,7 @@
 #endif
 
 #include "AbstractBooster.hpp"
-#include "WeakLearner.hpp"
+#include "weak_learners/WeakLearner.hpp"
 
 #include <coin/ClpSimplex.hpp>
 
