@@ -8,14 +8,15 @@ namespace totally_corrective_boosting {
 
 
 /// Class to encapsulate a weak learner.
-class AbstractWeakLearner{
+class AbstractWeakLearner
+{
 
 protected:
 
-    // Edge on the training dataset
+    /// Edge on the training dataset
     double edge;
 
-    // Vector of predictions on the training dataset.
+    /// Vector of predictions on the training dataset.
     SparseVector prediction;
 
 public:

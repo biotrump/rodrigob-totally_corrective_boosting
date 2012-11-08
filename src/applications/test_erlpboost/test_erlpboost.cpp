@@ -174,8 +174,8 @@ int main(int argc, char **argv)
 
 
 
-    int max_iter = 0;
-    config.readInto(max_iter, "max_iter");
+    int max_iterations = 0;
+    config.readInto(max_iterations, "max_iter");
 
     std::ofstream output_stream;
     output_stream.open(output_file.c_str());
@@ -253,24 +253,37 @@ int main(int argc, char **argv)
             eta = tKlBoost::compute_eta(labels.size(), epsilon, capital_dee);
         }
 
-        output_stream << "Maximum Iterations: " << max_iter << std::endl;
+        output_stream << "Maximum Iterations: " << max_iterations << std::endl;
         output_stream << "Epsilon (Tolerance): " << epsilon << std::endl;
         output_stream << "1/Nu (softening): " << 1.0/nu << std::endl << std::endl;
         output_stream << "eta: " << eta << std::endl << std::endl;
 
         solver = new_optimizer_instance(config,
-                                                                 labels.size(),
-                                                                 transposed,
-                                                                 eta, nu, epsilon,
-                                                                 binary);
+                                        labels.size(),
+                                        transposed,
+                                        eta, nu, epsilon,
+                                        binary);
 
-        ensemble_booster = new ErlpBoost(oracle, labels.size(), max_iter, epsilon, eta, nu, binary, solver);
+        if(is_kl_boost)
+        {
+            std::cout << "Running Erlpboost (also known as KlBoost)" << std::endl;
+            ensemble_booster = new ErlpBoost(oracle, labels.size(), max_iterations, epsilon, eta, nu, binary, solver);
+        }
+        else if(is_tKl_boost)
+        {
+            ensemble_booster = new tKlBoost(oracle, labels.size(), max_iterations, epsilon, capital_dee, binary, solver);
+        }
+        else
+        {
+            throw std::runtime_error("This should never happen.");
+        }
+
     }
     else if(booster_type == "LPBoost")
     {
-        std::cout << "running lpboost" << std::endl;
-        double eps = 0;
-        config.readInto(eps, "eps", 0.001);
+        std::cout << "Running lpboost" << std::endl;
+        double epsilon = 0;
+        config.readInto(epsilon, "eps", 0.001);
 
         double nu = 0;
         config.readInto(nu, "nu", 1.0);
@@ -285,14 +298,14 @@ int main(int argc, char **argv)
     }
     else if(booster_type == "AdaBoost")
     {
-        std::cout << "running adaboost" << std::endl;
-        ensemble_booster = new AdaBoost(oracle, labels.size(), max_iter,250);
+        std::cout << "Running adaboost" << std::endl;
+        ensemble_booster = new AdaBoost(oracle, labels.size(), max_iterations,250);
     }
     else if(booster_type == "Corrective")
     {
 
-        double eps = 0;
-        config.readInto(eps, "eps", 0.001);
+        double epsilon = 0;
+        config.readInto(epsilon, "eps", 0.001);
 
         double nu = 0;
         config.readInto(nu, "nu", 1.0);
@@ -301,9 +314,9 @@ int main(int argc, char **argv)
         config.readInto(linesearch, "linesearch", false);
 
         double eta = 0.0;
-        config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/eps);
+        config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/epsilon);
 
-        ensemble_booster = new CorrectiveBoost(oracle, labels.size(), max_iter, eps, eta, nu, linesearch,10);
+        ensemble_booster = new CorrectiveBoost(oracle, labels.size(), max_iterations, epsilon, eta, nu, linesearch,10);
     }
     else
     {
@@ -330,7 +343,7 @@ int main(int argc, char **argv)
     score.binary_loss(train_predictions, labels, train_loss, train_err);
 
     std::cout << "Evaluated " << train_predictions.dim << " predictions" << std::endl;
-    std::cout << "training error: " << train_err*100 << "%" << std::endl;
+    std::cout << "training error: " << train_err*100 << "% (" <<  100 - train_err*100 << " %)" << std::endl;
     std::cout << std::endl << "-----------------------" << std::endl;
 
     output_stream << "training error: " << train_err*100 << "%" << std::endl;
@@ -346,12 +359,12 @@ int main(int argc, char **argv)
         test_data.push_back(empty);
     }
 
-    DenseVector testpred = model.predict(test_data);
+    DenseVector test_predictions = model.predict(test_data);
     int test_loss;
     double test_err;
-    score.binary_loss(testpred, test_labels, test_loss, test_err);
+    score.binary_loss(test_predictions, test_labels, test_loss, test_err);
 
-    std::cout << "test error: " << test_err*100 << "%" << std::endl;
+    std::cout << "test error: " << test_err*100 << "% (" <<  100 - test_err*100 << " %)" << std::endl;
     std::cout << std::endl << "-----------------------" << std::endl;
 
     output_stream << "test error: " << test_err*100 << "%" << std::endl;
@@ -375,7 +388,7 @@ int main(int argc, char **argv)
         DenseVector validpred = model.predict(valid_data);
         score.binary_loss(validpred,valid_labels, valid_loss, valid_err);
 
-        std::cout << "validation error: " << valid_err*100 << "%" << std::endl;
+        std::cout << "validation error: " << valid_err*100 << "% (" <<  100 - valid_err*100 << " %)" << std::endl;
         std::cout << std::endl << "-----------------------" << std::endl;
 
         output_stream << "validation error: " << valid_err*100 << "%" << std::endl;

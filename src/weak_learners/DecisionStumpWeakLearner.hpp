@@ -44,7 +44,7 @@ public:
     // predict on a data matrix
     // assumes it's read in using readlibSVM_transpose
     // i.e. Data must be a vector of hypotheses
-    DenseVector   predict(const std::vector<SparseVector>& Data) const;
+    DenseVector predict(const std::vector<SparseVector>& Data) const;
 
     // methods to dump and load data
     void dump(std::ostream& os) const;

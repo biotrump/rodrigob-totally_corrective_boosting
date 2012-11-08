@@ -116,9 +116,18 @@ public:
 
     void reset()
     {
-        if(val != NULL) delete[] val;
+        if(val != NULL)
+        {
+            delete[] val;
+        }
+
         val = NULL;
-        if(index != NULL) delete [] index;
+
+        if(index != NULL)
+        {
+            delete [] index;
+        }
+
         index = NULL;
         nnz = 0;
         dim = 0;

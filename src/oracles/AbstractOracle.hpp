@@ -41,7 +41,7 @@ public:
     }
 
     /// given distribution return weak learner with maximum edge
-    virtual AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist) = 0;
+    virtual AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& distribution) = 0;
 };
 
 } // end of namespace totally_corrective_boosting

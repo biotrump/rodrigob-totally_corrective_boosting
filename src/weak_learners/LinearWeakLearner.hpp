@@ -41,7 +41,7 @@ public:
     bool equal(const AbstractWeakLearner *other_p) const;
     std::string get_type() const;
 
-    SparseVector get_wt() const { return wt;}
+    SparseVector get_wt() const { return wt; }
 
     // ugly hack. Need to figure out how to avoid.
     bool get_direction() const {return false; }

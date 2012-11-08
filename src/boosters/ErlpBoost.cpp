@@ -105,7 +105,7 @@ void ErlpBoost::update_stopping_criterion(const AbstractWeakLearner& wl)
 }
 
 
-void ErlpBoost::update_weights(const AbstractWeakLearner& wl)
+void ErlpBoost::update_weights(const AbstractWeakLearner& weak_learner)
 {
 
     // The predictions are already pre-multiplied with the labels already
@@ -114,7 +114,7 @@ void ErlpBoost::update_weights(const AbstractWeakLearner& wl)
     if(!found)
     {
         // need to push into the solver
-        SparseVector prediction = wl.get_prediction();
+        const SparseVector &prediction = weak_learner.get_prediction();
         solver->push_back(prediction);
     }
 
