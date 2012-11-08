@@ -15,14 +15,14 @@ namespace totally_corrective_boosting
 
 Timer::Timer()
     :_start_cpu(-1),
-      _start_wall_clock(-1),
-      num_calls(0),
-      total_cpu(0),
-      max_cpu(-std::numeric_limits<double>::max()),
-      min_cpu(std::numeric_limits<double>::max()),
-      total_wall_clock(0),
-      max_wall_clock(-std::numeric_limits<double>::max()),
-      min_wall_clock(std::numeric_limits<double>::max())
+     _start_wall_clock(-1),
+     num_calls(0),
+     total_cpu(0),
+     max_cpu(-std::numeric_limits<double>::max()),
+     min_cpu(std::numeric_limits<double>::max()),
+     total_wall_clock(0),
+     max_wall_clock(-std::numeric_limits<double>::max()),
+     min_wall_clock(std::numeric_limits<double>::max())
 {
     // nothing to do here
     return;

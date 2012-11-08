@@ -11,11 +11,16 @@ namespace totally_corrective_boosting
 {
 
 
-Svm::Svm(std::vector<SparseVector>& data, 
-         std::vector<int>& labels,
-         const bool& transposed,
-         const bool& reflexive):
-    AbstractOracle(data, labels, transposed), reflexive(reflexive){}
+Svm::Svm(
+        const std::vector<SparseVector>& data,
+        const std::vector<int>& labels,
+        const bool transposed,
+        const bool reflexive)
+    : AbstractOracle(data, labels, transposed), reflexive(reflexive)
+{
+    // nothing to do here
+    return;
+}
 
 Svm::~Svm()
 {
@@ -24,7 +29,8 @@ Svm::~Svm()
 }
 
 
-AbstractWeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist){
+AbstractWeakLearner* Svm::find_maximum_edge_weak_learner(const DenseVector& dist)
+{
 
     DenseVector edges;
 

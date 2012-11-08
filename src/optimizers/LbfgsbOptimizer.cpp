@@ -12,16 +12,19 @@
 namespace totally_corrective_boosting
 {
 
-LbfgsbOptimizer::LbfgsbOptimizer(const size_t& dim, 
-                                 const bool& transposed,
-                                 const double& eta,
-                                 const double& nu,
-                                 const double& epsilon,
-                                 const bool& binary):
-    AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary),
-    lambda(0.0), mu(1.0){
+LbfgsbOptimizer::LbfgsbOptimizer(const size_t dim, 
+                                 const bool transposed,
+                                 const double eta,
+                                 const double nu,
+                                 const double epsilon,
+                                 const bool binary)
+    : AbstractOptimizer(dim, transposed, eta, nu, epsilon, binary),
+      lambda(0.0), mu(1.0)
+{
+    // nothing to do here
     return;
 }
+
 
 LbfgsbOptimizer::~LbfgsbOptimizer()
 {
@@ -29,7 +32,9 @@ LbfgsbOptimizer::~LbfgsbOptimizer()
     return;
 }
 
-int LbfgsbOptimizer::solve(){
+
+int LbfgsbOptimizer::solve()
+{
 
     // Solution vector
     ap::real_1d_array x0;
@@ -101,8 +106,8 @@ int LbfgsbOptimizer::solve(){
     W.val = x.val;
     W.dim = num_weak_learners;
 
-    for(size_t iter = 0; iter < LBFGSB::max_iter; iter++){
-
+    for(size_t iteration = 0; iteration < LBFGSB::max_iter; iteration++)
+    {
         double epsg = omega;
         double epsf = 0;
         double epsx = 0;
@@ -131,11 +136,14 @@ int LbfgsbOptimizer::solve(){
         // assert(info > 0);
         assert(info == 4);
 
-        if(std::abs(w_gap) < eta){
+        if(std::abs(w_gap) < eta)
+        {
 
-            if(std::abs(w_gap) < Optimizer::wt_sum_tol){
+            if(std::abs(w_gap) < Optimizer::wt_sum_tol)
+            {
 
-                if(duality_gap_met()){
+                if(duality_gap_met())
+                {
                     // // svnvish: BUGBUG
                     // // Extra gradient computation happening here
                     // // Better to use norm gaps
@@ -153,24 +161,29 @@ int LbfgsbOptimizer::solve(){
             eta = eta*pow(alpha, beta_eta);
             omega = omega*pow(alpha, beta_omega);
 
-        }else{
+        }
+        else
+        {
             //lambda = lambda;
             mu *= tau;
             alpha = mu*gamma_bar;
             eta = eta_bar*pow(alpha, beta_eta);
             omega = omega_bar*pow(alpha, beta_omega);
         }
-    }
+
+    } // end of "for each iteration"
 
     // This is not a memory leak!
     W.val = NULL;
     W.dim = 0;
 
     return 0;
-}
+} // end of LbfgsbOptimizer::solve()
 
-double LbfgsbOptimizer::augmented_lagrangian_and_function_gradient(const ap::real_1d_array& x0,
-                                   ap::real_1d_array& g){
+double LbfgsbOptimizer::augmented_lagrangian_and_function_gradient(
+        const ap::real_1d_array& x0,
+        ap::real_1d_array& g)
+{
 
     // Copy current iterate into solver solution vector
     for(size_t i = 0; i < x.dim; i++)
@@ -204,20 +217,24 @@ double LbfgsbOptimizer::augmented_lagrangian_and_function_gradient(const ap::rea
     return obj;
 }
 
+
 void LbfgsbOptimizer::bounds(ap::integer_1d_array& nbd,
                              ap::real_1d_array& l,
-                             ap::real_1d_array& u){
+                             ap::real_1d_array& u)
+{
 
     // By default set lower bound to 0.0
     // By default set upper bound to 1.0
-    for(size_t i = 1; i <= x.dim; i++){
+    for(size_t i = 1; i <= x.dim; i++)
+    {
         l(i) = 0.0;
         u(i) = 1.0;
         nbd(i) = 2;
     }
 
     // psi have essentially no upper bound
-    for(size_t i = num_weak_learners+1; i <= x.dim; i++){
+    for(size_t i = num_weak_learners+1; i <= x.dim; i++)
+    {
         nbd(i) = 1;
         u(i) = Optimizer::infinity;
     }
@@ -227,11 +244,13 @@ void LbfgsbOptimizer::bounds(ap::integer_1d_array& nbd,
 
 void LbfgsbOptimizer::bounds_binary(ap::integer_1d_array& nbd,
                                     ap::real_1d_array& l,
-                                    ap::real_1d_array& u){
+                                    ap::real_1d_array& u)
+{
 
     // By default set lower bound to 0.0
     // By default set upper bound to 1.0
-    for(size_t i = 1; i <= x.dim; i++){
+    for(size_t i = 1; i <= x.dim; i++)
+    {
         l(i) = 0.0;
         u(i) = 1.0;
         nbd(i) = 2;

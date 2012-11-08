@@ -19,17 +19,26 @@ class AbstractOracle
 {
 
 protected:
-    std::vector<SparseVector> data;
-    std::vector<int> labels;
+    const std::vector<SparseVector> data;
+    const std::vector<int> labels;
 
-    bool transposed;
+    const bool transposed;
 
 public:
-    AbstractOracle(std::vector<SparseVector>& data,
-                   std::vector<int>& labels,
-                   const bool& transposed = false):
-        data(data), labels(labels), transposed(transposed){}
-    virtual ~AbstractOracle(){}
+    AbstractOracle(const std::vector<SparseVector>& data,
+                   const std::vector<int>& labels,
+                   const bool transposed = false)
+        : data(data), labels(labels), transposed(transposed)
+    {
+        // nothing to do here
+        return;
+    }
+
+    virtual ~AbstractOracle()
+    {
+        // nothing to do here
+        return;
+    }
 
     /// given distribution return weak learner with maximum edge
     virtual AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist) = 0;

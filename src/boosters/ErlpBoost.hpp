@@ -27,7 +27,8 @@ protected:
     /// min_{t} P^{q}(d^{q-1})
     double minPqdq1;
 
-    double eps;
+    /// Variable used as stopping criterion
+    const double epsilon;
 
     /// nu for softboost (looks like a 'v')
     double nu;
@@ -50,24 +51,24 @@ protected:
 
 public:
 
-    ErlpBoost(AbstractOracle* oracle,
+    ErlpBoost(AbstractOracle * const oracle,
               const int num_data_points,
               const int max_iterations,
-              const double eps,
+              const double epsilon,
               const double nu,
               const bool binary,
-              AbstractOptimizer* solver);
+              AbstractOptimizer * const solver);
 
-    ErlpBoost(AbstractOracle* oracle,
+    ErlpBoost(AbstractOracle* const oracle,
               const int num_data_points,
               const int max_iterations,
-              const double eps,
+              const double epsilon,
               const double eta,
               const double nu,
               const bool binary,
-              AbstractOptimizer* solver_);
+              AbstractOptimizer* const solver_);
 
-    ~ErlpBoost();
+    virtual ~ErlpBoost();
 
 };
 

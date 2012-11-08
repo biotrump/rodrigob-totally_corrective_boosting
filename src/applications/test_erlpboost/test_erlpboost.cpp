@@ -24,6 +24,7 @@
 #include "oracles/DecisionStump.hpp"
 #include "oracles/Svm.hpp"
 #include "boosters/ErlpBoost.hpp"
+#include "boosters/tKlBoost.hpp"
 #include "boosters/AdaBoost.hpp"
 #include "boosters/CorrectiveBoost.hpp"
 
@@ -52,6 +53,95 @@
 
 
 using namespace totally_corrective_boosting;
+
+/// Oracles factory
+AbstractOracle *new_oracle_instance(const ConfigFile &config,
+                                    const std::vector<SparseVector> &data,
+                                    const std::vector<int> &labels,
+                                    const bool transposed)
+{
+    bool reflexive;
+    config.readInto(reflexive, "reflexive");
+
+    std::string oracle_type;
+    config.readInto(oracle_type, "oracle_type");
+
+    AbstractOracle* oracle = NULL;
+
+    if(oracle_type == "rawdata")
+    {
+        oracle = new RawDataOracle(data, labels, transposed, reflexive);
+    }
+    else if(oracle_type == "svm")
+    {
+        oracle = new Svm(data, labels, transposed, reflexive);
+    }
+    else if(oracle_type == "decisionstump")
+    {
+        oracle = new DecisionStump(data, labels, reflexive);
+    }
+    else
+    {
+        printf("oracle_type == %s\n", oracle_type.c_str());
+        throw std::runtime_error("Received an unknown value for oracle_type");
+    }
+
+
+    return oracle;
+}
+
+
+/// Optimizers factory
+AbstractOptimizer* new_optimizer_instance(
+        const ConfigFile &config,
+        const size_t labels_size,
+        const bool transposed,
+        const double eta, const double nu, const double epsilon,
+        const bool binary)
+{
+
+
+    std::string optimizer_type;
+    config.readInto(optimizer_type, "optimizer_type", std::string("lbfgsb"));
+
+    printf("Using optimizer_type == %s\n", optimizer_type.c_str());
+
+    AbstractOptimizer* optimizer = NULL;
+
+    if(optimizer_type == "tao")
+    {
+#ifdef USE_TAO
+        solver = new TaoOptimizer(labels_size, transposed, eta, nu, eps, binary, argc, argv);
+#else
+        std::stringstream os;
+        os << "You must compile with TAO support enabled to use TAO"
+           << std::endl << "See readme.text for details" << std::endl;
+        throw std::invalid_argument(os.str());
+#endif
+    } else if(optimizer_type == "pg")
+    {
+        optimizer = new ProjectedGradientOptimizer(labels_size, transposed, eta, nu, epsilon, binary);
+    }
+    else if(optimizer_type == "hz")
+    {
+        optimizer = new ZhangdAndHagerOptimizer(labels_size, transposed, eta, nu, epsilon, binary);
+    }
+    else if(optimizer_type == "lbfgsb")
+    {
+        optimizer = new LbfgsbOptimizer(labels_size, transposed, eta, nu, epsilon, binary);
+    }
+    else if(optimizer_type == "cd")
+    {
+        optimizer = new CoordinateDescentOptimizer(labels_size, transposed, eta, nu, epsilon, binary);
+    }
+    else
+    {
+        throw std::runtime_error("Received an unknown value for optimizer_type");
+    }
+
+    return optimizer;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -82,67 +172,57 @@ int main(int argc, char **argv)
     std::string output_file;
     config.readInto(output_file, "output_file");
 
-    std::string oracle_type;
-    config.readInto(oracle_type, "oracle_type");
 
-    bool reflexive;
-    config.readInto(reflexive, "reflexive");
 
     int max_iter = 0;
     config.readInto(max_iter, "max_iter");
 
     std::ofstream output_stream;
     output_stream.open(output_file.c_str());
-    if(!output_stream.good()) {
+    if(!output_stream.good())
+    {
         std::stringstream os;
         os <<"Cannot open data file : " << output_file << std::endl;
         throw std::invalid_argument(os.str());
     }
 
-    LibSVMReader c;
+    // read input data --
+    LibSVMReader svm_reader;
     std::vector<SparseVector> data;
     std::vector<int> labels;
     const bool transposed = true;
 
     if(transposed)
     {
-        c.readlibSVM_transpose(train_file, data, labels);
+        svm_reader.readlibSVM_transpose(train_file, data, labels);
     }
     else
     {
-        c.readlibSVM(train_file, data, labels);
+        svm_reader.readlibSVM(train_file, data, labels);
     }
 
-    AbstractOracle* oracle = NULL;
+    // create oracle --
+    AbstractOracle * const oracle = new_oracle_instance(config, data, labels, transposed);
 
-    if(oracle_type == "rawdata")
-    {
-        oracle = new RawDataOracle(data, labels, transposed, reflexive);
-    }
-    else if(oracle_type == "svm")
-    {
-        oracle = new Svm(data, labels, transposed, reflexive);
-    }
-    else if(oracle_type == "decisionstump")
-    {
-        oracle = new DecisionStump(data, labels, reflexive);
-    }
-    else
-    {
-        printf("oracle_type == %s\n", oracle_type.c_str());
-        throw std::runtime_error("Received an unknown value for oracle_type");
-    }
 
+    // create booster --
     std::string booster_type;
     config.readInto(booster_type, "booster_type", std::string("ERLPBoost"));
 
-    AbstractBooster* eb = NULL;
     AbstractOptimizer* solver = NULL;
+    AbstractBooster* ensemble_booster = NULL;
 
-    if(booster_type == "ERLPBoost"){
 
-        double eps = 0;
-        config.readInto(eps, "eps", 0.001);
+    const bool
+            is_kl_boost = (booster_type == "ERLPBoost"
+                           or booster_type == "ErlpBoost"
+                           or booster_type == "KlBoost"),
+            is_tKl_boost = (booster_type == "tKlBoost");
+
+    if(is_kl_boost or is_tKl_boost)
+    {
+        double epsilon = 0;
+        config.readInto(epsilon, "eps", 0.001);
 
         double nu = 0;
         config.readInto(nu, "nu", 1.0);
@@ -150,57 +230,44 @@ int main(int argc, char **argv)
         bool binary = false;
         config.readInto(binary, "binary", false);
 
-        std::string optimizer_type;
-        config.readInto(optimizer_type, "optimizer_type", std::string("lbfgsb"));
 
         bool transposed = true;
         double eta = 0.0;
 
         if(binary)
-            config.readInto(eta, "eta", 2.0*(1.0+log(labels.size()/nu))/eps);
+        {
+            config.readInto(eta, "eta", 2.0*(1.0+log(labels.size()/nu))/epsilon);
+        }
         else
-            config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/eps);
+        {
+            config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/epsilon);
+        }
+
+
+        double capital_dee = 1/7.0;
+        config.readInto(capital_dee, "D", 1/7.0);
+
+        if(is_tKl_boost)
+        {
+            nu = tKlBoost::compute_nu(capital_dee);
+            eta = tKlBoost::compute_eta(labels.size(), epsilon, capital_dee);
+        }
 
         output_stream << "Maximum Iterations: " << max_iter << std::endl;
-        output_stream << "Epsilon (Tolerance): " << eps << std::endl;
-        output_stream << "Nu (softening): " << 1.0/nu << std::endl << std::endl;
+        output_stream << "Epsilon (Tolerance): " << epsilon << std::endl;
+        output_stream << "1/Nu (softening): " << 1.0/nu << std::endl << std::endl;
         output_stream << "eta: " << eta << std::endl << std::endl;
 
-        printf("Using optimizer_type == %s\n", optimizer_type.c_str());
+        solver = new_optimizer_instance(config,
+                                                                 labels.size(),
+                                                                 transposed,
+                                                                 eta, nu, epsilon,
+                                                                 binary);
 
-        if(optimizer_type == "tao"){
-#ifdef USE_TAO
-            solver = new TaoOptimizer(labels.size(), transposed, eta, nu, eps, binary, argc, argv);
-#else                                           
-            std::stringstream os;
-            os << "You must compile with TAO support enabled to use TAO"
-               << std::endl << "See readme.text for details" << std::endl;
-            throw std::invalid_argument(os.str());
-#endif
-        } else if(optimizer_type == "pg")
-        {
-            solver = new ProjectedGradientOptimizer(labels.size(), transposed, eta, nu, eps, binary);
-        }
-        else if(optimizer_type == "hz")
-        {
-            solver = new ZhangdAndHagerOptimizer(labels.size(), transposed, eta, nu, eps, binary);
-        }
-        else if(optimizer_type == "lbfgsb")
-        {
-            solver = new LbfgsbOptimizer(labels.size(), transposed, eta, nu, eps, binary);
-        }
-        else if(optimizer_type == "cd")
-        {
-            solver = new CoordinateDescentOptimizer(labels.size(), transposed, eta, nu, eps, binary);
-        }
-        else
-        {
-            throw std::runtime_error("Received an unknown value for optimizer_type");
-        }
-
-        eb = new ErlpBoost(oracle, labels.size(), max_iter, eps, eta, nu, binary, solver);
+        ensemble_booster = new ErlpBoost(oracle, labels.size(), max_iter, epsilon, eta, nu, binary, solver);
     }
-    else if(booster_type == "LPBoost"){
+    else if(booster_type == "LPBoost")
+    {
         std::cout << "running lpboost" << std::endl;
         double eps = 0;
         config.readInto(eps, "eps", 0.001);
@@ -216,11 +283,13 @@ int main(int argc, char **argv)
         throw std::invalid_argument(os.str());
 #endif
     }
-    else if(booster_type == "AdaBoost"){
+    else if(booster_type == "AdaBoost")
+    {
         std::cout << "running adaboost" << std::endl;
-        eb = new AdaBoost(oracle, labels.size(), max_iter,250);
+        ensemble_booster = new AdaBoost(oracle, labels.size(), max_iter,250);
     }
-    else if(booster_type == "Corrective"){
+    else if(booster_type == "Corrective")
+    {
 
         double eps = 0;
         config.readInto(eps, "eps", 0.001);
@@ -234,7 +303,7 @@ int main(int argc, char **argv)
         double eta = 0.0;
         config.readInto(eta, "eta", 2.0*log(labels.size()/nu)/eps);
 
-        eb = new CorrectiveBoost(oracle, labels.size(), max_iter, eps, eta, nu, linesearch,10);
+        ensemble_booster = new CorrectiveBoost(oracle, labels.size(), max_iter, eps, eta, nu, linesearch,10);
     }
     else
     {
@@ -242,11 +311,11 @@ int main(int argc, char **argv)
         throw std::runtime_error("Received an unknown value for booster_type");
     }
 
-    assert(eb);
+    assert(ensemble_booster);
 
-    size_t num_models = eb->boost(output_stream);
+    size_t num_models = ensemble_booster->boost(output_stream);
 
-    Ensemble model = eb->get_ensemble();
+    Ensemble model = ensemble_booster->get_ensemble();
     // output_stream << "model" << std::endl << model;
 
     std::cout << std::endl << "-----------------------" << std::endl;
@@ -269,7 +338,7 @@ int main(int argc, char **argv)
     // get test error
     std::vector<SparseVector> test_data;
     std::vector<int> test_labels;
-    c.readlibSVM_transpose(test_file, test_data, test_labels);
+    svm_reader.readlibSVM_transpose(test_file, test_data, test_labels);
     // backfill
     while(test_data.size() < data.size()){
         SparseVector empty(data[0].dim,1);
@@ -292,7 +361,7 @@ int main(int argc, char **argv)
     std::vector<int> valid_labels;
     if(valid_file != "no_valid")
     {
-        c.readlibSVM_transpose(valid_file, valid_data, valid_labels);
+        svm_reader.readlibSVM_transpose(valid_file, valid_data, valid_labels);
 
         // backfill
         while(valid_data.size() < data.size())
@@ -335,7 +404,8 @@ int main(int argc, char **argv)
     double *val_error = new double[num_models];
 
 
-    for(size_t i = 0; i <num_models; i++){
+    for(size_t i = 0; i <num_models; i++)
+    {
         Ensemble gen_model;
         in >> gen_model;
         // get gen error per iteration
@@ -373,8 +443,16 @@ int main(int argc, char **argv)
     delete [] gen_error;
     delete [] val_error;
 
-    if(solver) delete solver;
-    if(oracle) delete oracle;
+    // FIXME should use smart pointers
+    if(solver)
+    {
+        delete solver;
+    }
+
+    if(oracle)
+    {
+        delete oracle;
+    }
 
     return 0;
 }

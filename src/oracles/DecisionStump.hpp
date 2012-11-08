@@ -10,25 +10,23 @@
 #include "math/sparse_vector.hpp"
 #include "math/dense_integer_vector.hpp"
 
-
 #include <vector>
 #include <iostream>
 
 namespace totally_corrective_boosting
 {
 
-// using namespace std; 
-
 
 /// Decision stump oracle
-class DecisionStump: public AbstractOracle {
+class DecisionStump: public AbstractOracle
+{
 
-private:
+protected:
 
   // if less_than == true, the we consider x <= thresh
   // as well as x >= thresh
   // sort of correponds to reflexive
-  bool less_than; 
+  const bool less_than;
 
   std::vector<DenseIntegerVector> sorted_data;
   
@@ -36,9 +34,9 @@ private:
   Timer timer;
   
 public:
-  DecisionStump(std::vector<SparseVector>& data,
-                 std::vector<int>& labels, 
-                 bool less_than);
+  DecisionStump(const std::vector<SparseVector>& data,
+                 const std::vector<int>& labels,
+                 const bool less_than);
 
   ~DecisionStump();
 

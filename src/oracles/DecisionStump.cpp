@@ -8,10 +8,11 @@
 namespace totally_corrective_boosting
 {
 
-DecisionStump::DecisionStump(std::vector<SparseVector>& data, 
-                             std::vector<int>& labels,
-                             bool less_than):
-    AbstractOracle(data, labels), less_than(less_than){
+DecisionStump::DecisionStump(const std::vector<SparseVector>& data,
+                             const std::vector<int>& labels,
+                             const bool less_than):
+    AbstractOracle(data, labels), less_than(less_than)
+{
 
     // sorted_data is a matrix where each column is the
     // argsort value of the corresponding hypothesis
@@ -19,9 +20,10 @@ DecisionStump::DecisionStump(std::vector<SparseVector>& data,
     // do it once.
 
     Timer sort_timer;
-    std::vector<SparseVector>::iterator it;
+    std::vector<SparseVector>::const_iterator it;
     sort_timer.start();
-    for(it = data.begin(); it != data.end(); it++){
+    for(it = data.begin(); it != data.end(); it++)
+    {
         DenseIntegerVector tmp = argsort(*it);
         sorted_data.push_back(tmp);
     }
@@ -30,13 +32,17 @@ DecisionStump::DecisionStump(std::vector<SparseVector>& data,
     return;
 }
 
-DecisionStump::~DecisionStump(){
+
+DecisionStump::~DecisionStump()
+{
     std::cout << "Total time spent in weak learner: "
               << timer.total_cpu << std::endl;
     return;
 }
 
-AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVector& dist){
+
+AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVector& dist)
+{
 
     double best_threshold = 1.0;
     double best_edge = -1.0;
@@ -70,13 +76,15 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
     SparseVector result(data[max_index].dim, data[max_index].dim);
 
     // initially set result to zero
-    for(size_t i = 0; i < result.dim; i++){
+    for(size_t i = 0; i < result.dim; i++)
+    {
         result.val[i] = 0.0;
         result.index[i] = i;
     }
 
     // copy nonzero elements of best hypothesis into result
-    for(size_t i = 0; i < data[max_index].nnz; i++){
+    for(size_t i = 0; i < data[max_index].nnz; i++)
+    {
         size_t index = data[max_index].index[i];
         result.val[index] = data[max_index].val[i];
     }
@@ -86,7 +94,7 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
 
         // threshold prediction
         if((ge and (result.val[i] >= best_threshold)) or
-           (!ge and (result.val[i] <= best_threshold)))
+                (!ge and (result.val[i] <= best_threshold)))
             result.val[i] = 1.0;
         else
             result.val[i] = -1.0;
@@ -120,7 +128,8 @@ void DecisionStump::find_best_threshold_greater_or_equal(const size_t& index,
                                                          const DenseVector& dist,
                                                          const double& init_edge,
                                                          double& best_threshold,
-                                                         double& best_edge) const{
+                                                         double& best_edge) const
+{
 
     DenseIntegerVector indices = sorted_data[index]; // sorted indices for hyp index
     double max_so_far = init_edge;
@@ -193,7 +202,8 @@ void DecisionStump::find_best_threshold_less_or_equal(const size_t& index,
                                                       const DenseVector& dist,
                                                       const double& init_edge,
                                                       double& best_threshold,
-                                                      double& best_edge) const{
+                                                      double& best_edge) const
+{
 
     DenseIntegerVector indices = sorted_data[index]; // sorted indices for hyp index
     double max_so_far = init_edge;
@@ -251,7 +261,8 @@ void DecisionStump::find_best_threshold(const size_t& index,
                                         const double& init_edge,
                                         double& best_threshold,
                                         double& best_edge,
-                                        bool& ge) const{
+                                        bool& ge) const
+{
 
     double ge_edge;
     double ge_threshold;
@@ -289,19 +300,22 @@ void DecisionStump::find_best_threshold(const size_t& index,
 }
 
 
-DenseIntegerVector DecisionStump::argsort(SparseVector unsorted){
+DenseIntegerVector DecisionStump::argsort(SparseVector unsorted)
+{
 
     size_t dim = unsorted.nnz;
 
     std::vector<std::pair<double,size_t> > pair_vec;
 
-    for(size_t i = 0; i < unsorted.nnz; i++){
+    for(size_t i = 0; i < unsorted.nnz; i++)
+    {
 
         std::pair<double,size_t> tmp(unsorted.val[i],i);
         pair_vec.push_back(tmp);
     }
 
-    if(unsorted.nnz != unsorted.dim){
+    if(unsorted.nnz != unsorted.dim)
+    {
         std::pair<double,size_t>tmp(0.0,-1);
         pair_vec.push_back(tmp);
         dim++;
@@ -315,7 +329,8 @@ DenseIntegerVector DecisionStump::argsort(SparseVector unsorted){
     size_t* resval = new size_t[dim];
 
     size_t j = 0;
-    for(it=pair_vec.begin(); it!=pair_vec.end(); it++,j++){
+    for(it=pair_vec.begin(); it!=pair_vec.end(); it++,j++)
+    {
         resval[j] = it->second;
     }
     DenseIntegerVector result;

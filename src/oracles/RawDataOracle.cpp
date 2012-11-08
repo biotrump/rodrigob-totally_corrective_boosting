@@ -11,10 +11,11 @@
 namespace totally_corrective_boosting
 {
 
-RawDataOracle::RawDataOracle(std::vector<SparseVector>& data, 
-                             std::vector<int>& labels,
-                             const bool& transposed,
-                             const bool& reflexive):
+RawDataOracle::RawDataOracle(
+        const std::vector<SparseVector>& data,
+        const std::vector<int>& labels,
+        const bool transposed,
+        const bool reflexive):
     AbstractOracle(data, labels, transposed), reflexive(reflexive){}
 
 RawDataOracle::~RawDataOracle()

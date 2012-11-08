@@ -70,7 +70,10 @@ public:
   /// Boost and save intermediate results
   size_t boost(std::ostream& os = std::cout);
   
-  Ensemble get_ensemble(){ return model; }
+  Ensemble get_ensemble()
+  {
+      return model;
+  }
 
 };
 

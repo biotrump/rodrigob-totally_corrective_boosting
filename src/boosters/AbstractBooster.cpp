@@ -27,11 +27,11 @@ AbstractBooster::AbstractBooster(AbstractOracle* oracle_,
     return;
 }
 
-AbstractBooster::AbstractBooster(AbstractOracle* oracle,
+AbstractBooster::AbstractBooster(AbstractOracle* oracle_,
                                  const int num_data_points_,
                                  const int max_iterations_,
                                  const int disp_frequency_)
-    : oracle(oracle), num_data_points(num_data_points_),
+    : oracle(oracle_), num_data_points(num_data_points_),
       max_iterations(max_iterations_), display_frequency(disp_frequency_)
 {
 
@@ -52,7 +52,8 @@ AbstractBooster::~AbstractBooster()
     return;
 }
 
-size_t AbstractBooster::boost(std::ostream& output_stream){
+size_t AbstractBooster::boost(std::ostream& output_stream)
+{
     int i = 0;
     size_t num_models = 0;
     for(i = 0; i < max_iterations; i++)
@@ -93,15 +94,19 @@ size_t AbstractBooster::boost(std::ostream& output_stream){
 
 
     int num_iter;
-    if(i == max_iterations){
+    if(i == max_iterations)
+    {
         output_stream << "Max iterations exceeded!" << std::endl;
         num_iter = max_iterations;
-    }else{
+    }
+    else
+    {
         output_stream << "Finished in " << i << " iterations " << std::endl;
         num_iter = i;
     }
 
-    if(num_iter%display_frequency!=0){
+    if(num_iter%display_frequency!=0)
+    {
         output_stream << model << std::endl;
         output_stream << "Cumulative Time: " << timer.total_cpu<< std::endl;
         num_models++;
@@ -109,13 +114,13 @@ size_t AbstractBooster::boost(std::ostream& output_stream){
 
 
     std::cout << "Total CPU time expended: "
-                  << timer.total_cpu << " seconds" << std::endl;
+              << timer.total_cpu << " seconds" << std::endl;
     std::cout << "Maximum iteration time: "
-                  << timer.max_cpu << " seconds" << std::endl;
+              << timer.max_cpu << " seconds" << std::endl;
     std::cout << "Minimum iteration time: "
-                  << timer.min_cpu << " seconds" << std::endl;
+              << timer.min_cpu << " seconds" << std::endl;
     std::cout << "Average time per iteration: "
-                  << timer.average_cpu() << " seconds" << std::endl;
+              << timer.average_cpu() << " seconds" << std::endl;
 
     output_stream << "Total CPU time expended: "
                   << timer.total_cpu << " seconds" << std::endl;

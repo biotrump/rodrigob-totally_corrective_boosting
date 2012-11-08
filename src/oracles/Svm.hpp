@@ -20,10 +20,10 @@ private:
     bool reflexive;
 
 public:
-    Svm(std::vector<SparseVector>& data,
-        std::vector<int>& labels,
-        const bool& transposed,
-        const bool& reflexive);
+    Svm(const std::vector<SparseVector>& data,
+        const std::vector<int>& labels,
+        const bool transposed,
+        const bool reflexive);
     ~Svm();
 
     /// given distribution return weak learner with maximum edge
