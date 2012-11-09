@@ -19,62 +19,65 @@ namespace totally_corrective_boosting
 // Different implementations of the optimizer simply overload the
 // solve function 
 
-namespace Optimizer{
+namespace Optimizer
+{
   const double infinity = 1e30;
   const double kkt_gap_tol = 1e-3; // KKT gap violation tolerance
   const double pgnorm_tol = 1e-3;  // Max norm of projected gradient 
   const double wt_sum_tol = 1e-3;  // How much tolerance for the sum of wt - 1 
 }
 
-class AbstractOptimizer{
+
+class AbstractOptimizer
+{
 
 private:
 
-  // ERLPBoost function value and gradient
+  /// ERLPBoost function value and gradient
   double erlp_function();
   
   DenseVector erlp_gradient();
 
-  // Binary ERLPBoost function value and gradient
+  /// Binary ERLPBoost function value and gradient
   double binary_function();
   
   DenseVector binary_gradient();
   
-  // duality gap
+  /// duality gap
   double gap;
     
 protected:
-  // Columns of U 
+  /// Columns of U
   size_t num_weak_learners;
   
-  // Rows of U
+  /// Rows of U
   size_t dim;        
   
-  // Weak learners 
+  /// Weak learners
   std::vector<DenseVector> U; 
   
-  // Do we store U or U transpose?
+  /// Do we store U or U transpose?
   bool transposed; 
   
-  // Regularization parameter
+  /// Regularization parameter
   double eta;          
   
-  // nu for softboost
+  /// nu for softboost
   double nu;           
   
-  // epsilon tolerance of outer boosting loop
+  /// epsilon tolerance of outer boosting loop
   double epsilon;
   
-  // Are we solving binary boost problem?
+  /// Are we solving binary boost problem?
   bool binary;
 
-  // max edge 
+  /// max edge
   double edge; 
   
-  // KKT gap for w < kkt_gap_tol?
+  /// KKT gap for w < kkt_gap_tol?
   bool kkt_gap_met(const DenseVector& gradk);
   
-  // projected gradient norm for psi < pgnorm_tol
+  /// projected gradient norm for psi < pgnorm_tol
   bool pgnorm_met(const DenseVector& gradk);
 
   /// Keep track of time spent in function and gradient evaluation
@@ -92,10 +95,10 @@ public:
   /// Vector to store the distribution
   DenseVector distribution;
   
-  // minimum primal value seen so far
+  /// minimum primal value seen so far
   double min_primal;
 
-  // current dual objective
+  /// current dual objective
   double dual_obj;
   
   
@@ -124,7 +127,6 @@ public:
   bool converged(const DenseVector& gradk);
 
   bool duality_gap_met();
-  
   
   /// Derived classes will implement this method
   virtual int solve() = 0;

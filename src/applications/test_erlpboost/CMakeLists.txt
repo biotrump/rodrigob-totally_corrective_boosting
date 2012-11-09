@@ -75,6 +75,14 @@ list(APPEND SrcCpp ${ClpCpp})
 add_definitions(-DUSE_CLP)
 endif(USE_CLP)
 
+# ----------------------------------------------------------------------
+# set default compilation flags and default build
+set(OPT_CXX_FLAGS "-fopenmp -ffast-math -funroll-loops -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -DNDEBUG -DBOOST_DISABLE_ASSERTS ${OPT_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -g")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+
 
 # ----------------------------------------------------------------------
 # Create the executable

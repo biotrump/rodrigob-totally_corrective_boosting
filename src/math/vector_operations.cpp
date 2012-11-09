@@ -157,7 +157,9 @@ void transpose_dot(const std::vector<SparseVector>& mat, const SparseVector& vec
         double scale = vec.val[i];
         SparseVector row = mat[index];
         for(size_t i = 0; i < row.nnz; i++)
+        {
             res.val[row.index[i]] += scale*row.val[i];
+        }
     }
 
     return;

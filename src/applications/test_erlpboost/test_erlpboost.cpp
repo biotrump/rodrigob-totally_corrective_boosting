@@ -336,126 +336,138 @@ int main(int argc, char **argv)
 
     EvaluateLoss score;
 
-    // get training error
-    DenseVector train_predictions = model.predict(data);
-    int train_loss;
-    double train_err;
-    score.binary_loss(train_predictions, labels, train_loss, train_err);
-
-    std::cout << "Evaluated " << train_predictions.dim << " predictions" << std::endl;
-    std::cout << "training error: " << train_err*100 << "% (" <<  100 - train_err*100 << " %)" << std::endl;
-    std::cout << std::endl << "-----------------------" << std::endl;
-
-    output_stream << "training error: " << train_err*100 << "%" << std::endl;
-    output_stream << std::endl << "-----------------------" << std::endl;
-
-    // get test error
-    std::vector<SparseVector> test_data;
-    std::vector<int> test_labels;
-    svm_reader.readlibSVM_transpose(test_file, test_data, test_labels);
-    // backfill
-    while(test_data.size() < data.size()){
-        SparseVector empty(data[0].dim,1);
-        test_data.push_back(empty);
-    }
-
-    DenseVector test_predictions = model.predict(test_data);
-    int test_loss;
-    double test_err;
-    score.binary_loss(test_predictions, test_labels, test_loss, test_err);
-
-    std::cout << "test error: " << test_err*100 << "% (" <<  100 - test_err*100 << " %)" << std::endl;
-    std::cout << std::endl << "-----------------------" << std::endl;
-
-    output_stream << "test error: " << test_err*100 << "%" << std::endl;
-    output_stream << std::endl << "-----------------------" << std::endl;
-
-    // get validation error
-    std::vector<SparseVector> valid_data;
-    std::vector<int> valid_labels;
-    if(valid_file != "no_valid")
+    // get training error --
     {
-        svm_reader.readlibSVM_transpose(valid_file, valid_data, valid_labels);
+        DenseVector train_predictions = model.predict(data);
+        int train_loss;
+        double train_err;
+        score.binary_loss(train_predictions, labels, train_loss, train_err);
 
-        // backfill
-        while(valid_data.size() < data.size())
-        {
-            SparseVector empty(data[0].dim,1);
-            valid_data.push_back(empty);
-        }
-        int valid_loss;
-        double valid_err;
-        DenseVector validpred = model.predict(valid_data);
-        score.binary_loss(validpred,valid_labels, valid_loss, valid_err);
-
-        std::cout << "validation error: " << valid_err*100 << "% (" <<  100 - valid_err*100 << " %)" << std::endl;
+        std::cout << "Evaluated " << train_predictions.dim << " predictions" << std::endl;
+        std::cout << "training error: " << train_err*100 << "% (" <<  100 - train_err*100 << " %)" << std::endl;
         std::cout << std::endl << "-----------------------" << std::endl;
 
-        output_stream << "validation error: " << valid_err*100 << "%" << std::endl;
+        output_stream << "training error: " << train_err*100 << "%" << std::endl;
         output_stream << std::endl << "-----------------------" << std::endl;
     }
-    output_stream.close();
 
-    // get generalization error per iteration
-    std::ifstream in;
-    in.open(output_file.c_str());
-    if(!in.good()) {
-        std::stringstream os;
-        os <<"Cannot open data file : " << output_file << std::endl;
-        throw std::invalid_argument(os.str());
-    }
-
-
-
-    std::string s;
-    int gen_loss;
-    double gen_err;
-
-    int val_loss;
-    double val_err;
-
-    double *gen_error = new double[num_models];
-    double *val_error = new double[num_models];
-
-
-    for(size_t i = 0; i <num_models; i++)
+    // get test error --
+    std::vector<SparseVector> test_data;
+    std::vector<int> test_labels;
     {
-        Ensemble gen_model;
-        in >> gen_model;
-        // get gen error per iteration
-        DenseVector genpred = gen_model.predict(test_data);
-        score.binary_loss(genpred, test_labels, gen_loss, gen_err);
-        gen_error[i] = gen_err;
-        // get valid error per iteration
-        DenseVector valpred = gen_model.predict(valid_data);
-        score.binary_loss(valpred, valid_labels, val_loss, val_err);
-        val_error[i] = val_err;
-    }
-    in.close();
+        svm_reader.readlibSVM_transpose(test_file, test_data, test_labels);
+        // backfill
+        while(test_data.size() < data.size())
+        {
+            SparseVector empty(data[0].dim,1);
+            test_data.push_back(empty);
+        }
 
-    // apepend validation and generalization error per iter to output file
-    output_stream.open(output_file.c_str(),std::ofstream::app);
-    if(!output_stream.good()) {
-        std::stringstream os;
-        os <<"Cannot open data file : " << output_file << std::endl;
-        throw std::invalid_argument(os.str());
+        DenseVector test_predictions = model.predict(test_data);
+        int test_loss;
+        double test_err;
+        score.binary_loss(test_predictions, test_labels, test_loss, test_err);
+
+        std::cout << "test error: " << test_err*100 << "% (" <<  100 - test_err*100 << " %)" << std::endl;
+        std::cout << std::endl << "-----------------------" << std::endl;
+
+        output_stream << "test error: " << test_err*100 << "%" << std::endl;
+        output_stream << std::endl << "-----------------------" << std::endl;
+
     }
 
-    output_stream << "val iter ";
-    for(size_t i = 0; i < num_models; i++){
-        output_stream << val_error[i] << " ";
-    }
-    output_stream << std::endl;
+    // get validation error --
+    std::vector<SparseVector> valid_data;
+    std::vector<int> valid_labels;
+    {
+        if(valid_file != "no_valid")
+        {
+            svm_reader.readlibSVM_transpose(valid_file, valid_data, valid_labels);
 
-    output_stream << "generalization iter ";
-    for(size_t i = 0; i < num_models; i++){
-        output_stream << gen_error[i] << " ";
-    }
-    output_stream << std::endl;
-    output_stream.close();
+            // backfill
+            while(valid_data.size() < data.size())
+            {
+                SparseVector empty(data[0].dim,1);
+                valid_data.push_back(empty);
+            }
+            int valid_loss;
+            double valid_err;
+            DenseVector validpred = model.predict(valid_data);
+            score.binary_loss(validpred,valid_labels, valid_loss, valid_err);
 
-    delete [] gen_error;
-    delete [] val_error;
+            std::cout << "validation error: " << valid_err*100 << "% (" <<  100 - valid_err*100 << " %)" << std::endl;
+            std::cout << std::endl << "-----------------------" << std::endl;
+
+            output_stream << "validation error: " << valid_err*100 << "%" << std::endl;
+            output_stream << std::endl << "-----------------------" << std::endl;
+        }
+        output_stream.close();
+
+    }
+
+    // get generalization error per iteration --
+    {
+        std::ifstream in;
+        in.open(output_file.c_str());
+        if(!in.good())
+        {
+            std::stringstream os;
+            os <<"Cannot open data file : " << output_file << std::endl;
+            throw std::invalid_argument(os.str());
+        }
+
+
+
+        std::string s;
+        int gen_loss;
+        double gen_err;
+
+        int val_loss;
+        double val_err;
+
+        std::vector<double> gen_error(num_models);
+        std::vector<double> val_error(num_models);
+
+
+        for(size_t i = 0; i < num_models; i++)
+        {
+            Ensemble gen_model;
+            in >> gen_model;
+            // get gen error per iteration
+            DenseVector genpred = gen_model.predict(test_data);
+            score.binary_loss(genpred, test_labels, gen_loss, gen_err);
+            gen_error[i] = gen_err;
+            // get valid error per iteration
+            DenseVector valpred = gen_model.predict(valid_data);
+            score.binary_loss(valpred, valid_labels, val_loss, val_err);
+            val_error[i] = val_err;
+        }
+        in.close();
+
+        // apepend validation and generalization error per iter to output file
+        output_stream.open(output_file.c_str(),std::ofstream::app);
+        if(!output_stream.good()) {
+            std::stringstream os;
+            os <<"Cannot open data file : " << output_file << std::endl;
+            throw std::invalid_argument(os.str());
+        }
+
+        output_stream << "val iter ";
+        for(size_t i = 0; i < num_models; i++){
+            output_stream << val_error[i] << " ";
+        }
+        output_stream << std::endl;
+
+        output_stream << "generalization iter ";
+        for(size_t i = 0; i < num_models; i++)
+        {
+            output_stream << gen_error[i] << " ";
+        }
+        output_stream << std::endl;
+        output_stream.close();
+
+
+    }
 
     // FIXME should use smart pointers
     if(solver)

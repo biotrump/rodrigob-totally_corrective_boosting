@@ -175,7 +175,8 @@ void AbstractOptimizer::push_back(const SparseVector& u)
 }
 
 
-double AbstractOptimizer::erlp_function(){
+double AbstractOptimizer::erlp_function()
+{
     function_timer.start();
 
     DenseVector W;
@@ -186,7 +187,10 @@ double AbstractOptimizer::erlp_function(){
     // Whatever is left is psi
     double* psi = x.val + num_weak_learners;
     double psi_sum = 0.0;
-    for(size_t i = 0; i < dim; i++) psi_sum += psi[i];
+    for(size_t i = 0; i < dim; i++)
+    {
+        psi_sum += psi[i];
+    }
 
     DenseVector tmp_distribution;
     // since the booster stores U transpose do transpose dot
@@ -201,14 +205,19 @@ double AbstractOptimizer::erlp_function(){
 
     // Find max element
     double exp_max = -std::numeric_limits<double>::max();
-    for(size_t i = 0; i < tmp_distribution.dim; i++){
+    for(size_t i = 0; i < tmp_distribution.dim; i++)
+    {
         tmp_distribution.val[i] = - eta*(tmp_distribution.val[i] + psi[i]);
-        if(tmp_distribution.val[i] > exp_max) exp_max = tmp_distribution.val[i];
+        if(tmp_distribution.val[i] > exp_max)
+        {
+            exp_max = tmp_distribution.val[i];
+        }
     }
 
     // Safe exponentiation
     dual_obj = 0.0;
-    for(size_t i = 0; i < tmp_distribution.dim; i++) {
+    for(size_t i = 0; i < tmp_distribution.dim; i++)
+    {
         distribution.val[i] = exp(tmp_distribution.val[i] - exp_max)/dim;
         dual_obj += distribution.val[i];
     }
@@ -219,13 +228,14 @@ double AbstractOptimizer::erlp_function(){
     dual_obj = (log(dual_obj)+ exp_max)/eta;
     dual_obj += (psi_sum/nu);
 
-    // This is not a memory leak!
+    // This is not a memory leak! (because W.val is only pointing to x.val)
     W.val = NULL;
     W.dim = 0;
 
     function_timer.stop();
     return dual_obj;
 }
+
 
 // Compute objective function value 
 // Just a dummy forwarding function 
@@ -240,6 +250,7 @@ double AbstractOptimizer::function()
         return erlp_function();
     }
 }
+
 
 DenseVector AbstractOptimizer::erlp_gradient()
 {

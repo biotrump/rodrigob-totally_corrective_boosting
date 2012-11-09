@@ -74,33 +74,36 @@ void CorrectiveBoost::update_weights(const AbstractWeakLearner &wl){
 }
 
 
-void CorrectiveBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
+void CorrectiveBoost::update_linear_ensemble(const AbstractWeakLearner &weak_learner)
+{
+    std::cout << "Number of weak learners: " << model.size() << std::endl;
 
-    std::cout << "Num of wl: " << model.size() << std::endl;
-
-    SparseVector ut = wl.get_prediction();
+    SparseVector ut = weak_learner.get_prediction();
 
     DenseVector x(ut.dim);
-    for(size_t i = 0; i < ut.nnz; i++){
+    for(size_t i = 0; i < ut.nnz; i++)
+    {
         x.val[ut.index[i]] = ut.val[i];
     }
 
-    DenseVector ut_dense(x);
+    const DenseVector ut_dense(x);
 
-    if(UW.dim>0){
+    if(UW.dim>0)
+    {
         DenseVector w = model.get_weights();
         // subtract Uw from x and store in x
-        for(size_t i = 0; i < x.dim; i++){
+        for(size_t i = 0; i < x.dim; i++)
+        {
             x.val[i] -=  UW.val[i];
         }
     }
 
     // set alpha
-    double dx = dot(examples_distribution,x);
+    const double dx = dot(examples_distribution, x);
 
     // find the maximum value of x
-    double max_x = max(x);
-    double denom = pow(max_x,2);
+    const double max_x = max(x);
+    const double denom = pow(max_x,2);
     double alpha;
 
     // svnvish: BUGBUG
@@ -116,17 +119,22 @@ void CorrectiveBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
     // update the other weights
     model.scale_weights(1.0-alpha);
 
-    WeightedWeakLearner wwl(&wl, alpha);
+    WeightedWeakLearner wwl(&weak_learner, alpha);
     model.add(wwl);
 
-    if(UW.dim ==0){
+    if(UW.dim ==0)
+    {
         UW.dim = x.dim;
         UW.val = new double[x.dim];
-        for(size_t i = 0; i < UW.dim; i++){
+        for(size_t i = 0; i < UW.dim; i++)
+        {
             UW.val[i] = alpha *ut_dense.val[i];
         }
-    }else{
-        for(size_t i = 0; i < UW.dim; i++){
+    }
+    else
+    {
+        for(size_t i = 0; i < UW.dim; i++)
+        {
             UW.val[i] = (1.0 - alpha)*UW.val[i] + alpha * ut_dense.val[i];
         }
     }
@@ -134,7 +142,9 @@ void CorrectiveBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
     return;
 }
 
-bool CorrectiveBoost::stopping_criterion(std::ostream& os){
+
+bool CorrectiveBoost::stopping_criterion(std::ostream& os)
+{
     std::cout << "min of Obj Values : " << minPqdq1 << std::endl;
     std::cout << "min Lower Bound : " << minPt1dt1 << std::endl;
     std::cout << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
@@ -142,15 +152,17 @@ bool CorrectiveBoost::stopping_criterion(std::ostream& os){
     return(minPqdq1 <=  minPt1dt1 + eps/2.0);
 }
 
-void CorrectiveBoost::update_stopping_criterion(const AbstractWeakLearner &wl){
 
+void CorrectiveBoost::update_stopping_criterion(const AbstractWeakLearner &wl)
+{
     minPqdq1 = std::min(wl.get_edge()+(relative_entropy(examples_distribution)/eta), minPqdq1);
     return;
 }
 
 
-// Return the dual objective function after projection
-double CorrectiveBoost::proj_simplex(DenseVector& dist, const double& exp_max){
+/// @returns the dual objective function after projection
+double CorrectiveBoost::proj_simplex(DenseVector& dist, const double& exp_max)
+{
 
     double cap = 1.0/nu;
     double theta = 0.0;
@@ -162,22 +174,33 @@ double CorrectiveBoost::proj_simplex(DenseVector& dist, const double& exp_max){
     // store the sum of the dist in Z
     double Z = sum(tmpdist);
     // find theta
-    for(size_t i = 0; i < tmpdist.dim; i++){
+    for(size_t i = 0; i < tmpdist.dim; i++)
+    {
         theta = (1.0 - cap * i)/Z;
-        if(theta * tmpdist.val[N-i] <= cap){break;}
-        else{Z -= tmpdist.val[N-i];}
+        if(theta * tmpdist.val[N-i] <= cap)
+        {
+            break;
+        }
+        else
+        {
+            Z -= tmpdist.val[N-i];
+        }
     }
 
     double ubndsum = 0.0;
     double psisum = 0.0;
     size_t bnd = 0;
 
-    for(size_t i = 0; i < dist.dim; i++){
-        if(theta*dist.val[i] > cap){
+    for(size_t i = 0; i < dist.dim; i++)
+    {
+        if(theta*dist.val[i] > cap)
+        {
             bnd++;
             psisum -= log(dist.val[i]*dim)/eta;
             dist.val[i] = cap;
-        }else{
+        }
+        else
+        {
             ubndsum += dist.val[i];
             dist.val[i] = theta*dist.val[i];
         }

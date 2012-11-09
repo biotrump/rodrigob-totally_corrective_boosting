@@ -50,7 +50,9 @@ public:
     {
         val = new double[dim];
         for(size_t i = 0; i < dim; i++)
+        {
             val[i] = 0.0;
+        }
     }
 
     DenseVector (const size_t& dim, const double& _val): dim(dim)

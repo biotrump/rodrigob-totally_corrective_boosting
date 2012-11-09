@@ -9,9 +9,10 @@ namespace totally_corrective_boosting
 {
 
 
-namespace LBFGSB{
-const size_t max_iter = 10000;
-const size_t lbfgsb_max_iter = 1000;
+namespace LBFGSB
+{
+const size_t max_iterations = 10000;
+const size_t lbfgsb_max_iterations = 1000;
 const size_t lbfgsb_m = 5; // Past gradients stored in lbfgsb
 }
 

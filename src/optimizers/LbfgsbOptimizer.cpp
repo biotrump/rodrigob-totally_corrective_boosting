@@ -35,14 +35,15 @@ LbfgsbOptimizer::~LbfgsbOptimizer()
 
 int LbfgsbOptimizer::solve()
 {
-
     // Solution vector
     ap::real_1d_array x0;
     x0.setbounds(1, x.dim);
 
     // copy current x into x0
     for(size_t i = 0; i < x.dim; i++)
+    {
         x0(i+1) = x.val[i];
+    }
 
     ap::integer_1d_array nbd;
     ap::real_1d_array l;
@@ -106,7 +107,7 @@ int LbfgsbOptimizer::solve()
     W.val = x.val;
     W.dim = num_weak_learners;
 
-    for(size_t iteration = 0; iteration < LBFGSB::max_iter; iteration++)
+    for(size_t iteration = 0; iteration < LBFGSB::max_iterations; iteration++)
     {
         double epsg = omega;
         double epsf = 0;
@@ -119,7 +120,7 @@ int LbfgsbOptimizer::solve()
                        epsg,
                        epsf,
                        epsx,
-                       LBFGSB::lbfgsb_max_iter,
+                       LBFGSB::lbfgsb_max_iterations,
                        nbd,
                        l,
                        u,
@@ -128,9 +129,11 @@ int LbfgsbOptimizer::solve()
 
         // copy current solution into x
         for(size_t i = 0; i < x.dim; i++)
+        {
             x.val[i] = x0(i+1);
+        }
 
-        double w_gap = sum(W) - 1.0;
+        const double w_gap = sum(W) - 1.0;
 
         // std::cout << "info: " << info << std::endl;
         // assert(info > 0);
@@ -180,6 +183,7 @@ int LbfgsbOptimizer::solve()
     return 0;
 } // end of LbfgsbOptimizer::solve()
 
+
 double LbfgsbOptimizer::augmented_lagrangian_and_function_gradient(
         const ap::real_1d_array& x0,
         ap::real_1d_array& g)
@@ -187,7 +191,9 @@ double LbfgsbOptimizer::augmented_lagrangian_and_function_gradient(
 
     // Copy current iterate into solver solution vector
     for(size_t i = 0; i < x.dim; i++)
+    {
         x.val[i] = x0(i+1);
+    }
 
     // Compute objective function
     double obj = function();
@@ -241,6 +247,7 @@ void LbfgsbOptimizer::bounds(ap::integer_1d_array& nbd,
 
     return;
 }
+
 
 void LbfgsbOptimizer::bounds_binary(ap::integer_1d_array& nbd,
                                     ap::real_1d_array& l,

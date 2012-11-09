@@ -44,6 +44,7 @@ protected:
 
     void update_stopping_criterion(const AbstractWeakLearner& wl);
 
+    /// @returns the dual objective function after projection
     double proj_simplex(DenseVector& examples_distribution, const double& exp_max);
 
     double line_search(DenseVector ut);
