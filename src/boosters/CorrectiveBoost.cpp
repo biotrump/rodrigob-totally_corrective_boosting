@@ -143,12 +143,11 @@ void CorrectiveBoost::update_linear_ensemble(const AbstractWeakLearner &weak_lea
 }
 
 
-bool CorrectiveBoost::stopping_criterion(std::ostream& os)
+bool CorrectiveBoost::stopping_criterion(std::ostream& log_stream)
 {
-    std::cout << "min of Obj Values : " << minPqdq1 << std::endl;
-    std::cout << "min Lower Bound : " << minPt1dt1 << std::endl;
-    std::cout << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
-    os << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
+    log_stream << "min of Obj Values : " << minPqdq1 << std::endl;
+    log_stream << "min Lower Bound : " << minPt1dt1 << std::endl;
+    log_stream << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
     return(minPqdq1 <=  minPt1dt1 + eps/2.0);
 }
 

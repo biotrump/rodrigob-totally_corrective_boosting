@@ -14,7 +14,9 @@ class ErlpBoost: public AbstractBooster
 {
 
 protected:
-    bool found;
+
+
+    bool new_weak_learner_was_already_in_model;
 
     /// Are we going to use Binary relative entropy
     bool binary;
@@ -45,7 +47,7 @@ protected:
 
     void update_linear_ensemble(const AbstractWeakLearner& wl);
 
-    bool stopping_criterion(std::ostream& os);
+    bool stopping_criterion(std::ostream& log_stream);
 
     void update_stopping_criterion(const AbstractWeakLearner& wl);
 

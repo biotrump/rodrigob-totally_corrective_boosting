@@ -16,7 +16,11 @@ RawDataOracle::RawDataOracle(
         const std::vector<int>& labels,
         const bool transposed,
         const bool reflexive):
-    AbstractOracle(data, labels, transposed), reflexive(reflexive){}
+    AbstractOracle(data, labels, transposed), reflexive(reflexive)
+{
+    // nothing to do here
+    return;
+}
 
 RawDataOracle::~RawDataOracle()
 {

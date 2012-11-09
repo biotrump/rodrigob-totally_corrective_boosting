@@ -22,13 +22,13 @@ protected:
   AbstractOracle* oracle;
 
   /// Number of data points
-  int num_data_points;
+  const int num_data_points;
   
   /// Maximum number of iterations
-  int max_iterations;
+  const int max_iterations;
 
   /// Affects how often we dump the model to file
-  int display_frequency;
+  const int display_frequency;
   
   /// The model is just an ensemble of weak hypothesis seen so far
   Ensemble model;
@@ -63,17 +63,16 @@ public:
   AbstractBooster(AbstractOracle* oracle,
            const int num_data_points,
            const int max_iterations,
-           const int disp_frequency_);
+           const int display_frequency_);
 
   virtual ~AbstractBooster();
 
   /// Boost and save intermediate results
-  size_t boost(std::ostream& os = std::cout);
+  /// This is the main loop of the training,
+  /// this function may take some time to finish...
+  size_t boost(std::ostream& log_stream = std::cout);
   
-  Ensemble get_ensemble()
-  {
-      return model;
-  }
+  const Ensemble &get_ensemble() const;
 
 };
 

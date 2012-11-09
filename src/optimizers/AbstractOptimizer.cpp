@@ -350,9 +350,13 @@ double AbstractOptimizer::binary_function()
 
     // since the booster stores U transpose do transpose dot
     if(transposed)
+    {
         transpose_dot(U, W, tmp_dist);
+    }
     else
+    {
         dot(U, W, tmp_dist);
+    }
 
 
     // This is not a memory leak!

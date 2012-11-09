@@ -1,23 +1,3 @@
-/* Copyright (c) 2009, S V N Vishwanathan
- * All rights reserved.
- *
- * The contents of this file are subject to the Mozilla Public License
- * Version 1.1 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * Authors: S V N Vishwanathan
- *
- * Created: (28/03/2009)
- *
- * Last Updated: (28/03/2008)
- */
-
 
 #include "LibSvmReader.hpp"
 #include "oracles/RawDataOracle.hpp"
@@ -45,6 +25,9 @@
 #include "boosters/LpBoost.hpp"
 #endif
 
+#include <boost/iostreams/tee.hpp>
+#include <boost/iostreams/stream.hpp>
+
 #include <iostream>
 #include <fstream>
 
@@ -60,11 +43,13 @@ AbstractOracle *new_oracle_instance(const ConfigFile &config,
                                     const std::vector<int> &labels,
                                     const bool transposed)
 {
-    bool reflexive;
+    bool reflexive = false;
     config.readInto(reflexive, "reflexive");
 
     std::string oracle_type;
     config.readInto(oracle_type, "oracle_type");
+
+    printf("Using oracle_type == %s\n", oracle_type.c_str());
 
     AbstractOracle* oracle = NULL;
 
@@ -85,7 +70,6 @@ AbstractOracle *new_oracle_instance(const ConfigFile &config,
         printf("oracle_type == %s\n", oracle_type.c_str());
         throw std::runtime_error("Received an unknown value for oracle_type");
     }
-
 
     return oracle;
 }
@@ -155,7 +139,7 @@ int main(int argc, char **argv)
         throw std::invalid_argument(os.str());
     }
 
-    char* filename = argv[1];
+    const char * const filename = argv[1];
     std::string config_file = filename;
 
     ConfigFile config(config_file);
@@ -169,22 +153,28 @@ int main(int argc, char **argv)
     std::string valid_file;
     config.readInto(valid_file, "valid_file", std::string("no_valid"));
 
-    std::string output_file;
-    config.readInto(output_file, "output_file");
-
-
+    std::string log_filepath;
+    config.readInto(log_filepath, "output_file");
 
     int max_iterations = 0;
     config.readInto(max_iterations, "max_iter");
 
-    std::ofstream output_stream;
-    output_stream.open(output_file.c_str());
-    if(!output_stream.good())
+    std::ofstream log_file_stream;
+    log_file_stream.open(log_filepath.c_str());
+    if(not log_file_stream.good())
     {
         std::stringstream os;
-        os <<"Cannot open data file : " << output_file << std::endl;
+        os <<"Cannot open log file : " << log_filepath << std::endl;
         throw std::invalid_argument(os.str());
     }
+
+    // Tee code based on http://stackoverflow.com/questions/999120
+
+    typedef boost::iostreams::tee_device<std::ostream, std::ofstream> tee_device_t;
+    typedef boost::iostreams::stream<tee_device_t> tee_stream_t;
+
+    tee_device_t log_tee_device(std::cout, log_file_stream);
+    tee_stream_t log_stream(log_tee_device);
 
     // read input data --
     LibSVMReader svm_reader;
@@ -253,10 +243,10 @@ int main(int argc, char **argv)
             eta = tKlBoost::compute_eta(labels.size(), epsilon, capital_dee);
         }
 
-        output_stream << "Maximum Iterations: " << max_iterations << std::endl;
-        output_stream << "Epsilon (Tolerance): " << epsilon << std::endl;
-        output_stream << "1/Nu (softening): " << 1.0/nu << std::endl << std::endl;
-        output_stream << "eta: " << eta << std::endl << std::endl;
+        log_stream << "Maximum Iterations: " << max_iterations << std::endl;
+        log_stream << "Epsilon (Tolerance): " << epsilon << std::endl;
+        log_stream << "1/Nu (softening): " << 1.0/nu << std::endl << std::endl;
+        log_stream << "eta: " << eta << std::endl << std::endl;
 
         solver = new_optimizer_instance(config,
                                         labels.size(),
@@ -326,13 +316,12 @@ int main(int argc, char **argv)
 
     assert(ensemble_booster);
 
-    size_t num_models = ensemble_booster->boost(output_stream);
+    size_t num_models = ensemble_booster->boost(log_stream);
 
     Ensemble model = ensemble_booster->get_ensemble();
     // output_stream << "model" << std::endl << model;
 
-    std::cout << std::endl << "-----------------------" << std::endl;
-    output_stream << std::endl << "-----------------------" << std::endl;
+    log_stream << std::endl << "-----------------------" << std::endl;
 
     EvaluateLoss score;
 
@@ -343,12 +332,9 @@ int main(int argc, char **argv)
         double train_err;
         score.binary_loss(train_predictions, labels, train_loss, train_err);
 
-        std::cout << "Evaluated " << train_predictions.dim << " predictions" << std::endl;
-        std::cout << "training error: " << train_err*100 << "% (" <<  100 - train_err*100 << " %)" << std::endl;
-        std::cout << std::endl << "-----------------------" << std::endl;
-
-        output_stream << "training error: " << train_err*100 << "%" << std::endl;
-        output_stream << std::endl << "-----------------------" << std::endl;
+        log_stream << "Evaluated " << train_predictions.dim << " predictions" << std::endl;
+        log_stream << "training error: " << train_err*100 << "% (accuracy " <<  100 - train_err*100 << " %)" << std::endl;
+        log_stream << std::endl << "-----------------------" << std::endl;
     }
 
     // get test error --
@@ -368,54 +354,45 @@ int main(int argc, char **argv)
         double test_err;
         score.binary_loss(test_predictions, test_labels, test_loss, test_err);
 
-        std::cout << "test error: " << test_err*100 << "% (" <<  100 - test_err*100 << " %)" << std::endl;
-        std::cout << std::endl << "-----------------------" << std::endl;
-
-        output_stream << "test error: " << test_err*100 << "%" << std::endl;
-        output_stream << std::endl << "-----------------------" << std::endl;
-
+        log_stream << "test error: " << test_err*100 << "% (accuracy " <<  100 - test_err*100 << " %)" << std::endl;
+        log_stream << std::endl << "-----------------------" << std::endl;
     }
 
     // get validation error --
-    std::vector<SparseVector> valid_data;
+    std::vector<SparseVector> validation_data;
     std::vector<int> valid_labels;
     {
         if(valid_file != "no_valid")
         {
-            svm_reader.readlibSVM_transpose(valid_file, valid_data, valid_labels);
+            svm_reader.readlibSVM_transpose(valid_file, validation_data, valid_labels);
 
             // backfill
-            while(valid_data.size() < data.size())
+            while(validation_data.size() < data.size())
             {
                 SparseVector empty(data[0].dim,1);
-                valid_data.push_back(empty);
+                validation_data.push_back(empty);
             }
             int valid_loss;
             double valid_err;
-            DenseVector validpred = model.predict(valid_data);
-            score.binary_loss(validpred,valid_labels, valid_loss, valid_err);
+            const DenseVector validation_predictions = model.predict(validation_data);
+            score.binary_loss(validation_predictions,valid_labels, valid_loss, valid_err);
 
-            std::cout << "validation error: " << valid_err*100 << "% (" <<  100 - valid_err*100 << " %)" << std::endl;
-            std::cout << std::endl << "-----------------------" << std::endl;
-
-            output_stream << "validation error: " << valid_err*100 << "%" << std::endl;
-            output_stream << std::endl << "-----------------------" << std::endl;
+            log_stream << "validation error: " << valid_err*100 << "% (accuracy " <<  100 - valid_err*100 << " %)" << std::endl;
+            log_stream << std::endl << "-----------------------" << std::endl;
         }
-        output_stream.close();
 
     }
 
     // get generalization error per iteration --
     {
-        std::ifstream in;
-        in.open(output_file.c_str());
-        if(!in.good())
+        std::ifstream input_stream;
+        input_stream.open(log_filepath.c_str());
+        if(not input_stream.good())
         {
             std::stringstream os;
-            os <<"Cannot open data file : " << output_file << std::endl;
+            os <<"Cannot open data file : " << log_filepath << std::endl;
             throw std::invalid_argument(os.str());
         }
-
 
 
         std::string s;
@@ -425,49 +402,50 @@ int main(int argc, char **argv)
         int val_loss;
         double val_err;
 
-        std::vector<double> gen_error(num_models);
-        std::vector<double> val_error(num_models);
+        std::vector<double> test_data_error(num_models);
+        std::vector<double> validation_data_error(num_models);
 
 
         for(size_t i = 0; i < num_models; i++)
         {
             Ensemble gen_model;
-            in >> gen_model;
+            input_stream >> gen_model;
             // get gen error per iteration
-            DenseVector genpred = gen_model.predict(test_data);
-            score.binary_loss(genpred, test_labels, gen_loss, gen_err);
-            gen_error[i] = gen_err;
+            DenseVector test_data_prediction = gen_model.predict(test_data);
+            score.binary_loss(test_data_prediction, test_labels, gen_loss, gen_err);
+            test_data_error[i] = gen_err;
             // get valid error per iteration
-            DenseVector valpred = gen_model.predict(valid_data);
-            score.binary_loss(valpred, valid_labels, val_loss, val_err);
-            val_error[i] = val_err;
+            DenseVector validation_data_prediction = gen_model.predict(validation_data);
+            score.binary_loss(validation_data_prediction, valid_labels, val_loss, val_err);
+            validation_data_error[i] = val_err;
         }
-        in.close();
+        input_stream.close();
 
-        // apepend validation and generalization error per iter to output file
-        output_stream.open(output_file.c_str(),std::ofstream::app);
-        if(!output_stream.good()) {
+        // append validation and generalization error per iter to output file
+        /*log_stream.open(log_filepath.c_str(), std::ofstream::app);
+        if(not log_stream.good()) {
             std::stringstream os;
-            os <<"Cannot open data file : " << output_file << std::endl;
+            os <<"Cannot open data file : " << log_filepath << std::endl;
             throw std::invalid_argument(os.str());
-        }
+        }*/
 
-        output_stream << "val iter ";
-        for(size_t i = 0; i < num_models; i++){
-            output_stream << val_error[i] << " ";
-        }
-        output_stream << std::endl;
-
-        output_stream << "generalization iter ";
+        log_stream << "validation data error for each N? iterations: ";
         for(size_t i = 0; i < num_models; i++)
         {
-            output_stream << gen_error[i] << " ";
+            log_stream << validation_data_error[i] << " ";
         }
-        output_stream << std::endl;
-        output_stream.close();
+        log_stream << std::endl;
 
+        log_stream << "test data error for each N? iterations: ";
+        for(size_t i = 0; i < num_models; i++)
+        {
+            log_stream << test_data_error[i] << " ";
+        }
+        log_stream << std::endl;
 
     }
+
+    log_stream.close();
 
     // FIXME should use smart pointers
     if(solver)
@@ -480,5 +458,8 @@ int main(int argc, char **argv)
         delete oracle;
     }
 
-    return 0;
+
+    log_stream << "End of game. Have a nice day!" << std::endl;
+
+    return EXIT_SUCCESS;
 }

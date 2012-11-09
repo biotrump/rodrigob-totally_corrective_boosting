@@ -28,6 +28,7 @@ namespace Optimizer
 }
 
 
+/// These are optimizers for the ERLPBoost problem (only)
 class AbstractOptimizer
 {
 

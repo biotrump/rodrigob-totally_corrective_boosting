@@ -2,6 +2,8 @@
 #include "ErlpBoost.hpp"
 #include "math/vector_operations.hpp"
 
+
+#include <stdexcept>
 #include <iostream>
 #include <cmath>
 
@@ -17,7 +19,7 @@ ErlpBoost::ErlpBoost(AbstractOracle * const oracle_,
                      const bool binary_,
                      AbstractOptimizer * const solver_)
     : AbstractBooster(oracle_, num_data_points, max_iterations),
-      found(false),
+      new_weak_learner_was_already_in_model(false),
       binary(binary_),
       minPt1dt1(-1.0), minPqdq1(1.0),
       epsilon(epsilon_), nu(nu_), solver(solver_)
@@ -48,7 +50,7 @@ ErlpBoost::ErlpBoost(AbstractOracle * const oracle,
                      const bool binary_,
                      AbstractOptimizer * const solver_)
     : AbstractBooster(oracle, num_data_points, max_iterations),
-      found(false),
+      new_weak_learner_was_already_in_model(false),
       binary(binary_), minPt1dt1(-1.0), minPqdq1(1.0), epsilon(eps_),
       nu(nu_), eta(eta_), solver(solver_)
 {
@@ -69,17 +71,17 @@ ErlpBoost::~ErlpBoost()
 void ErlpBoost::update_linear_ensemble(const AbstractWeakLearner& weak_learner)
 {
     WeightedWeakLearner weighted_weak_learner(&weak_learner, 0.0);
-    found = model.add(weighted_weak_learner);
+    new_weak_learner_was_already_in_model = model.add(weighted_weak_learner);
     return;
 }
 
 
-bool ErlpBoost::stopping_criterion(std::ostream& os)
+bool ErlpBoost::stopping_criterion(std::ostream& log_stream)
 {
-    std::cout << "min of Obj Values : " << minPqdq1 << std::endl;
-    std::cout << "min Lower Bound : " << minPt1dt1 << std::endl;
-    std::cout << "epsilon gap: " <<  minPqdq1 - minPt1dt1 << std::endl;
-    os << "epsilon gap: " <<  minPqdq1 - minPt1dt1 << std::endl;
+    log_stream << "min of Obj Values : " << minPqdq1 << std::endl;
+    log_stream << "min Lower Bound : " << minPt1dt1 << std::endl;
+    log_stream << "epsilon gap: " <<  minPqdq1 - minPt1dt1 << std::endl;
+
     return (minPqdq1 <=  minPt1dt1 + epsilon/2.0);
 }
 
@@ -111,7 +113,7 @@ void ErlpBoost::update_weights(const AbstractWeakLearner& weak_learner)
     // The predictions are already pre-multiplied with the labels already
     // in the weak learner
 
-    if(!found)
+    if(not new_weak_learner_was_already_in_model)
     {
         // need to push into the solver
         const SparseVector &prediction = weak_learner.get_prediction();
@@ -120,7 +122,10 @@ void ErlpBoost::update_weights(const AbstractWeakLearner& weak_learner)
 
     // Call the solver
     const int info = solver->solve();
-    assert(!info);
+    if(info != 0)
+    {
+        throw std::runtime_error("Something went wrong inside the solver... sorry.");
+    }
 
     // We get back the distribution and max edge for free.
     // Only need to read wts back

@@ -35,8 +35,8 @@ DecisionStump::DecisionStump(const std::vector<SparseVector>& data,
 
 DecisionStump::~DecisionStump()
 {
-    std::cout << "Total time spent in weak learner: "
-              << timer.total_cpu << std::endl;
+    std::cout << "Total time spent in the DecisionStump weak learner (aka the oracle): "
+              << timer.total_cpu << " seconds" << std::endl;
     return;
 }
 
@@ -56,7 +56,9 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
     // compute the initial edge for a hypothesis
     // that always predicts 1
     for(size_t i = 0; i < labels.size(); i++)
+    {
         init_edge += dist.val[i]*labels[i];
+    }
 
     for(size_t i = 0; i < size; i++){
         double tmp_threshold;
@@ -90,14 +92,19 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
     }
 
     double edge = 0.0; // just for checking that we're thresholding well
-    for(size_t i = 0; i < result.dim; i++){
+    for(size_t i = 0; i < result.dim; i++)
+    {
 
         // threshold prediction
         if((ge and (result.val[i] >= best_threshold)) or
-                (!ge and (result.val[i] <= best_threshold)))
+                ((not ge) and (result.val[i] <= best_threshold)))
+        {
             result.val[i] = 1.0;
+        }
         else
+        {
             result.val[i] = -1.0;
+        }
 
         // multiply by label
         result.val[i] *= labels[i];
