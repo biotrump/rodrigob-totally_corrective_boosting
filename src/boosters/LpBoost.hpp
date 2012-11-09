@@ -13,23 +13,24 @@ namespace totally_corrective_boosting
 {
 
 /// Derived class. Implements LPBoost
-class LpBoost: public AbstractBooster{
+class LpBoost: public AbstractBooster
+{
   
-private:
+protected:
   
-  // minPt1dt1 contains the minimum of the piecewise linear lower bound:
-  // P^{t-1}(d^{t-1})
+  /// minPt1dt1 contains the minimum of the piecewise linear lower bound:
+  /// P^{t-1}(d^{t-1})
   double minPt1dt1;
   
-  // minpqdq1 contains the minimum function value seen so far:
-  // min_{t} P^{q}(d^{q-1})
+  /// minpqdq1 contains the minimum function value seen so far:
+  /// min_{t} P^{q}(d^{q-1})
   double minPqdq1;
 
-  // Stopping criterion 
-  double eps;
+  /// Stopping criterion
+  const double epsilon;
   
-  // nu for softboost 
-  double nu;
+  /// nu for softboost
+  const double nu;
   
   // solver
   ClpSimplex solver;
@@ -46,11 +47,11 @@ protected:
   
 public:
 
-  LpBoost(AbstractOracle* &oracle,
-           const int& num_data_points,
-           const int& max_iterations,
-           const double& eps,
-           const double& nu);
+  LpBoost(AbstractOracle* oracle,
+           const int num_data_points,
+           const int max_iterations,
+           const double epsilon,
+           const double nu);
   ~LpBoost(void);
   
 };

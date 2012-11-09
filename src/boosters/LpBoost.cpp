@@ -9,41 +9,42 @@
 namespace totally_corrective_boosting
 {
 
-LpBoost::LpBoost(AbstractOracle* &oracle,
-                 const int& num_pt,
-                 const int& max_iter,
-                 const double& eps,
-                 const double& nu):
-    AbstractBooster(oracle, num_pt, max_iter), minPt1dt1(-1.0), minPqdq1(1.0), eps(eps), nu(nu){
+LpBoost::LpBoost(AbstractOracle *oracle,
+                 const int num_data_points,
+                 const int max_iterations,
+                 const double epsilon_,
+                 const double nu_):
+    AbstractBooster(oracle, num_data_points, max_iterations), minPt1dt1(-1.0), minPqdq1(1.0), epsilon(epsilon_), nu(nu_)
+{
 
     solver.setLogLevel(0);
-    solver.resize(0, 1+num_pt);
+    solver.resize(0, 1+num_data_points);
 
     solver.setObjCoeff(0, 1.0);
-    for(int i=0; i<num_pt; i++)
+    for(int i=0; i<num_data_points; i++)
         solver.setObjCoeff(i+1, 0.0);
 
     // set bounds for \xi
     solver.setColumnBounds(0, -COIN_DBL_MAX, COIN_DBL_MAX);
 
     // set bounds for d_i
-    for (int i=0; i<num_pt; i++)
+    for (int i=0; i<num_data_points; i++)
+    {
         solver.setColumnBounds(i+1, 0.0, 1.0/nu);
+    }
 
     // add summation to one constraint
-    double* newrow = new double[1+num_pt];
-    int* newrowidx = new int[1+num_pt];
+    std::vector<double> new_row(1+num_data_points);
+    std::vector<int> new_row_index(1+num_data_points);
 
-    newrow[0] = 0;
-    newrowidx[0] = 0;
-    for(int i = 0; i < num_pt; i++){
-        newrow[i+1] = 1.0;
-        newrowidx[i+1] = i+1;
+    new_row[0] = 0;
+    new_row_index[0] = 0;
+    for(int i = 0; i < num_data_points; i++)
+    {
+        new_row[i+1] = 1.0;
+        new_row_index[i+1] = i+1;
     }
-    solver.addRow(1+num_pt, newrowidx, newrow, 1.0, 1.0);
-
-    delete newrow;
-    delete newrowidx;
+    solver.addRow(1+num_data_points, new_row_index.data(), new_row.data(), 1.0, 1.0);
 
     return;
 }
@@ -62,7 +63,7 @@ void LpBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
 
 bool LpBoost::stopping_criterion(std::ostream& os){
     os << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
-    return(minPqdq1 <=  minPt1dt1 + eps/2.0);
+    return(minPqdq1 <=  minPt1dt1 + epsilon/2.0);
 }
 
 
@@ -84,20 +85,20 @@ void LpBoost::update_weights(const AbstractWeakLearner &wl){
     //           << "Number of rows: " << solver.getNumRows() << std::endl
     //           << "Number of cols: " << solver.getNumCols() << std::endl;
 
-    double* newrow = new double[1+pred.nnz];
-    int* newrowidx = new int[1+pred.nnz];
+    double* new_row = new double[1+pred.nnz];
+    int* new_row_index = new int[1+pred.nnz];
 
-    newrow[0] = -1;
-    newrowidx[0] = 0;
+    new_row[0] = -1;
+    new_row_index[0] = 0;
     for(size_t i = 0; i < pred.nnz; i++){
-        newrow[i+1] = pred.val[i];
-        newrowidx[i+1] = pred.idx[i]+1;
-        // std::cout << "newrow[" << i+1 << "]: " << newrow[i+1] << "  " << newrowidx[i+1] << std::endl;
+        new_row[i+1] = pred.val[i];
+        new_row_index[i+1] = pred.index[i]+1;
+        // std::cout << "new_row[" << i+1 << "]: " << new_row[i+1] << "  " << new_row_index[i+1] << std::endl;
     }
-    solver.addRow(1+pred.nnz, newrowidx, newrow, -COIN_DBL_MAX, 0);
+    solver.addRow(1+pred.nnz, new_row_index, new_row, -COIN_DBL_MAX, 0);
 
-    delete newrow;
-    delete newrowidx;
+    delete new_row;
+    delete new_row_index;
 
     // solve in the primal
     solver.primal();

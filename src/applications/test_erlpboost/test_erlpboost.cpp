@@ -288,7 +288,7 @@ int main(int argc, char **argv)
         double nu = 0;
         config.readInto(nu, "nu", 1.0);
 #ifdef USE_CLP
-        eb = new LpBoost(oracle, labels.size(), max_iter, eps, nu);
+        ensemble_booster = new LpBoost(oracle, labels.size(), max_iterations, epsilon, nu);
 #else
         std::stringstream os;
         os << "You must compile with COIN-OR LP solver support enabled to use LPBoost"
@@ -299,7 +299,7 @@ int main(int argc, char **argv)
     else if(booster_type == "AdaBoost")
     {
         std::cout << "Running adaboost" << std::endl;
-        ensemble_booster = new AdaBoost(oracle, labels.size(), max_iterations,250);
+        ensemble_booster = new AdaBoost(oracle, labels.size(), max_iterations, 250);
     }
     else if(booster_type == "Corrective")
     {
