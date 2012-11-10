@@ -5,6 +5,7 @@
 
 #include <limits>
 #include <cmath>
+#include <iostream>
 
 namespace totally_corrective_boosting
 {

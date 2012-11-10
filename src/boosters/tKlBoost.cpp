@@ -51,4 +51,32 @@ double tKlBoost::compute_eta(const int num_data_points, const double epsilon, co
     return eta;
 }
 
+
+
+void tKlBoost::_update_examples_distribution(const AbstractWeakLearner &wl)
+{
+    return update_examples_distribution(wl);
+}
+
+
+void tKlBoost::_update_linear_ensemble(const AbstractWeakLearner &wl)
+{
+    return update_linear_ensemble(wl);
+}
+
+
+bool tKlBoost::_stopping_criterion(std::ostream &log_stream)
+{
+    return stopping_criterion(log_stream);
+}
+
+
+void tKlBoost::_update_stopping_criterion(const AbstractWeakLearner &wl)
+{
+    return update_stopping_criterion(wl);
+}
+
+
+
+
 } // end of namespace totally_corrective_boosting

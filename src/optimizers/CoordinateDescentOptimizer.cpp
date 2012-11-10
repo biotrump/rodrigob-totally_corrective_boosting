@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <limits>
 #include <stdexcept>
+#include <iostream>
 
 namespace totally_corrective_boosting
 {

@@ -228,7 +228,9 @@ double dot(const DenseVector& a, const DenseVector& b)
     assert(a.dim == b.dim);
     double val = 0.0;
     for(size_t i = 0; i < a.dim; i++)
+    {
         val += b.val[i]*a.val[i];
+    }
     return val;
 }
 
@@ -237,7 +239,6 @@ double dot(const DenseVector& a, const DenseVector& b)
 // We will allocate memory for the result.
 // To explicitly encourage the callers to deallocate
 // we will assert that res.index and res.val are NULL
-
 void hadamard(const SparseVector& a, const SparseVector& b, SparseVector& res)
 {
 
@@ -500,117 +501,6 @@ double binary_relative_entropy(const DenseVector& d, const double& nu)
             ent += ((1/nu) - d.val[i])*log(((1/nu) - d.val[i])/((1/nu)-(1.0/d.dim)));
     }
     return ent;
-}
-
-std::ostream& operator << (std::ostream& os, const DenseVector& d)
-{
-    for(size_t i = 0; i < d.dim; i++)
-    {
-        os << "[" << i << "] " << d.val[i];
-        if( i != (d.dim -1))
-            os << "  ";
-    }
-    os << std::endl;
-    return os;
-}
-
-std::ostream& operator << (std::ostream& os, const DenseIntegerVector& d)
-{
-    for(size_t i = 0; i < d.dim; i++)
-    {
-        os << "[" << i << "] " << d.val[i];
-        if( i != (d.dim -1))
-            os << "  ";
-    }
-    os << std::endl;
-    return os;
-}
-
-std::ostream& operator << (std::ostream& os, const SparseVector& s)
-{
-    os << "(" << s.dim << ")" << " ";
-    for(size_t i = 0; i < s.nnz; i++)
-    {
-        os << "[" << s.index[i] << "]  "<< s.val[i];
-        if (i != (s.nnz-1))
-            os << "  ";
-    }
-    os << std::endl;
-    return os;
-}
-
-std::istream& operator >> (std::istream& in, SparseVector& s)
-{
-    try
-    {
-
-        std::vector<int> indices;
-        std::vector<double> vals;
-        char v;
-        int index;
-        int dim;
-
-        // get the dimension
-        in >> v;
-        if( v != '(')
-            throw std::string("must start with (");
-        in >> dim;
-        in >> v;
-        if( v != ')')
-            throw std::string("must end with )");
-
-
-        // get all of the index,val pairs of the sparse vector
-        while(in.peek()!= '\n')
-        {
-
-
-            in >> v;
-            if( v != '[')
-                throw std::string("must start with [");
-            in >> index;
-            in >> v;
-            if( v != ']')
-                throw std::string("must end with ]");
-
-            double wt;
-            in >> wt;
-
-            indices.push_back(index);
-            vals.push_back(wt);
-
-        }
-
-        int nnz = (int)indices.size();
-        SparseVector tmp(dim,nnz);
-        for(int i = 0; i < nnz; i++)
-        {
-            tmp.val[i] = vals[i];
-            tmp.index[i] = indices[i];
-        }
-        s = tmp;
-    }
-    catch (std::string st)
-    {
-        std::cout << st << std::endl;
-    }
-
-    return in;
-}
-
-
-bool operator == (const SparseVector& s1, const SparseVector& s2)
-{
-    return (s1.dim == s2.dim) and
-           (s1.nnz == s2.nnz) and
-           std::equal(s1.val, s1.val+s1.nnz, s2.val) and
-           std::equal(s1.index, s1.index+s1.nnz, s2.index);
-}
-
-bool operator == (const DenseVector& d1, const DenseVector& d2)
-{
-    return (d1.dim == d2.dim) and
-           std::equal(d1.val, d1.val+d1.dim, d2.val);
 }
 
 } // end of namespace totally_corrective_boosting

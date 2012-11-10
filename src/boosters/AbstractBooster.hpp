@@ -14,7 +14,8 @@ namespace totally_corrective_boosting
 /// Base Class to encapsulate a boosting algorithm. Different
 /// implementations have to implement the virtual methods in this class
 /// to specify a full fledged boosting algorithm.
-class AbstractBooster {
+class AbstractBooster
+{
 
 protected:
     

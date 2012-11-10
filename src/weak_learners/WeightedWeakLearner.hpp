@@ -3,7 +3,10 @@
 
 #include "AbstractWeakLearner.hpp"
 
-namespace totally_corrective_boosting {
+#include <string>
+
+namespace totally_corrective_boosting
+{
 
 
 class WeightedWeakLearner

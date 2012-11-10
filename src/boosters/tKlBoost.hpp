@@ -33,6 +33,17 @@ public:
     static double compute_eta(const int num_data_points,
                               const double epsilon,
                               const double capital_dee);
+
+public:
+
+    /// Python style "back door" access, for easier experimental integration in foreign software
+    /// @{
+    void _update_examples_distribution(const AbstractWeakLearner& wl);
+    void _update_linear_ensemble(const AbstractWeakLearner& wl);
+    bool _stopping_criterion(std::ostream& log_stream);
+    void _update_stopping_criterion(const AbstractWeakLearner& wl);
+    /// @}
+
 };
 
 } // end of namespace totally_corrective_boosting
