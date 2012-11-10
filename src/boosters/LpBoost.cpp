@@ -14,7 +14,8 @@ LpBoost::LpBoost(AbstractOracle *oracle,
                  const int max_iterations,
                  const double epsilon_,
                  const double nu_):
-    AbstractBooster(oracle, num_data_points, max_iterations), minPt1dt1(-1.0), minPqdq1(1.0), epsilon(epsilon_), nu(nu_)
+    AbstractBooster(oracle, num_data_points, max_iterations),
+    minPt1dt1(-1.0), minPqdq1(1.0), epsilon(epsilon_), nu(nu_)
 {
 
     solver.setLogLevel(0);
@@ -49,32 +50,42 @@ LpBoost::LpBoost(AbstractOracle *oracle,
     return;
 }
 
+
 LpBoost::~LpBoost()
 {
     // nothing to do here
     return;
 }
 
-void LpBoost::update_linear_ensemble(const AbstractWeakLearner &wl){
+
+void LpBoost::update_linear_ensemble(const AbstractWeakLearner &wl)
+{
     WeightedWeakLearner wwl(&wl, 1.0);
     model.add(wwl);
     return;
 }
 
-bool LpBoost::stopping_criterion(std::ostream& os){
+
+bool LpBoost::stopping_criterion(std::ostream& os)
+{
     os << "epsilon gap: " <<  minPqdq1 - minPt1dt1<< std::endl;
     return(minPqdq1 <=  minPt1dt1 + epsilon/2.0);
 }
 
 
-void LpBoost::update_stopping_criterion(const AbstractWeakLearner &wl){
-
-    double gamma = wl.get_edge();
-    if(gamma < minPqdq1) minPqdq1 = gamma;
+void LpBoost::update_stopping_criterion(const AbstractWeakLearner &wl)
+{
+    const double gamma = wl.get_edge();
+    if(gamma < minPqdq1)
+    {
+        minPqdq1 = gamma;
+    }
     return;
 }
 
-void LpBoost::update_weights(const AbstractWeakLearner &wl){
+
+void LpBoost::update_examples_distribution(const AbstractWeakLearner &wl)
+{
 
     // The predictions are already pre-multiplied with the labels already
     // in the weak learner
@@ -90,7 +101,8 @@ void LpBoost::update_weights(const AbstractWeakLearner &wl){
 
     new_row[0] = -1;
     new_row_index[0] = 0;
-    for(size_t i = 0; i < pred.nnz; i++){
+    for(size_t i = 0; i < pred.nnz; i++)
+    {
         new_row[i+1] = pred.val[i];
         new_row_index[i+1] = pred.index[i]+1;
         // std::cout << "new_row[" << i+1 << "]: " << new_row[i+1] << "  " << new_row_index[i+1] << std::endl;
@@ -121,7 +133,9 @@ void LpBoost::update_weights(const AbstractWeakLearner &wl){
 
     DenseVector wtvec(model.size());
     for(size_t i = 0; i < wtvec.dim; i++)
+    {
         wtvec.val[i] = -wt[i+1];
+    }
 
     model.set_weights(wtvec);
 
