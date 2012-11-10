@@ -25,7 +25,7 @@ AdaBoost::~AdaBoost()
 }
 
 
-void AdaBoost::update_weights(const AbstractWeakLearner& wl)
+void AdaBoost::update_examples_distribution(const AbstractWeakLearner& wl)
 {
 
     SparseVector pred = wl.get_prediction();

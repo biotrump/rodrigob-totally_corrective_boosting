@@ -58,14 +58,14 @@ def main():
     data_labels_patterns = []
     for i in splits_indices:
         data_labels_pattern = \
-            ("*_train_data_%i.asc" %i, "*_train_labels_%i.asc" %i, "_train_%i.lib_svm.txt" %i)
+            ("*_train_data_%i.asc" %i, "*_train_labels_%i.asc" %i, "_train_%i.libsvm.txt" %i)
         data_labels_patterns.append( data_labels_pattern )    
 
     # two for loop make the final output more readable 
     # (all train files, then test files)        
     for i in splits_indices:        
         data_labels_pattern = \
-            ("*_test_data_%i.asc" %i, "*_test_labels_%i.asc" %i, "_test_%i.lib_svm.txt" %i)
+            ("*_test_data_%i.asc" %i, "*_test_labels_%i.asc" %i, "_test_%i.libsvm.txt" %i)
         data_labels_patterns.append( data_labels_pattern )    
         
     for data_labels_pattern in data_labels_patterns:

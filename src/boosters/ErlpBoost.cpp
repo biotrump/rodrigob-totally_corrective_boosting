@@ -107,7 +107,7 @@ void ErlpBoost::update_stopping_criterion(const AbstractWeakLearner& wl)
 }
 
 
-void ErlpBoost::update_weights(const AbstractWeakLearner& weak_learner)
+void ErlpBoost::update_examples_distribution(const AbstractWeakLearner& weak_learner)
 {
 
     // The predictions are already pre-multiplied with the labels already

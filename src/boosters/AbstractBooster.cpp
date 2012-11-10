@@ -61,6 +61,10 @@ AbstractBooster::~AbstractBooster()
 
 size_t AbstractBooster::boost(std::ostream& log_stream)
 {
+
+    //const bool dump_the_models = true;
+    const bool dump_the_models = false;
+
     int i = 0;
     size_t num_models = 0;
     for(i = 0; i < max_iterations; i++)
@@ -73,7 +77,7 @@ size_t AbstractBooster::boost(std::ostream& log_stream)
             break;
         }
         update_linear_ensemble(*new_weak_learner);
-        update_weights(*new_weak_learner);
+        update_examples_distribution(*new_weak_learner);
         timer.stop();
 
         if(((i+1)%display_frequency)==0)
@@ -88,9 +92,13 @@ size_t AbstractBooster::boost(std::ostream& log_stream)
             {
                 log_stream << "Cumulative time: " << timer.total_cpu << " seconds" << std::endl;
             }
-            log_stream << model << std::endl;
 
-            num_models+=1;
+            if(dump_the_models)
+            {
+                log_stream << model << std::endl;
+                num_models+=1;
+            }
+
             if(examples_distribution.dim < 20)
             {
                 log_stream << "Examples distribution: " << examples_distribution << std::endl;
@@ -100,34 +108,37 @@ size_t AbstractBooster::boost(std::ostream& log_stream)
     } // end of "for each boosting iteration"
 
 
-    int num_iter;
+    if( (i%display_frequency) !=0)
+    {
+        if(dump_the_models)
+        {
+            log_stream << model << std::endl;
+            num_models+=1;
+        }
+
+        log_stream << "Cumulative Time: " << timer.total_cpu << " seconds" << std::endl;
+    }
+
+
+    log_stream << std::endl << "-----------------------" << std::endl;
+
     if(i == max_iterations)
     {
         log_stream << "Max iterations exceeded!" << std::endl;
-        num_iter = max_iterations;
     }
     else
     {
         log_stream << "Finished in " << i << " iterations " << std::endl;
-        num_iter = i;
     }
-
-    if( (num_iter%display_frequency) !=0)
-    {
-        log_stream << model << std::endl;
-        log_stream << "Cumulative Time: " << timer.total_cpu<< std::endl;
-        num_models++;
-    }
-
 
     log_stream << "Total CPU time expended: "
-                  << timer.total_cpu << " seconds" << std::endl;
+               << timer.total_cpu << " seconds" << std::endl;
     log_stream << "Maximum iteration time: "
-                  << timer.max_cpu << " seconds" << std::endl;
+               << timer.max_cpu << " seconds" << std::endl;
     log_stream << "Minimum iteration time: "
-                  << timer.min_cpu << " seconds" << std::endl;
+               << timer.min_cpu << " seconds" << std::endl;
     log_stream << "Average time per iteration: "
-                  << timer.average_cpu() << " seconds" << std::endl;
+               << timer.average_cpu() << " seconds" << std::endl;
     //os << model;
     return num_models;
 }

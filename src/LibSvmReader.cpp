@@ -93,12 +93,12 @@ int LibSVMReader::readlibSVM(const std::string& filename,
         data_pt.val = new double[data_pt.nnz];
         data_pt.index = new size_t[data_pt.nnz];
         size_t i =0;
-        for (dbl_itr it = pt_val.begin(); it!=pt_val.end(); it++, i++)
+        for (dbl_itr it = pt_val.begin(); it!=pt_val.end(); ++it, i++)
         {
             data_pt.val[i] = *it;
         }
         i = 0;
-        for (uint_itr it = pt_index.begin(); it!=pt_index.end(); it++, i++)
+        for (uint_itr it = pt_index.begin(); it!=pt_index.end(); ++it, i++)
         {
             data_pt.index[i] = *it;
         }
@@ -116,7 +116,7 @@ int LibSVMReader::readlibSVM(const std::string& filename,
     std::cout << std::endl << "-----------------------" << std::endl;
 
     // adjust the dimensions
-    for (svec_itr it = data.begin(); it!=data.end(); it++)
+    for (svec_itr it = data.begin(); it!=data.end(); ++it)
     {
         (*it).dim = max_index;
     }
@@ -430,7 +430,7 @@ int LibSVMReader::readlibSVM_transpose_fast(const std::string& filename,
 
     // iterate over the hypotheses
     size_t i = 0;
-    for(it = tmpmat.begin(); it != tmpmat.end(); it++,i++)
+    for(it = tmpmat.begin(); it != tmpmat.end(); ++it,i++)
     {
         // create a hypothesis
         SparseVector hyp;

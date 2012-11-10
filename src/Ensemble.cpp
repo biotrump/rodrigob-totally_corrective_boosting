@@ -29,7 +29,7 @@ double Ensemble::predict(const DenseVector& x) const
 {
 
     double result = 0.0;
-    for(wwl_citr it = ensemble.begin(); it != ensemble.end(); it++)
+    for(wwl_citr it = ensemble.begin(); it != ensemble.end(); ++it)
         result += (*it).weighted_predict(x);
 
     // for(size_t i = 0; i < ensemble.size(); i++){
@@ -47,7 +47,7 @@ double Ensemble::predict(const SparseVector& x) const
 
 
     double result = 0.0;
-    for(wwl_citr it = ensemble.begin(); it != ensemble.end(); it++)
+    for(wwl_citr it = ensemble.begin(); it != ensemble.end(); ++it)
         result += (*it).weighted_predict(x);
 
     // for(size_t i = 0; i < ensemble.size(); i++){
@@ -64,9 +64,14 @@ double Ensemble::predict(const SparseVector& x) const
 DenseVector Ensemble::predict(const std::vector<SparseVector>& data) const
 {
 
+    if(data.empty())
+    {
+        return  DenseVector(); // empty input, empty output
+    }
+
     DenseVector result(data[0].dim);
 
-    for(wwl_citr it = ensemble.begin(); it != ensemble.end(); it++)
+    for(wwl_citr it = ensemble.begin(); it != ensemble.end(); ++it)
     {
         DenseVector pred = (*it).weighted_predict(data);
         axpy(1.0, result, pred, result);
@@ -89,7 +94,7 @@ DenseVector Ensemble::predict(const std::vector<SparseVector>& data) const
 // // side effect: if true, then index contains the index of the wl
 // bool CEnsemble::find_wl(const CWeakLearner* wl, size_t& index){
 //   size_t tmpindex = 0;
-//   for(wwl_itr it = ensemble.begin(); it != ensemble.end(); it++,tmpindex++){
+//   for(wwl_itr it = ensemble.begin(); it != ensemble.end(); ++it,tmpindex++){
 //     bool found = it->wl_equal(wl);
 //     if( found ){
 //       index = tmpindex;
@@ -117,7 +122,7 @@ void Ensemble::set_weights(const DenseVector& wts)
     assert(wts.dim >= ensemble.size());
     wwl_itr it = ensemble.begin();
     double* val = wts.val;
-    for(; it != ensemble.end(); it++, val++)
+    for(; it != ensemble.end(); ++it, val++)
     {
         it->set_weight(*val);
     }
@@ -126,7 +131,7 @@ void Ensemble::set_weights(const DenseVector& wts)
 
 void Ensemble::scale_weights(const double& scale)
 {
-    for(wwl_itr it = ensemble.begin(); it != ensemble.end(); it++)
+    for(wwl_itr it = ensemble.begin(); it != ensemble.end(); ++it)
     {
         it->scale_weight(scale);
     }
@@ -185,7 +190,7 @@ std::ostream& operator << (std::ostream& os, const Ensemble& e)
     }
     os << "TYPEWL " << typ << std::endl;
     os << "NUMWL " << e.ensemble.size() << std::endl;
-    for (wwl_citr it = e.ensemble.begin(); it != e.ensemble.end(); it++)
+    for (wwl_citr it = e.ensemble.begin(); it != e.ensemble.end(); ++it)
         os << *it;
     os << "MODEL END" << std::endl;
     return os;

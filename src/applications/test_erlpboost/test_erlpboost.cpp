@@ -41,7 +41,8 @@ using namespace totally_corrective_boosting;
 AbstractOracle *new_oracle_instance(const ConfigFile &config,
                                     const std::vector<SparseVector> &data,
                                     const std::vector<int> &labels,
-                                    const bool transposed)
+                                    const bool transposed,
+                                    std::ostream &log_stream = std::cout)
 {
     bool reflexive = false;
     config.readInto(reflexive, "reflexive");
@@ -49,7 +50,8 @@ AbstractOracle *new_oracle_instance(const ConfigFile &config,
     std::string oracle_type;
     config.readInto(oracle_type, "oracle_type");
 
-    printf("Using oracle_type == %s\n", oracle_type.c_str());
+    log_stream << "Using oracle_type == " << oracle_type << std::endl;
+
 
     AbstractOracle* oracle = NULL;
 
@@ -81,14 +83,15 @@ AbstractOptimizer* new_optimizer_instance(
         const size_t labels_size,
         const bool transposed,
         const double eta, const double nu, const double epsilon,
-        const bool binary)
+        const bool binary,
+        std::ostream &log_stream = std::cout)
 {
 
 
     std::string optimizer_type;
     config.readInto(optimizer_type, "optimizer_type", std::string("lbfgsb"));
 
-    printf("Using optimizer_type == %s\n", optimizer_type.c_str());
+    log_stream << "Using optimizer_type == " << optimizer_type << std::endl;
 
     AbstractOptimizer* optimizer = NULL;
 
@@ -144,14 +147,14 @@ int main(int argc, char **argv)
 
     ConfigFile config(config_file);
 
-    std::string train_file;
-    config.readInto(train_file, "train_file");
+    std::string train_filepath;
+    config.readInto(train_filepath, "train_file");
 
-    std::string test_file;
-    config.readInto(test_file, "test_file");
+    std::string test_filepath;
+    config.readInto(test_filepath, "test_file");
 
-    std::string valid_file;
-    config.readInto(valid_file, "valid_file", std::string("no_valid"));
+    std::string valid_filepath;
+    config.readInto(valid_filepath, "valid_file", std::string("no_valid"));
 
     std::string log_filepath;
     config.readInto(log_filepath, "output_file");
@@ -184,20 +187,22 @@ int main(int argc, char **argv)
 
     if(transposed)
     {
-        svm_reader.readlibSVM_transpose(train_file, data, labels);
+        svm_reader.readlibSVM_transpose(train_filepath, data, labels);
     }
     else
     {
-        svm_reader.readlibSVM(train_file, data, labels);
+        svm_reader.readlibSVM(train_filepath, data, labels);
     }
 
     // create oracle --
-    AbstractOracle * const oracle = new_oracle_instance(config, data, labels, transposed);
+    AbstractOracle * const oracle = new_oracle_instance(config, data, labels, transposed, log_stream);
 
 
     // create booster --
     std::string booster_type;
     config.readInto(booster_type, "booster_type", std::string("ERLPBoost"));
+
+    log_stream << "Using booster_type == " << booster_type << std::endl;
 
     AbstractOptimizer* solver = NULL;
     AbstractBooster* ensemble_booster = NULL;
@@ -249,10 +254,10 @@ int main(int argc, char **argv)
         log_stream << "eta: " << eta << std::endl << std::endl;
 
         solver = new_optimizer_instance(config,
-                                        labels.size(),
-                                        transposed,
+                                        labels.size(), transposed,
                                         eta, nu, epsilon,
-                                        binary);
+                                        binary,
+                                        log_stream);
 
         if(is_kl_boost)
         {
@@ -341,7 +346,7 @@ int main(int argc, char **argv)
     std::vector<SparseVector> test_data;
     std::vector<int> test_labels;
     {
-        svm_reader.readlibSVM_transpose(test_file, test_data, test_labels);
+        svm_reader.readlibSVM_transpose(test_filepath, test_data, test_labels);
         // backfill
         while(test_data.size() < data.size())
         {
@@ -362,9 +367,9 @@ int main(int argc, char **argv)
     std::vector<SparseVector> validation_data;
     std::vector<int> valid_labels;
     {
-        if(valid_file != "no_valid")
+        if(valid_filepath != "no_valid")
         {
-            svm_reader.readlibSVM_transpose(valid_file, validation_data, valid_labels);
+            svm_reader.readlibSVM_transpose(valid_filepath, validation_data, valid_labels);
 
             // backfill
             while(validation_data.size() < data.size())
@@ -408,14 +413,15 @@ int main(int argc, char **argv)
 
         for(size_t i = 0; i < num_models; i++)
         {
-            Ensemble gen_model;
-            input_stream >> gen_model;
+            Ensemble learned_model;
+            input_stream >> learned_model;
             // get gen error per iteration
-            DenseVector test_data_prediction = gen_model.predict(test_data);
+            DenseVector test_data_prediction = learned_model.predict(test_data);
             score.binary_loss(test_data_prediction, test_labels, gen_loss, gen_err);
             test_data_error[i] = gen_err;
+
             // get valid error per iteration
-            DenseVector validation_data_prediction = gen_model.predict(validation_data);
+            DenseVector validation_data_prediction = learned_model.predict(validation_data);
             score.binary_loss(validation_data_prediction, valid_labels, val_loss, val_err);
             validation_data_error[i] = val_err;
         }

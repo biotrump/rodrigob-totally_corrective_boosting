@@ -53,7 +53,7 @@ CorrectiveBoost::~CorrectiveBoost()
     return;
 }
 
-void CorrectiveBoost::update_weights(const AbstractWeakLearner &wl){
+void CorrectiveBoost::update_examples_distribution(const AbstractWeakLearner &wl){
 
     double exp_max = 0.0;
 

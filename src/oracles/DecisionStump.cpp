@@ -22,7 +22,7 @@ DecisionStump::DecisionStump(const std::vector<SparseVector>& data,
     Timer sort_timer;
     std::vector<SparseVector>::const_iterator it;
     sort_timer.start();
-    for(it = data.begin(); it != data.end(); it++)
+    for(it = data.begin(); it != data.end(); ++it)
     {
         DenseIntegerVector tmp = argsort(*it);
         sorted_data.push_back(tmp);
@@ -336,7 +336,7 @@ DenseIntegerVector DecisionStump::argsort(SparseVector unsorted)
     size_t* resval = new size_t[dim];
 
     size_t j = 0;
-    for(it=pair_vec.begin(); it!=pair_vec.end(); it++,j++)
+    for(it=pair_vec.begin(); it!=pair_vec.end(); ++it,j++)
     {
         resval[j] = it->second;
     }

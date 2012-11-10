@@ -45,7 +45,7 @@ protected:
   virtual void update_linear_ensemble(const AbstractWeakLearner& wl)=0;
 
   /// Update the weights of the examples distribution
-  virtual void update_weights(const AbstractWeakLearner& wl)=0;
+  virtual void update_examples_distribution(const AbstractWeakLearner& wl)=0;
 
   virtual void update_stopping_criterion(const AbstractWeakLearner& wl)=0;
 

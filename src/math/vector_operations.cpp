@@ -32,7 +32,7 @@ void dot(const std::vector<T>& mat, const X& vec, SparseVector& res)
 
     size_t i =0;
     typename std::vector<T>::const_iterator it;
-    for (it = mat.begin(); it!=mat.end(); it++)
+    for (it = mat.begin(); it!=mat.end(); ++it)
     {
         res.val[i] = dot(*it, vec);
         res.index[i] = i;
@@ -79,7 +79,7 @@ void dot(const std::vector<T>& mat, const X& vec, DenseVector& res)
 
     size_t i = 0;
     typename std::vector<T>::const_iterator it;
-    for (it = mat.begin(); it!=mat.end(); it++)
+    for (it = mat.begin(); it!=mat.end(); ++it)
     {
         res.val[i] = dot(*it, vec);
         i++;
@@ -120,7 +120,7 @@ void transpose_dot(const std::vector<T>& mat, const DenseVector& vec, DenseVecto
 
     typename std::vector<T>::const_iterator it;
     double* vec_val;
-    for (it = mat.begin(), vec_val = vec.val; it!=mat.end(); vec_val++, it++)
+    for (it = mat.begin(), vec_val = vec.val; it!=mat.end(); vec_val++, ++it)
         axpy(*vec_val, *it, res, res);
 
     return;

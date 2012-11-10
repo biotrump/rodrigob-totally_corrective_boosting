@@ -43,7 +43,7 @@ protected:
 
 protected:
 
-    void update_weights(const AbstractWeakLearner& wl);
+    void update_examples_distribution(const AbstractWeakLearner& wl);
 
     void update_linear_ensemble(const AbstractWeakLearner& wl);
 
