@@ -27,7 +27,7 @@ protected:
   
 public:
 
-  AdaBoost(AbstractOracle* oracle,
+  AdaBoost(const boost::shared_ptr<AbstractOracle> &oracle,
             const int num_data_points,
             const int max_iterations,
             const int display_frequency);

@@ -7,7 +7,7 @@
 namespace totally_corrective_boosting
 {
 
-AdaBoost::AdaBoost(AbstractOracle *oracle,
+AdaBoost::AdaBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                    const int num_pt,
                    const int max_iter,
                    const int disp_freq)

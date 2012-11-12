@@ -11,14 +11,14 @@
 namespace totally_corrective_boosting
 {
 
-ErlpBoost::ErlpBoost(AbstractOracle * const oracle_,
+ErlpBoost::ErlpBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                      const int num_data_points,
                      const int max_iterations,
                      const double epsilon_,
                      const double nu_,
                      const bool binary_,
-                     AbstractOptimizer * const solver_)
-    : AbstractBooster(oracle_, num_data_points, max_iterations),
+                     const boost::shared_ptr<AbstractOptimizer> &solver_)
+    : AbstractBooster(oracle, num_data_points, max_iterations),
       new_weak_learner_was_already_in_model(false),
       binary(binary_),
       minPt1dt1(-1.0), minPqdq1(1.0),
@@ -41,14 +41,14 @@ ErlpBoost::ErlpBoost(AbstractOracle * const oracle_,
 }
 
 
-ErlpBoost::ErlpBoost(AbstractOracle * const oracle,
+ErlpBoost::ErlpBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                      const int num_data_points,
                      const int max_iterations,
                      const double eps_,
                      const double eta_,
                      const double nu_,
                      const bool binary_,
-                     AbstractOptimizer * const solver_)
+                     const boost::shared_ptr<AbstractOptimizer> &solver_)
     : AbstractBooster(oracle, num_data_points, max_iterations),
       new_weak_learner_was_already_in_model(false),
       binary(binary_), minPt1dt1(-1.0), minPqdq1(1.0), epsilon(eps_),

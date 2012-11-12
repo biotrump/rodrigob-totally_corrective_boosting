@@ -53,7 +53,7 @@ protected:
 
 public:
 
-    CorrectiveBoost(AbstractOracle* oracle,
+    CorrectiveBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                     const int num_data_points,
                     const int max_iterations,
                     const double eps,
@@ -61,7 +61,7 @@ public:
                     const bool linesearch,
                     const int display_frequency);
 
-    CorrectiveBoost(AbstractOracle* oracle,
+    CorrectiveBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                     const int num_data_points,
                     const int max_iterations,
                     const double eps,

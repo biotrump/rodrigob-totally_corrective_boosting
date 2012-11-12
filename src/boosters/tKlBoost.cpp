@@ -5,13 +5,13 @@
 namespace totally_corrective_boosting
 {
 
-tKlBoost::tKlBoost(AbstractOracle *oracle,
+tKlBoost::tKlBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                    const int num_data_points,
                    const int max_iterations,
                    const double epsilon,
                    const double capital_dee,
                    const bool binary,
-                   AbstractOptimizer *solver)
+                   const boost::shared_ptr<AbstractOptimizer> &solver)
     : ErlpBoost(oracle, num_data_points, max_iterations, epsilon,
                 compute_eta(num_data_points, epsilon, capital_dee),
                 compute_nu(capital_dee),

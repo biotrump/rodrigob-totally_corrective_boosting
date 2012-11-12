@@ -9,7 +9,7 @@ namespace totally_corrective_boosting
 {
 
 
-CorrectiveBoost::CorrectiveBoost(AbstractOracle* oracle,
+CorrectiveBoost::CorrectiveBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                                  const int num_pt,
                                  const int max_iter,
                                  const double eps,
@@ -28,7 +28,7 @@ CorrectiveBoost::CorrectiveBoost(AbstractOracle* oracle,
 }
 
 
-CorrectiveBoost::CorrectiveBoost(AbstractOracle* oracle,
+CorrectiveBoost::CorrectiveBoost(const boost::shared_ptr<AbstractOracle> &oracle,
                                  const int num_pt,
                                  const int max_iter,
                                  const double eps,

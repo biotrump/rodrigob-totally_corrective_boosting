@@ -8,7 +8,7 @@ namespace totally_corrective_boosting
 {
 
 
-AbstractBooster::AbstractBooster(AbstractOracle* oracle_,
+AbstractBooster::AbstractBooster(const boost::shared_ptr<AbstractOracle> &oracle_,
                                  const int num_data_points_,
                                  const int max_iterations_)
     : oracle(oracle_), num_data_points(num_data_points_),
@@ -29,7 +29,7 @@ AbstractBooster::AbstractBooster(AbstractOracle* oracle_,
 }
 
 
-AbstractBooster::AbstractBooster(AbstractOracle* oracle_,
+AbstractBooster::AbstractBooster(const boost::shared_ptr<AbstractOracle> &oracle_,
                                  const int num_data_points_,
                                  const int max_iterations_,
                                  const int display_frequency_)

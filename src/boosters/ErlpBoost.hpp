@@ -5,9 +5,10 @@
 #include "weak_learners/AbstractWeakLearner.hpp"
 #include "optimizers/AbstractOptimizer.hpp"
 
+#include <boost/shared_ptr.hpp>
+
 namespace totally_corrective_boosting
 {
-
 
 /// Derived class. Implements ERLPBoost
 class ErlpBoost: public AbstractBooster
@@ -39,7 +40,7 @@ protected:
     double eta;
     
     /// solver
-    AbstractOptimizer* solver;
+    boost::shared_ptr<AbstractOptimizer> solver;
 
 protected:
 
@@ -53,22 +54,22 @@ protected:
 
 public:
 
-    ErlpBoost(AbstractOracle * const oracle,
+    ErlpBoost(const boost::shared_ptr<AbstractOracle> &oracle,
               const int num_data_points,
               const int max_iterations,
               const double epsilon,
               const double nu,
               const bool binary,
-              AbstractOptimizer * const solver);
+              const boost::shared_ptr<AbstractOptimizer> &solver_);
 
-    ErlpBoost(AbstractOracle* const oracle,
+    ErlpBoost(const boost::shared_ptr<AbstractOracle> &oracle,
               const int num_data_points,
               const int max_iterations,
               const double epsilon,
               const double eta,
               const double nu,
               const bool binary,
-              AbstractOptimizer* const solver_);
+              const boost::shared_ptr<AbstractOptimizer> &solver_);
 
     virtual ~ErlpBoost();
 

@@ -72,7 +72,7 @@ const double ap::minrealnumber  = 1E-300;
 ap::complex operations
 ********************************************************************/
 const bool ap::operator==(const ap::complex& lhs, const ap::complex& rhs)
-{ return lhs.x==rhs.x && lhs.y==rhs.y; }
+{ return lhs.x==rhs.x and lhs.y==rhs.y; }
 
 const bool ap::operator!=(const ap::complex& lhs, const ap::complex& rhs)
 { return lhs.x!=rhs.x || lhs.y!=rhs.y; }

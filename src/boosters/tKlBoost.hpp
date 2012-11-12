@@ -17,13 +17,13 @@ public:
 
     /// The term D (capital_dee) dictates the regularization
     /// (D=1/7, 1/5, 1/3) was used ni Liu's experiments
-    tKlBoost(AbstractOracle* oracle,
-              const int num_data_points,
-              const int max_iterations,
-              const double epsilon,
-              const double capital_dee,
-              const bool binary,
-              AbstractOptimizer* solver);
+    tKlBoost(const boost::shared_ptr<AbstractOracle> &oracle,
+             const int num_data_points,
+             const int max_iterations,
+             const double epsilon,
+             const double capital_dee,
+             const bool binary,
+             const boost::shared_ptr<AbstractOptimizer> &solver);
     ~tKlBoost();
 
     /// we define compute nu as static since it will be needed outside the class

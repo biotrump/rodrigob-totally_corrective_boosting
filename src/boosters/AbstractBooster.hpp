@@ -5,6 +5,8 @@
 #include "oracles/AbstractOracle.hpp"
 #include "Timer.hpp"
 
+#include <boost/shared_ptr.hpp>
+
 #include <vector>
 #include <iostream>
 
@@ -20,7 +22,7 @@ class AbstractBooster
 protected:
     
   /// Oracle to supply hypothesis with max edge
-  AbstractOracle* oracle;
+  boost::shared_ptr<AbstractOracle> oracle;
 
   /// Number of data points
   const int num_data_points;
@@ -56,12 +58,12 @@ protected:
   
 public:
     
-  AbstractBooster(AbstractOracle* oracle_,
+  AbstractBooster(const boost::shared_ptr<AbstractOracle> &oracle_,
            const int num_data_points_,
            const int max_iterations_);
 
 
-  AbstractBooster(AbstractOracle* oracle,
+  AbstractBooster(const boost::shared_ptr<AbstractOracle> &oracle_,
            const int num_data_points,
            const int max_iterations,
            const int display_frequency_);
