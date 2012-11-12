@@ -77,6 +77,10 @@ public:
   
   const Ensemble &get_ensemble() const;
 
+
+  /// Helper function for debugging and external usage
+  const DenseVector&  get_examples_distribution() const;
+
 };
 
 } // end of namespace totally_corrective_boosting

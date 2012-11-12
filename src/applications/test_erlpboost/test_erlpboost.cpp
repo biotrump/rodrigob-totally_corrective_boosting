@@ -68,7 +68,6 @@ int main(int argc, char **argv)
     }
 
     // Tee code based on http://stackoverflow.com/questions/999120
-
     typedef boost::iostreams::tee_device<std::ostream, std::ofstream> tee_device_t;
     typedef boost::iostreams::stream<tee_device_t> tee_stream_t;
 

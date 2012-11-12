@@ -49,46 +49,55 @@
 #include <fstream>
 #include <sstream>
 
-using std::string;
+
 
 namespace totally_corrective_boosting
 {
 
 class ConfigFile
 {
+
+
 // Data
 protected:
+
+    typedef std::string string;
+
     string myDelimiter;  // separator between key and value
     string myComment;    // separator between value and comments
     string mySentry;     // optional string to signal end of file
-    std::map<string,string> myContents;  // extracted keys and values
+    std::map<string, string> myContents;  // extracted keys and values
 
-    typedef std::map<string,string>::iterator mapi;
-    typedef std::map<string,string>::const_iterator mapci;
+    typedef std::map<string, string>::iterator mapi;
+    typedef std::map<string, string>::const_iterator mapci;
 
 // Methods
 public:
+    /// Empty configuration constructor
+    ConfigFile();
+
     ConfigFile( string filename,
                 string delimiter = "=",
                 string comment = "#",
                 string sentry = "EndConfigFile" );
-    ConfigFile();
 
-    // Search for key and read value or optional default value
+    /// Search for key and read value or optional default value
+    /// @{
     template<class T> T read( const string& key ) const;  // call as read<T>
     template<class T> T read( const string& key, const T& value ) const;
     template<class T> bool readInto( T& var, const string& key ) const;
     template<class T>
     bool readInto( T& var, const string& key, const T& value ) const;
+    /// @}
 
-    // Modify keys and values
+    /// Modify keys and values
     template<class T> void add( string key, const T& value );
     void remove( const string& key );
 
-    // Check whether key exists in configuration
+    /// Check whether key exists in configuration
     bool keyExists( const string& key ) const;
 
-    // Check or change configuration syntax
+    /// Check or change configuration syntax
     string getDelimiter() const
     {
         return myDelimiter;
@@ -114,8 +123,10 @@ public:
         return old;
     }
 
-    // Write or read configuration
+    /// Write configuration file
     friend std::ostream& operator<<( std::ostream& os, const ConfigFile& cf );
+
+    /// Read configuration file
     friend std::istream& operator>>( std::istream& is, ConfigFile& cf );
 
 protected:
@@ -141,7 +152,7 @@ public:
 
 /* static */
 template<class T>
-string ConfigFile::T_as_string( const T& t )
+std::string ConfigFile::T_as_string( const T& t )
 {
     // Convert from a T to a string
     // Type T must support << operator
@@ -166,7 +177,7 @@ T ConfigFile::string_as_T( const string& s )
 
 /* static */
 template<>
-inline string ConfigFile::string_as_T<string>( const string& s )
+inline std::string ConfigFile::string_as_T<std::string>( const string& s )
 {
     // Convert from a string to a string
     // In other words, do nothing

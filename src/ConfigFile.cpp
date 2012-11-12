@@ -41,6 +41,7 @@ ConfigFile::ConfigFile( string filename, string delimiter,
     if( !in ) throw file_not_found( filename );
 
     in >> (*this);
+    return;
 }
 
 
@@ -48,6 +49,7 @@ ConfigFile::ConfigFile()
     : myDelimiter( string(1,'=') ), myComment( string(1,'#') )
 {
     // Construct a ConfigFile without a file; empty
+    return;
 }
 
 

@@ -149,4 +149,11 @@ const Ensemble &AbstractBooster::get_ensemble() const
     return model;
 }
 
+
+const DenseVector &AbstractBooster::get_examples_distribution() const
+{
+    return examples_distribution;
+}
+
+
 } // end of namespace totally_corrective_boosting
