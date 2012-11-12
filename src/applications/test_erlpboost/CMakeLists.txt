@@ -34,7 +34,6 @@ include_directories(
 # Collect source files
 
 file(GLOB SrcCpp 
-  "./*.cpp"
   "${src_folder}/*.cpp"
   "${src_folder}/weak_learners/*.cpp"
   "${src_folder}/oracles/*.cpp"
@@ -85,15 +84,42 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 
 # ----------------------------------------------------------------------
-# Create the executable
-
-add_executable(test_erlpboost
-  ${SrcCpp}
-  ${HelpersCpp}
+# Create the library
+add_library( totally_corrective_boosting SHARED
+   ${SrcCpp}
+   ${HelpersCpp}
 )
 
+target_link_libraries( totally_corrective_boosting
+
+   boost_program_options-mt boost_filesystem-mt boost_system-mt boost_thread-mt
+   #protobuf
+   gomp
+
+   #csparse sparse spblas mv
+   #lapack blas atlas
+)
+
+
+if(USE_CLP)
+target_link_libraries(totally_corrective_boosting
+  Clp
+)
+endif(USE_CLP)
+
+# ----------------------------------------------------------------------
+# Create the executable
+
+add_executable(test_erlpboost "test_erlpboost.cpp")
+
 target_link_libraries(test_erlpboost
-   boost_program_options-mt boost_filesystem-mt boost_system-mt boost_thread-mt 
+
+   totally_corrective_boosting
+
+   boost_program_options-mt
+   boost_filesystem-mt
+   boost_system-mt
+   boost_thread-mt
    #protobuf
    gomp 
    
