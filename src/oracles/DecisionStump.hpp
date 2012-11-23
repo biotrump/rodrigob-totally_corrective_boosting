@@ -40,7 +40,7 @@ public:
 
   ~DecisionStump();
 
-  // given distribution return weak learner with maximum edge
+  /// given distribution return weak learner with maximum edge
   AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& dist);
 
   /// given a hypothesis and distribution, return the best threshold

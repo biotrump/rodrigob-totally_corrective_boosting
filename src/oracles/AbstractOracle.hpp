@@ -27,20 +27,12 @@ protected:
 public:
     AbstractOracle(const std::vector<SparseVector>& data,
                    const std::vector<int>& labels,
-                   const bool transposed = false)
-        : data(data), labels(labels), transposed(transposed)
-    {
-        // nothing to do here
-        return;
-    }
+                   const bool transposed = false);
 
-    virtual ~AbstractOracle()
-    {
-        // nothing to do here
-        return;
-    }
+    virtual ~AbstractOracle();
 
     /// given distribution return weak learner with maximum edge
+    /// (should return a new instance, the receiver is responsible of the weak learner object destruction)
     virtual AbstractWeakLearner* find_maximum_edge_weak_learner(const DenseVector& distribution) = 0;
 };
 

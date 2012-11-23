@@ -13,21 +13,22 @@ namespace totally_corrective_boosting
 class DenseVector
 {
 public:
-    // List of values
+    /// List of values
     double *val;
 
-    // Overall dimension
+    /// Overall dimension
     size_t dim;
 
-    // default constructor
+    /// default constructor
     DenseVector()
     {
         dim = 0;
         val = NULL;
+        return;
     }
 
 
-    // Other constructors: Syntactic sugar
+    /// Other constructors: Syntactic sugar
     DenseVector (const size_t& dim): dim(dim)
     {
         val = new double[dim];
@@ -35,6 +36,7 @@ public:
         {
             val[i] = 0.0;
         }
+        return;
     }
 
 
