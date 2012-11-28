@@ -75,40 +75,40 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
         }
     }
 
-    SparseVector result(data[max_index].dim, data[max_index].dim);
+    SparseVector prediction(data[max_index].dim, data[max_index].dim);
 
     // initially set result to zero
-    for(size_t i = 0; i < result.dim; i++)
+    for(size_t i = 0; i < prediction.dim; i++)
     {
-        result.val[i] = 0.0;
-        result.index[i] = i;
+        prediction.val[i] = 0.0;
+        prediction.index[i] = i;
     }
 
     // copy nonzero elements of best hypothesis into result
     for(size_t i = 0; i < data[max_index].nnz; i++)
     {
         size_t index = data[max_index].index[i];
-        result.val[index] = data[max_index].val[i];
+        prediction.val[index] = data[max_index].val[i];
     }
 
     double edge = 0.0; // just for checking that we're thresholding well
-    for(size_t i = 0; i < result.dim; i++)
+    for(size_t i = 0; i < prediction.dim; i++)
     {
 
         // threshold prediction
-        if((ge and (result.val[i] >= best_threshold)) or
-                ((not ge) and (result.val[i] <= best_threshold)))
+        if((ge and (prediction.val[i] >= best_threshold)) or
+                ((not ge) and (prediction.val[i] <= best_threshold)))
         {
-            result.val[i] = 1.0;
+            prediction.val[i] = 1.0;
         }
         else
         {
-            result.val[i] = -1.0;
+            prediction.val[i] = -1.0;
         }
 
         // multiply by label
-        result.val[i] *= labels[i];
-        edge += result.val[i]*dist.val[i];
+        prediction.val[i] *= labels[i];
+        edge += prediction.val[i]*dist.val[i];
     }
     SparseVector wt(size, 1);
     wt.index[0] = max_index;
@@ -119,7 +119,7 @@ AbstractWeakLearner* DecisionStump::find_maximum_edge_weak_learner(const DenseVe
 
     AbstractWeakLearner* wl = new DecisionStumpWeakLearner(wt,
                                                            edge,
-                                                           result,
+                                                           prediction,
                                                            best_threshold,
                                                            ge,
                                                            max_index);

@@ -12,7 +12,7 @@ namespace totally_corrective_boosting
 
 DecisionStumpWeakLearner::DecisionStumpWeakLearner():
     LinearWeakLearner(),
-    thresh(0), direction(true), index(0)
+    threshold(0), direction(true), index(0)
 {
     // nothing to do here
     return;
@@ -23,11 +23,11 @@ DecisionStumpWeakLearner::DecisionStumpWeakLearner(
         const SparseVector& wt,
         const double& edge,
         const SparseVector& prediction,
-        const double& thresh,
-        const bool& direction,
-        const int& index)
+        const double& threshold_,
+        const bool& direction_,
+        const int& index_)
     : LinearWeakLearner(wt, edge, prediction),
-      thresh(thresh), direction(direction), index(index)
+      threshold(threshold_), direction(direction_), index(index_)
 {
     // nothing to do here
     return;
@@ -37,7 +37,7 @@ DecisionStumpWeakLearner::DecisionStumpWeakLearner(
 
 DecisionStumpWeakLearner::DecisionStumpWeakLearner(const DecisionStumpWeakLearner& other)
     : LinearWeakLearner(other.wt, other.edge, other.prediction),
-      thresh(other.thresh),
+      threshold(other.threshold),
       direction(other.direction)
 {
     // nothing to do here
@@ -65,11 +65,11 @@ double DecisionStumpWeakLearner::predict(const DenseVector& x) const
     double result;
 
     if(direction){
-        if( tmp >= thresh){result = 1.0;}
+        if( tmp >= threshold){result = 1.0;}
         else {result = -1.0;}
     }
     else{
-        if( tmp <= thresh){result = 1.0;}
+        if( tmp <= threshold){result = 1.0;}
         else {result = -1.0;}
     }
 
@@ -84,11 +84,11 @@ double DecisionStumpWeakLearner::predict(const SparseVector& x) const
     double result;
 
     if(direction){
-        if( tmp >= thresh){result = 1.0;}
+        if( tmp >= threshold){result = 1.0;}
         else {result = -1.0;}
     }
     else{
-        if( tmp <= thresh){result = 1.0;}
+        if( tmp <= threshold){result = 1.0;}
         else {result = -1.0;}
     }
 
@@ -96,24 +96,24 @@ double DecisionStumpWeakLearner::predict(const SparseVector& x) const
 }
 
 
-DenseVector DecisionStumpWeakLearner::predict(const std::vector<SparseVector>& Data) const
+DenseVector DecisionStumpWeakLearner::predict(const std::vector<SparseVector>& data) const
 {
 
-    DenseVector result(Data[index].dim);
+    DenseVector result(data[index].dim);
 
-    for(size_t i = 0; i < Data[index].nnz; i++){
-        int tmpindex = Data[index].index[i];
-        result.val[tmpindex] = Data[index].val[i];
+    for(size_t i = 0; i < data[index].nnz; i++){
+        int tmpindex = data[index].index[i];
+        result.val[tmpindex] = data[index].val[i];
     }
 
-    for(size_t i = 0; i < Data[index].dim; i++){
+    for(size_t i = 0; i < data[index].dim; i++){
 
         if(direction){
-            if( result.val[i] >= thresh){result.val[i] = 1.0;}
+            if( result.val[i] >= threshold){result.val[i] = 1.0;}
             else {result.val[i] = -1.0;}
         }
         else{
-            if( result.val[i] <= thresh){result.val[i] = 1.0;}
+            if( result.val[i] <= threshold){result.val[i] = 1.0;}
             else {result.val[i] = -1.0;}
         }
 
@@ -127,7 +127,7 @@ void DecisionStumpWeakLearner::dump(std::ostream& os) const
 {
     os  << wt;
     os << "edge: " << edge << std::endl;
-    os << "thresh: " << thresh << std::endl;
+    os << "thresh: " << threshold << std::endl;
     os << "dir: " << direction << std::endl;
     os << "index: " << index << std::endl;
     return;
@@ -141,7 +141,7 @@ void DecisionStumpWeakLearner::load(std::istream& in)
         expect_keyword(in,"edge:");
         in >> edge;
         expect_keyword(in,"thresh:");
-        in >> thresh;
+        in >> threshold;
         expect_keyword(in,"dir:");
         in >> direction;
         expect_keyword(in,"index:");
@@ -159,7 +159,7 @@ bool DecisionStumpWeakLearner::equal(const AbstractWeakLearner *other_p) const
 {
     const DecisionStumpWeakLearner *wl_p = dynamic_cast<const DecisionStumpWeakLearner *>(other_p);
     return (wl_p != NULL)
-            and ( this->thresh == wl_p->get_threshold()
+            and ( this->threshold == wl_p->get_threshold()
                   and this->direction == wl_p->get_direction()
                   and this->index == wl_p->get_index()
                   and this->wt == wl_p->get_wt());

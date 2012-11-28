@@ -21,6 +21,8 @@ protected:
 
 public:
     AbstractWeakLearner();
+
+    /// This constructor copies the prediction vector
     AbstractWeakLearner(const double& edge, const SparseVector& prediction);
 
     virtual ~AbstractWeakLearner();
@@ -41,7 +43,7 @@ public:
     virtual std::string get_type() const = 0;
 
     double get_edge() const { return edge; }
-    SparseVector get_prediction() const { return prediction; }
+    const SparseVector &get_prediction() const { return prediction; }
 
     // ugly hack. Need to figure out how to avoid.
     virtual bool get_direction() const {return false; }

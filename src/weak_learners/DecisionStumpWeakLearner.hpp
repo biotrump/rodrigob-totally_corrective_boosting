@@ -14,7 +14,7 @@ class DecisionStumpWeakLearner: public LinearWeakLearner
 private:
 
     // threshold
-    double thresh;
+    double threshold;
 
     // direction of threshold:
     // if dir == true, then x >= thresh
@@ -29,7 +29,7 @@ public:
     DecisionStumpWeakLearner();
 
     DecisionStumpWeakLearner(const SparseVector& wt, const double& edge, const SparseVector& prediction,
-                             const double& thresh, const bool& direction, const int& index);
+                             const double& threshold, const bool& direction, const int& index);
 
     /// Copy constructor
     DecisionStumpWeakLearner(const DecisionStumpWeakLearner& other);
@@ -53,7 +53,7 @@ public:
 
     // accessor methods
     bool get_direction() const {return direction; }
-    double get_threshold() const {return thresh; }
+    double get_threshold() const {return threshold; }
     size_t get_index() const {return index;}
 
     friend

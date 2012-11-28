@@ -13,6 +13,9 @@ class SparseVector
 {
 
 public:
+
+    typedef double value_type;
+
     // List of values
     double *val;
 

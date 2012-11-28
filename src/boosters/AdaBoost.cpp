@@ -25,19 +25,19 @@ AdaBoost::~AdaBoost()
 }
 
 
-void AdaBoost::update_examples_distribution(const AbstractWeakLearner& wl)
+void AdaBoost::update_examples_distribution(const AbstractWeakLearner& weak_learner)
 {
-
-    SparseVector pred = wl.get_prediction();
+    const SparseVector &prediction = weak_learner.get_prediction();
 
     // Since the prediction is a sparse vector
     // We only need to update those components of dist for which hx.val is
     // non-zero.
-    for(size_t i = 0; i < pred.nnz; i++){
+    for(size_t i = 0; i < prediction.nnz; i++)
+    {
         // Predictions are premultiplied with the labels already in the weak
         // learner
-        int index = pred.index[i];
-        examples_distribution.val[index] = examples_distribution.val[index]*exp(-alpha*pred.val[i]);
+        const int index = prediction.index[i];
+        examples_distribution.val[index] = examples_distribution.val[index]*exp(-alpha*prediction.val[i]);
     }
     normalize(examples_distribution);
     return;
